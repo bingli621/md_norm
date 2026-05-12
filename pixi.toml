@@ -1,0 +1,16 @@
+[workspace]
+authors = ["bingli <bing.li@ess.eu>"]
+channels = ["conda-forge"]
+name = "let"
+platforms = ["osx-arm64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+python = "3.11.*"
+scipp = ">=25.12.0,<26"
+scippneutron = ">=26.3.0,<27"
+mcstas = ">=3.6.15,<4"
+mcstasscript = ">=0.0.79,<0.0.80"
+mcstastox = ">=0.0.12,<0.0.13"

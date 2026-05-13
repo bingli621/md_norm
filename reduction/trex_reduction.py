@@ -67,6 +67,7 @@ def produce_trex_event_object(
 
     tof_to_centroid = sc.lookup(look_up_tab, mode="previous")
     event_object = event_object.transform_coords(time_on_monitor=tof_to_centroid)
+    event_object.coords["monitor_counts"] = sc.scalar(value=monitor.Ncount.sum())
 
     return event_object
 

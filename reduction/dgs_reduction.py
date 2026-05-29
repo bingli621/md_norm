@@ -5,7 +5,6 @@ import scipp.constants as consts
 # Utility Functions
 
 
-
 def energy_to_momentum(en):
     k = sc.sqrt(2 * consts.m_n * en) / consts.hbar
     return k.to(unit="1/Å")
@@ -20,43 +19,53 @@ def speed_to_energy(v):
     en = 0.5 * consts.m_n * v**2
     return en.to(unit="meV")
 
-#TODO
-def determine_INS_windows(detecor_positions, monitor_data, energy_transfer_ratio=(-0.9, 0.9)):
-    """Check allowed range to avoid frame overlap.
+
+def determine_INS_windows(
+    detecor_positions, monitor_data, energy_transfer_ratio=(-0.8, 0.8)
+):
+    """Determine INS time windows per detector pixel, per RRM.
     Keep E = Ei - Ef = ±0.8*Ei by default."""
 
-
-    sample_to_detectors = sc.norm(detecor_positions - monitor_data.coords['sample_position'])
-    r_gain, r_loss = 1 / (1 - np.array(energy_transfer_ratio))
-
+    sample_to_detectors = sc.norm(
+        detecor_positions - monitor_data.coords["sample_position"]
+    )
     ei = monitor_data.coords["ei"]
     time_on_sample = monitor_data.coords["time_on_sample"]
-    sample_to_detectors = monitor_data.coords["sample_to_detectors"]
-
-    ef_gain = ei / r_gain
-    ef_loss = ei / r_loss
-
+    r_gain, r_loss = energy_transfer_ratio
+    ef_gain = ei * (1 - r_gain)
+    ef_loss = ei * (1 - r_loss)
     vf_gain = energy_to_speed(ef_gain)
     vf_loss = energy_to_speed(ef_loss)
-
     t_gain = time_on_sample + sample_to_detectors / vf_gain
     t_loss = time_on_sample + sample_to_detectors / vf_loss
 
-    # TODO check for overlap, modify t_gain/t_loss
-    # LET has a source frequency of 10 Hz
-    pass
+    # TODO
+    # modify t_gain/t_loss,
+    # if rrm >1, check overlap between subframes
+    # check for source period, LET has a source frequency of 10 Hz
 
     vf_gain = sample_to_detectors / (t_gain - time_on_sample)
     vf_loss = sample_to_detectors / (t_loss - time_on_sample)
 
     ef_gain = speed_to_energy(vf_gain)
     ef_loss = speed_to_energy(vf_loss)
+    en_gain_ratio = 1 - ef_gain / ei
+    en_loss_ratio = 1 - ef_loss / ei
 
-    energy_transfer_ratio = (1 - ef_gain / ei, 1 - ef_loss / ei)
+    norm_factors = sc.DataArray(
+        data=sc.zeros(sizes=detecor_positions.sizes | monitor_data.sizes),
+        coords={
+            "energy_gain_ratio": en_gain_ratio,
+            "energy_loss_ratio": en_loss_ratio,
+            "sample_position": monitor_data.coords["sample_position"],
+            "detector_positions": detecor_positions,
+            "ei": monitor_data.coords["ei"],
+            "vec_ki": monitor_data.coords["vec_ki"],
+            "monitor_counts": monitor_data.data,
+        },
+    )
 
-    return events
-
-
+    return norm_factors
 
 
 def distance_between(position_1, position_2):
@@ -83,7 +92,9 @@ def monitor_single_pulse(tof_monitor):
         ],
         unit="us",
     )
-    data = sc.DataArray(data=counts, coords={"time_on_monitor": sc.to_unit(toa_com,'s')})
+    data = sc.DataArray(
+        data=counts, coords={"time_on_monitor": sc.to_unit(toa_com, "s")}
+    )
     return data
 
 
@@ -148,13 +159,26 @@ calculate_ei = {
 
 
 # -----------------------------------------------------
-# Calculate Ef
+# Calculate detector trajectory endpoints
 # -----------------------------------------------------
+def kf_m(energy_loss_ratio, ei):
+    ef = (1 - energy_loss_ratio) * ei
+    return energy_to_momentum(ef)
 
 
-def sample_to_detectors(sample_position, detector_positions):
-    return distance_between(sample_position, detector_positions)
+def kf_M(energy_gain_ratio, ei):
+    ef = (1 - energy_gain_ratio) * ei
+    return energy_to_momentum(ef)
 
+
+
+
+
+calculate_ef = {
+    
+    "kf_m": kf_m,
+    "kf_M": kf_M,
+}
 
 def unit_vec_kf(detector_positions, sample_position):
     """ """
@@ -162,6 +186,69 @@ def unit_vec_kf(detector_positions, sample_position):
     unit_kf = d / sc.norm(d)
 
     return unit_kf
+
+
+def vec_kf_m(kf_m, unit_vec_kf):
+    return kf_m * unit_vec_kf
+
+
+def vec_kf_M(kf_M, unit_vec_kf):
+    return kf_M * unit_vec_kf
+
+
+def vec_q_m(vec_ki, vec_kf_m):
+    return vec_ki - vec_kf_m
+
+
+def vec_q_M(vec_ki, vec_kf_M):
+    return vec_ki - vec_kf_M
+
+
+def qx_m(vec_q_m):
+    return vec_q_m.fields.x.copy()
+
+
+def qy_m(vec_q_m):
+    return vec_q_m.fields.y.copy()
+
+
+def qz_m(vec_q_m):
+    return vec_q_m.fields.z.copy()
+
+
+def qx_M(vec_q_M):
+    return vec_q_M.fields.x.copy()
+
+
+def qy_M(vec_q_M):
+    return vec_q_M.fields.y.copy()
+
+
+def qz_M(vec_q_M):
+    return vec_q_M.fields.z.copy()
+
+
+calculate_trajectory_endpoints = {
+    "unit_vec_kf": unit_vec_kf,
+    "vec_kf_m": vec_kf_m,
+    "vec_kf_M": vec_kf_M,
+    "vec_q_m": vec_q_m,
+    "vec_q_M": vec_q_M,
+    "qx_m": qx_m,
+    "qy_m": qy_m,
+    "qz_m": qz_m,
+    "qx_M": qx_M,
+    "qy_M": qy_M,
+    "qz_M": qz_M,
+}
+
+# -----------------------------------------------------
+# Calculate Ef
+# -----------------------------------------------------
+
+
+def sample_to_detectors(sample_position, detector_positions):
+    return distance_between(sample_position, detector_positions)
 
 
 def vec_vf(sample_to_detectors, tof, time_on_sample):
@@ -186,22 +273,17 @@ def vec_kf(mag_kf, unit_vec_kf):
     return mag_kf * unit_vec_kf
 
 
-calculate_ef = {
-    "sample_to_detectors": sample_to_detectors,
-    "unit_vec_kf": unit_vec_kf,
-    "vf": vec_vf,
-    "ef": ef,
-    "mag_kf": mag_kf,
-    "vec_kf": vec_kf,
-}
+# calculate_ef = {
+#     "sample_to_detectors": sample_to_detectors,
+#     "unit_vec_kf": unit_vec_kf,
+#     "vf": vec_vf,
+#     "ef": ef,
+#     "mag_kf": mag_kf,
+#     "vec_kf": vec_kf,
+# }
 
 
 # --------- Q and en --------
-
-
-def vec_Q(vec_ki, vec_kf):
-    """ """
-    return vec_ki - vec_kf
 
 
 def qx(vec_Q):
@@ -231,7 +313,6 @@ dgs_reduction = (
     calculate_ei
     | calculate_ef
     | {
-        "vec_Q": vec_Q,
         "mag_Q": mag_Q,
         "qx": qx,
         "qy": qy,

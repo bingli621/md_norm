@@ -20,9 +20,23 @@ def speed_to_energy(v):
     return en.to(unit="meV")
 
 
+def distance_between(position_1, position_2):
+    d = position_1.to(unit="m") - position_2.to(unit="m")
+    return sc.norm(d)
+
+
+def speed_between(position0, position1, time0, time1):
+    return sc.norm((position0 - position1)) / sc.abs((time0 - time1))
+
+
+def sample_to_detectors(sample_position, detector_positions):
+    return distance_between(sample_position, detector_positions)
+
+
+# ------------------------------------------------------------
 def determine_INS_windows(
-    detecor_positions, monitor_data, energy_transfer_ratio=(-0.8, 0.8)
-):
+    monitor_data, detecor_positions, energy_transfer_ratio=(-0.8, 0.8)
+) -> sc.DataArray:
     """Determine INS time windows per detector pixel, per RRM.
     Keep E = Ei - Ef = ±0.8*Ei by default."""
 
@@ -44,20 +58,13 @@ def determine_INS_windows(
     # if rrm >1, check overlap between subframes
     # check for source period, LET has a source frequency of 10 Hz
 
-    vf_gain = sample_to_detectors / (t_gain - time_on_sample)
-    vf_loss = sample_to_detectors / (t_loss - time_on_sample)
-
-    ef_gain = speed_to_energy(vf_gain)
-    ef_loss = speed_to_energy(vf_loss)
-    en_gain_ratio = 1 - ef_gain / ei
-    en_loss_ratio = 1 - ef_loss / ei
-
     norm_factors = sc.DataArray(
         data=sc.zeros(sizes=detecor_positions.sizes | monitor_data.sizes),
         coords={
-            "energy_gain_ratio": en_gain_ratio,
-            "energy_loss_ratio": en_loss_ratio,
+            "toa_min": t_gain,
+            "toa_max": t_loss,
             "sample_position": monitor_data.coords["sample_position"],
+            "time_on_sample": time_on_sample,
             "detector_positions": detecor_positions,
             "ei": monitor_data.coords["ei"],
             "vec_ki": monitor_data.coords["vec_ki"],
@@ -66,11 +73,6 @@ def determine_INS_windows(
     )
 
     return norm_factors
-
-
-def distance_between(position_1, position_2):
-    d = position_1.to(unit="m") - position_2.to(unit="m")
-    return sc.norm(d)
 
 
 def monitor_single_pulse(tof_monitor):
@@ -161,6 +163,30 @@ calculate_ei = {
 # -----------------------------------------------------
 # Calculate detector trajectory endpoints
 # -----------------------------------------------------
+def vf_gain(sample_position, detector_positions, time_on_sample, toa_min):
+    return speed_between(sample_position, detector_positions, time_on_sample, toa_min)
+
+
+def vf_loss(sample_position, detector_positions, time_on_sample, toa_max):
+    return speed_between(sample_position, detector_positions, time_on_sample, toa_max)
+
+
+def ef_gain(vf_gain):
+    return speed_to_energy(vf_gain)
+
+
+def ef_loss(vf_loss):
+    return speed_to_energy(vf_loss)
+
+
+def en_gain_ratio(ei, ef_gain):
+    return 1 - ef_gain / ei
+
+
+def en_loss_ratio(ei, ef_loss):
+    return 1 - ef_loss / ei
+
+
 def kf_m(energy_loss_ratio, ei):
     ef = (1 - energy_loss_ratio) * ei
     return energy_to_momentum(ef)
@@ -171,14 +197,17 @@ def kf_M(energy_gain_ratio, ei):
     return energy_to_momentum(ef)
 
 
-
-
-
 calculate_ef = {
-    
+    "vf_gain": vf_gain,
+    "vf_loss": vf_loss,
+    "ef_gain": ef_gain,
+    "ef_loss": ef_loss,
+    "energy_gain_ratio": en_gain_ratio,
+    "energy_loss_ratio": en_loss_ratio,
     "kf_m": kf_m,
     "kf_M": kf_M,
 }
+
 
 def unit_vec_kf(detector_positions, sample_position):
     """ """
@@ -245,10 +274,6 @@ calculate_trajectory_endpoints = {
 # -----------------------------------------------------
 # Calculate Ef
 # -----------------------------------------------------
-
-
-def sample_to_detectors(sample_position, detector_positions):
-    return distance_between(sample_position, detector_positions)
 
 
 def vec_vf(sample_to_detectors, tof, time_on_sample):

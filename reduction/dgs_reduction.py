@@ -160,6 +160,151 @@ calculate_ei = {
 }
 
 
+# TODO unwrap frame
+def assign_rrm(events, norm_factors):
+    """Assgin RRM index of TOA based on (toa_min, toa_max), mask data in-between
+    Note:  the periodicity of events are not considered at the moment"""
+    toa_min = norm_factors.coords["toa_min"]
+    toa_max = norm_factors.coords["toa_max"]
+
+    pid = events.coords["pixel_id"]
+    toa = events.coords["toa"]
+
+    # Select the (rrm,) slice corresponding to each event pixel
+    # dims = (events, rrm)
+    tmin = toa_min["pixel_id", pid].rename_dims({"pixel_id": "events"})
+    tmax = toa_max["pixel_id", pid].rename_dims({"pixel_id": "events"})
+
+    # ------------------
+    # Assign RRM from toa_min
+    # ------------------
+    passed = toa >= tmin  # dims=(events, rrm)
+
+    rrm = passed.values.sum(axis=1) - 1
+    n_rrm = tmin.sizes["rrm"]
+
+    # Wrap around: toa < first toa_min -> largest rrm
+    rrm[rrm < 0] = n_rrm - 1
+
+    events.coords["rrm"] = sc.array(dims=["events"], values=rrm)
+
+    # check multiple matches
+    # n_matches = inside.values.sum(axis=1)
+
+    # ------------------
+    # Mask invalid events
+    # ------------------
+    inside = (toa >= tmin) & (toa < tmax)  # dims=(events, rrm)
+    mask = sc.any(inside, dim="rrm")
+    events.masks["outside"] = ~mask
+
+    # ------------------
+    # Add coordinates to events
+    # ------------------
+
+    events.coords["ei"] = sc.array(
+        dims=["events"],
+        values=norm_factors.coords["ei"].values[rrm],
+        unit=norm_factors.coords["ei"].unit,
+    )
+    events.coords["vec_ki"] = sc.vectors(
+        dims=["events"],
+        values=norm_factors.coords["vec_ki"].values[rrm],
+        unit=norm_factors.coords["vec_ki"].unit,
+    )
+
+    events.coords["time_on_sample"] = sc.array(
+        dims=["events"],
+        values=norm_factors.coords["time_on_sample"].values[rrm],
+        unit=norm_factors.coords["time_on_sample"].unit,
+    )
+
+    events.coords["sample_position"] = norm_factors.coords["sample_position"]
+    events.coords["detector_positions"] = sc.vectors(
+        dims=["events"],
+        values=norm_factors.coords["detector_positions"].values[pid.values],
+        unit=norm_factors.coords["detector_positions"].unit,
+    )
+
+    return events
+
+
+# -----------------------------------------------------
+# Calculate (Q,E) from (pixel_id, toa)
+# -----------------------------------------------------
+
+
+def vec_vf(sample_to_detectors, toa, time_on_sample):
+    """ """
+    vf = sample_to_detectors / (toa - time_on_sample)
+    return vf
+
+
+def unit_vec_kf(detector_positions, sample_position):
+    """ """
+    d = detector_positions - sample_position
+    unit_kf = d / sc.norm(d)
+
+    return unit_kf
+
+
+def mag_kf(vf):
+    """ """
+    mag_kf = (consts.m_n * vf) / consts.hbar
+    return sc.to_unit(mag_kf, "1/Å")
+
+
+def ef(vf):
+    ef = 0.5 * consts.m_n * vf**2
+    return sc.to_unit(ef, "meV")
+
+
+def vec_kf(mag_kf, unit_vec_kf):
+    """ """
+    return mag_kf * unit_vec_kf
+
+def vec_q(vec_ki, vec_kf):
+    return vec_ki - vec_kf
+
+def qx(vec_q):
+    return vec_q.fields.x.copy()
+
+
+def qy(vec_q):
+    return vec_q.fields.y.copy()
+
+
+def qz(vec_q):
+    return vec_q.fields.z.copy()
+
+
+def mag_q(vec_q):
+    """ """
+    return sc.to_unit(sc.norm(vec_q), "1/Å")
+
+
+def energy_transfer(ei, ef):
+    """ """
+    en = ei - ef
+    return sc.to_unit(en, "meV")
+
+
+calculate_qe = {
+    "sample_to_detectors": sample_to_detectors,
+    "unit_vec_kf": unit_vec_kf,
+    "vf": vec_vf,
+    "ef": ef,
+    "mag_kf": mag_kf,
+    "vec_kf": vec_kf,
+    "vec_q":vec_q,
+    "mag_q": mag_q,
+    "qx": qx,
+    "qy": qy,
+    "qz": qz,
+    "en": energy_transfer,
+}
+
+
 # -----------------------------------------------------
 # Calculate detector trajectory endpoints
 # -----------------------------------------------------
@@ -207,14 +352,6 @@ calculate_ef = {
     "kf_m": kf_m,
     "kf_M": kf_M,
 }
-
-
-def unit_vec_kf(detector_positions, sample_position):
-    """ """
-    d = detector_positions - sample_position
-    unit_kf = d / sc.norm(d)
-
-    return unit_kf
 
 
 def vec_kf_m(kf_m, unit_vec_kf):
@@ -271,77 +408,10 @@ calculate_trajectory_endpoints = {
     "qz_M": qz_M,
 }
 
-# -----------------------------------------------------
-# Calculate Ef
-# -----------------------------------------------------
-
-
-def vec_vf(sample_to_detectors, tof, time_on_sample):
-    """ """
-    vf = sample_to_detectors / (tof - time_on_sample)
-    return vf
-
-
-def mag_kf(vf):
-    """ """
-    mag_kf = (consts.m_n * vf) / consts.hbar
-    return sc.to_unit(mag_kf, "1/Å")
-
-
-def ef(vf):
-    ef = 0.5 * consts.m_n * vf**2
-    return sc.to_unit(ef, "meV")
-
-
-def vec_kf(mag_kf, unit_vec_kf):
-    """ """
-    return mag_kf * unit_vec_kf
-
-
-# calculate_ef = {
-#     "sample_to_detectors": sample_to_detectors,
-#     "unit_vec_kf": unit_vec_kf,
-#     "vf": vec_vf,
-#     "ef": ef,
-#     "mag_kf": mag_kf,
-#     "vec_kf": vec_kf,
-# }
-
 
 # --------- Q and en --------
 
 
-def qx(vec_Q):
-    return vec_Q.fields.x.copy()
-
-
-def qy(vec_Q):
-    return vec_Q.fields.y.copy()
-
-
-def qz(vec_Q):
-    return vec_Q.fields.z.copy()
-
-
-def mag_Q(vec_Q):
-    """ """
-    return sc.to_unit(sc.norm(vec_Q), "1/Å")
-
-
-def energy_transfer(ei, ef):
-    """ """
-    en = ei - ef
-    return sc.to_unit(en, "meV")
-
-
 dgs_reduction = (
-    calculate_ei
-    | calculate_ef
-    | {
-        "mag_Q": mag_Q,
-        "qx": qx,
-        "qy": qy,
-        "qz": qz,
-        "en": energy_transfer,
-    }
+    calculate_ei | calculate_ef | calculate_qe | calculate_trajectory_endpoints
 )

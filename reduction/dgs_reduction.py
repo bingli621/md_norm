@@ -1,39 +1,8 @@
 import numpy as np
 import scipp as sc
-import scipp.constants as consts
-
-# Utility Functions
+from utils import *
 
 
-def energy_to_momentum(en):
-    k = sc.sqrt(2 * consts.m_n * en) / consts.hbar
-    return k.to(unit="1/Å")
-
-
-def energy_to_speed(en):
-    v = sc.sqrt(2 * en / consts.m_n)
-    return v.to(unit="m/s")
-
-
-def speed_to_energy(v):
-    en = 0.5 * consts.m_n * v**2
-    return en.to(unit="meV")
-
-
-def distance_between(position_1, position_2):
-    d = position_1.to(unit="m") - position_2.to(unit="m")
-    return sc.norm(d)
-
-
-def speed_between(position0, position1, time0, time1):
-    return sc.norm((position0 - position1)) / sc.abs((time0 - time1))
-
-
-def sample_to_detectors(sample_position, detector_positions):
-    return distance_between(sample_position, detector_positions)
-
-
-# ------------------------------------------------------------
 def determine_INS_windows(
     monitor_data, detecor_positions, energy_transfer_ratio=(-0.8, 0.8)
 ) -> sc.DataArray:
@@ -98,66 +67,6 @@ def monitor_single_pulse(tof_monitor):
         data=counts, coords={"time_on_monitor": sc.to_unit(toa_com, "s")}
     )
     return data
-
-
-# -----------------------------------------------------
-# Calculate Ei
-# -----------------------------------------------------
-
-
-def source_to_monitor(source_position, presample_monitor_position):
-    return distance_between(source_position, presample_monitor_position)
-
-
-def unit_vec_ki(presample_monitor_position, sample_position):
-    """ """
-    d = sample_position - presample_monitor_position
-    unit_vec_ki = d / sc.norm(d)
-    return unit_vec_ki
-
-
-def vi_from_one_monitor(source_to_monitor, time_on_monitor):
-    """ """
-    vi = source_to_monitor / time_on_monitor
-    return vi
-
-
-def ei(vi):
-    ei = 0.5 * consts.m_n * vi**2
-    return sc.to_unit(ei, "meV")
-
-
-def mag_ki(vi):
-    """ """
-    mag_ki = (consts.m_n * vi) / consts.hbar
-    return sc.to_unit(mag_ki, "1/Å")
-
-
-def monitor_to_sample(sample_position, presample_monitor_position):
-    return distance_between(sample_position, presample_monitor_position)
-
-
-def time_on_sample(monitor_to_sample, time_on_monitor, vi):
-    """ """
-    time_on_sample = time_on_monitor + monitor_to_sample / vi
-    return time_on_sample
-
-
-def vec_ki(mag_ki, unit_vec_ki):
-    """ """
-    return mag_ki * unit_vec_ki
-
-
-calculate_ei = {
-    "source_to_monitor": source_to_monitor,
-    "vi": vi_from_one_monitor,
-    "ei": ei,
-    "monitor_to_sample": monitor_to_sample,
-    "time_on_sample": time_on_sample,
-    "unit_vec_ki": unit_vec_ki,
-    "mag_ki": mag_ki,
-    "vec_ki": vec_ki,
-}
 
 
 # TODO unwrap frame
@@ -230,63 +139,67 @@ def assign_rrm(events, norm_factors):
 
 
 # -----------------------------------------------------
-# Calculate (Q,E) from (pixel_id, toa)
+#  generate bin boxes
 # -----------------------------------------------------
 
 
-def vec_vf(sample_to_detectors, toa, time_on_sample):
-    """ """
-    vf = sample_to_detectors / (toa - time_on_sample)
-    return vf
+def _make_bins(spec, dim, unit="1/Å"):
+    if not isinstance(spec, tuple):
+        raise TypeError(f"{dim} must be a tuple of length 2 or 3")
+
+    if len(spec) == 2:
+        start, stop = spec
+        step = stop - start
+
+    elif len(spec) == 3:
+        start, stop, step = spec
+
+    else:
+        raise ValueError(f"{dim} tuple must have length 2 or 3")
+
+    return sc.arange(dim=dim, start=start, stop=stop + step, step=step, unit=unit)
 
 
-def unit_vec_kf(detector_positions, sample_position):
-    """ """
-    d = detector_positions - sample_position
-    unit_kf = d / sc.norm(d)
+def generate_bins(qx=None, qy=None, qz=None, en=None):
+    """
+    Generate Scipp bin edges for x, y, z, and en.
 
-    return unit_kf
+    Each argument must be:
+      - (min, max)
+      - (start, stop, step)
 
+    Returns
+    -------
+    dict[str, sc.Variable]
+        Bin edges per dimension
+    """
+    bins = {}
 
-def mag_kf(vf):
-    """ """
-    mag_kf = (consts.m_n * vf) / consts.hbar
-    return sc.to_unit(mag_kf, "1/Å")
+    if qx is not None:
+        bins["qx"] = _make_bins(qx, "qx")
 
+    if qy is not None:
+        bins["qy"] = _make_bins(qy, "qy")
 
-def ef(vf):
-    ef = 0.5 * consts.m_n * vf**2
-    return sc.to_unit(ef, "meV")
+    if qz is not None:
+        bins["qz"] = _make_bins(qz, "qz")
 
+    if en is not None:
+        bins["en"] = _make_bins(en, "en", unit="meV")
 
-def vec_kf(mag_kf, unit_vec_kf):
-    """ """
-    return mag_kf * unit_vec_kf
-
-def vec_q(vec_ki, vec_kf):
-    return vec_ki - vec_kf
-
-def qx(vec_q):
-    return vec_q.fields.x.copy()
-
-
-def qy(vec_q):
-    return vec_q.fields.y.copy()
+    return bins
 
 
-def qz(vec_q):
-    return vec_q.fields.z.copy()
-
-
-def mag_q(vec_q):
-    """ """
-    return sc.to_unit(sc.norm(vec_q), "1/Å")
-
-
-def energy_transfer(ei, ef):
-    """ """
-    en = ei - ef
-    return sc.to_unit(en, "meV")
+calculate_ei = {
+    "source_to_monitor": source_to_monitor,
+    "vi": vi_from_one_monitor,
+    "ei": ei,
+    "monitor_to_sample": monitor_to_sample,
+    "time_on_sample": time_on_sample,
+    "unit_vec_ki": unit_vec_ki,
+    "mag_ki": mag_ki,
+    "vec_ki": vec_ki,
+}
 
 
 calculate_qe = {
@@ -296,7 +209,7 @@ calculate_qe = {
     "ef": ef,
     "mag_kf": mag_kf,
     "vec_kf": vec_kf,
-    "vec_q":vec_q,
+    "vec_q": vec_q,
     "mag_q": mag_q,
     "qx": qx,
     "qy": qy,
@@ -305,44 +218,7 @@ calculate_qe = {
 }
 
 
-# -----------------------------------------------------
-# Calculate detector trajectory endpoints
-# -----------------------------------------------------
-def vf_gain(sample_position, detector_positions, time_on_sample, toa_min):
-    return speed_between(sample_position, detector_positions, time_on_sample, toa_min)
-
-
-def vf_loss(sample_position, detector_positions, time_on_sample, toa_max):
-    return speed_between(sample_position, detector_positions, time_on_sample, toa_max)
-
-
-def ef_gain(vf_gain):
-    return speed_to_energy(vf_gain)
-
-
-def ef_loss(vf_loss):
-    return speed_to_energy(vf_loss)
-
-
-def en_gain_ratio(ei, ef_gain):
-    return 1 - ef_gain / ei
-
-
-def en_loss_ratio(ei, ef_loss):
-    return 1 - ef_loss / ei
-
-
-def kf_m(energy_loss_ratio, ei):
-    ef = (1 - energy_loss_ratio) * ei
-    return energy_to_momentum(ef)
-
-
-def kf_M(energy_gain_ratio, ei):
-    ef = (1 - energy_gain_ratio) * ei
-    return energy_to_momentum(ef)
-
-
-calculate_ef = {
+calculate_trajectory_endpoints = {
     "vf_gain": vf_gain,
     "vf_loss": vf_loss,
     "ef_gain": ef_gain,
@@ -351,50 +227,6 @@ calculate_ef = {
     "energy_loss_ratio": en_loss_ratio,
     "kf_m": kf_m,
     "kf_M": kf_M,
-}
-
-
-def vec_kf_m(kf_m, unit_vec_kf):
-    return kf_m * unit_vec_kf
-
-
-def vec_kf_M(kf_M, unit_vec_kf):
-    return kf_M * unit_vec_kf
-
-
-def vec_q_m(vec_ki, vec_kf_m):
-    return vec_ki - vec_kf_m
-
-
-def vec_q_M(vec_ki, vec_kf_M):
-    return vec_ki - vec_kf_M
-
-
-def qx_m(vec_q_m):
-    return vec_q_m.fields.x.copy()
-
-
-def qy_m(vec_q_m):
-    return vec_q_m.fields.y.copy()
-
-
-def qz_m(vec_q_m):
-    return vec_q_m.fields.z.copy()
-
-
-def qx_M(vec_q_M):
-    return vec_q_M.fields.x.copy()
-
-
-def qy_M(vec_q_M):
-    return vec_q_M.fields.y.copy()
-
-
-def qz_M(vec_q_M):
-    return vec_q_M.fields.z.copy()
-
-
-calculate_trajectory_endpoints = {
     "unit_vec_kf": unit_vec_kf,
     "vec_kf_m": vec_kf_m,
     "vec_kf_M": vec_kf_M,
@@ -409,9 +241,4 @@ calculate_trajectory_endpoints = {
 }
 
 
-# --------- Q and en --------
-
-
-dgs_reduction = (
-    calculate_ei | calculate_ef | calculate_qe | calculate_trajectory_endpoints
-)
+dgs_reduction = calculate_ei | calculate_qe

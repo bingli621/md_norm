@@ -31,9 +31,9 @@ def compute_q_de_norm(
     grid = tuple(np.sort(x.values) for x in grid)
 
     norm = sc.zeros(
-        dims=['h', 'k', 'l', 'energy_transfer'],
+        dims=["h", "k", "l", "energy_transfer"],
         shape=[len(edge) - 1 for edge in grid],
-        unit='meV',
+        unit="meV",
     )
     for start, stop, omega in zip(
         trajectory_start, trajectory_stop, solid_angle, strict=True
@@ -77,14 +77,14 @@ def _energy_to_final_momentum(
     final_energy = incident_energy - energy_transfer
     return sc.to_unit(
         sc.sqrt(2 * sc.constants.m_n / sc.constants.hbar**2 * final_energy),
-        '1/Å',
+        "1/Å",
         copy=False,
     )
 
 
 def _momentum_to_energy(mom: sc.Variable) -> sc.Variable:
     return sc.to_unit(
-        sc.constants.hbar**2 / (2 * sc.constants.m_n) * mom**2, 'meV', copy=False
+        sc.constants.hbar**2 / (2 * sc.constants.m_n) * mom**2, "meV", copy=False
     )
 
 
@@ -209,7 +209,7 @@ def _compute_trajectory_segment_lengths(
     # for constant Ei.
     delta_e = np.diff(
         _momentum_to_energy(
-            sc.array(dims=['kf'], values=segment_ends[:, 3], unit='1/Å')
+            sc.array(dims=["kf"], values=segment_ends[:, 3], unit="1/Å")
         ).values
     )
 

@@ -40,16 +40,16 @@ def compute_q_de_norm(
     ):
         # TODO for now, convert to raw numbers:
         start = (
-            *(x.value for x in start[:3]),
-            _energy_to_final_momentum(
-                energy_transfer=start[3], incident_energy=incident_energy
-            ).value,
+            *(x.value for x in start),
+            # _energy_to_final_momentum(
+            #     energy_transfer=start[3], incident_energy=incident_energy
+            # ).value,
         )
         stop = (
-            *(x.value for x in stop[:3]),
-            _energy_to_final_momentum(
-                energy_transfer=stop[3], incident_energy=incident_energy
-            ).value,
+            *(x.value for x in stop),
+            # _energy_to_final_momentum(
+            #     energy_transfer=stop[3], incident_energy=incident_energy
+            # ).value,
         )
 
         if abs(stop[3] - start[3]) < 1e-10:

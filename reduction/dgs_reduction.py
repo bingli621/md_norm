@@ -30,13 +30,13 @@ def determine_INS_windows(
     norm_factors = sc.DataArray(
         data=sc.zeros(sizes=detecor_positions.sizes | monitor_data.sizes),
         coords={
+            "time_on_sample": time_on_sample,
             "toa_min": t_gain,
             "toa_max": t_loss,
             "sample_position": monitor_data.coords["sample_position"],
-            "time_on_sample": time_on_sample,
             "detector_positions": detecor_positions,
+            "ki": monitor_data.coords["ki"],
             "ei": monitor_data.coords["ei"],
-            "vec_ki": monitor_data.coords["vec_ki"],
             "monitor_counts": monitor_data.data,
         },
     )
@@ -116,10 +116,10 @@ def assign_rrm(events, norm_factors):
         values=norm_factors.coords["ei"].values[rrm],
         unit=norm_factors.coords["ei"].unit,
     )
-    events.coords["vec_ki"] = sc.vectors(
+    events.coords["ki"] = sc.vectors(
         dims=["events"],
-        values=norm_factors.coords["vec_ki"].values[rrm],
-        unit=norm_factors.coords["vec_ki"].unit,
+        values=norm_factors.coords["ki"].values[rrm],
+        unit=norm_factors.coords["ki"].unit,
     )
 
     events.coords["time_on_sample"] = sc.array(
@@ -191,26 +191,22 @@ def generate_bins(qx=None, qy=None, qz=None, en=None):
 
 
 calculate_ei = {
-    "source_to_monitor": source_to_monitor,
+    "time_on_source": time_on_source,
     "vi": vi_from_one_monitor,
     "ei": ei,
-    "monitor_to_sample": monitor_to_sample,
     "time_on_sample": time_on_sample,
-    "unit_vec_ki": unit_vec_ki,
-    "mag_ki": mag_ki,
-    "vec_ki": vec_ki,
+    "ki": ki,
 }
 
 
 calculate_qe = {
-    "sample_to_detectors": sample_to_detectors,
-    "unit_vec_kf": unit_vec_kf,
-    "vf": vec_vf,
+    # "sample_to_detectors": sample_to_detectors,
+    "kf_unit_vec": kf_unit_vec_from_positions,
+    "vf": vf,
     "ef": ef,
-    "mag_kf": mag_kf,
-    "vec_kf": vec_kf,
-    "vec_q": vec_q,
-    "mag_q": mag_q,
+    "kf": kf,
+    "q": momentum_transfer,
+    "q_mag": q_mag,
     "qx": qx,
     "qy": qy,
     "qz": qz,
@@ -219,26 +215,20 @@ calculate_qe = {
 
 
 calculate_trajectory_endpoints = {
-    "vf_gain": vf_gain,
-    "vf_loss": vf_loss,
+    # "vf_gain": vf_gain,
+    # "vf_loss": vf_loss,
     "ef_gain": ef_gain,
     "ef_loss": ef_loss,
     "energy_gain_ratio": en_gain_ratio,
     "energy_loss_ratio": en_loss_ratio,
+    "kf_m_mag": kf_m_mag,
+    "kf_M_mag": kf_M_mag,
+    "kf_unit_vec": kf_unit_vec_from_positions,
     "kf_m": kf_m,
     "kf_M": kf_M,
-    "unit_vec_kf": unit_vec_kf,
-    "vec_kf_m": vec_kf_m,
-    "vec_kf_M": vec_kf_M,
-    "vec_q_m": vec_q_m,
-    "vec_q_M": vec_q_M,
-    "qx_m": qx_m,
-    "qy_m": qy_m,
-    "qz_m": qz_m,
-    "qx_M": qx_M,
-    "qy_M": qy_M,
-    "qz_M": qz_M,
+    "q_m": q_m,
+    "q_M": q_M,
 }
 
 
-dgs_reduction = calculate_ei | calculate_qe
+# dgs_reduction = calculate_ei | calculate_qe

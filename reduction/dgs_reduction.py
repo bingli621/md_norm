@@ -1,6 +1,7 @@
 import numpy as np
 import scipp as sc
 from utils import *
+from _single_crystal import compute_q_de_norm
 
 
 def determine_INS_windows(
@@ -190,6 +191,20 @@ def generate_bins(qx=None, qy=None, qz=None, en=None):
     return bins
 
 
+def generate_plot_coords_and_title(bins):
+    plot_coords = []
+    plot_title = ""
+    for key, value in bins.items():
+        if value.size == 2:
+            plot_title += (
+                f"{key}=({value.values[0]:.3g}, {value.values[1]:.3g}) [{value.unit}], "
+            )
+        else:
+            plot_coords.append(key)
+
+    return plot_coords, plot_title
+
+
 calculate_ei = {
     "time_on_source": time_on_source,
     "vi": vi_from_one_monitor,
@@ -232,3 +247,24 @@ calculate_trajectory_endpoints = {
 
 
 # dgs_reduction = calculate_ei | calculate_qe
+
+
+def mdnorm(events, bins, trajectory_start, trajectory_stop, solid_angles, ei, rrm=0):
+
+    plot_coords, plot_title = generate_plot_coords_and_title(bins)
+
+    data_hist = sc.bin(events, **bins).hist()
+
+    norm = compute_q_de_norm(
+        trajectory_start=tuple(zip(*trajectory_start)),
+        trajectory_stop=tuple(zip(*trajectory_stop)),
+        # Using calculated solid angles:
+        solid_angle=solid_angles,
+        grid=tuple(bins.values()),
+        incident_energy=ei,
+    )
+    norm = norm.rename_dims(h="qx", k="qy", l="qz", energy_transfer="en")
+
+    data = (data_hist.squeeze().transpose()) / norm.squeeze()
+
+    return data, plot_coords, plot_title

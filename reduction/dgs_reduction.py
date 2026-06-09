@@ -1,7 +1,7 @@
 import numpy as np
 import scipp as sc
 from utils import *
-from _single_crystal import compute_q_de_norm
+from reduction._single_crystal import compute_q_de_norm
 
 
 def determine_INS_windows(
@@ -263,7 +263,7 @@ def mdnorm(events, bins, trajectory_start, trajectory_stop, solid_angles, ei, rr
         grid=tuple(bins.values()),
         incident_energy=ei,
     )
-    norm = norm.rename_dims(h="qx", k="qy", l="qz", energy_transfer="en")
+    norm = norm.rename(h="qx", k="qy", l="qz", energy_transfer="en")
 
     data = (data_hist.squeeze().transpose()) / norm.squeeze()
 

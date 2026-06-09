@@ -15,12 +15,14 @@ def compute_q_de_norm(
     solid_angle: sc.Variable,
     grid: tuple[sc.Variable, sc.Variable, sc.Variable, sc.Variable],
     incident_energy: sc.Variable,
-) -> sc.Variable:
+) -> sc.DataArray:
     """TODO
 
     The grid is specified in (h, k, l, dE),
     gets converted to (h, k, l, kf)
+    The trajectory is specified in (h, k, l, kf)
     """
+    orig_grid = tuple(x.copy() for x in grid)
     grid = (
         *grid[:3],
         _energy_to_final_momentum(
@@ -28,7 +30,11 @@ def compute_q_de_norm(
         ),
     )
 
-    grid = tuple(np.sort(x.values) for x in grid)
+    # TODO sort is bad when we have NaN from OOB delta E (?)
+    #  dE -> kf reverses order, if inputs are ordered, then just flip the array
+    # grid = tuple(np.sort(x.values) for x in grid)
+    # grid = tuple(x.values for x in grid)
+    grid = (*(x.values for x in grid[:3]), grid[3].values[::-1])
 
     norm = sc.zeros(
         dims=["h", "k", "l", "energy_transfer"],
@@ -39,18 +45,8 @@ def compute_q_de_norm(
         trajectory_start, trajectory_stop, solid_angle, strict=True
     ):
         # TODO for now, convert to raw numbers:
-        start = (
-            *(x.value for x in start),
-            # _energy_to_final_momentum(
-            #     energy_transfer=start[3], incident_energy=incident_energy
-            # ).value,
-        )
-        stop = (
-            *(x.value for x in stop),
-            # _energy_to_final_momentum(
-            #     energy_transfer=stop[3], incident_energy=incident_energy
-            # ).value,
-        )
+        start = tuple(x.value for x in start)
+        stop = tuple(x.value for x in stop)
 
         if abs(stop[3] - start[3]) < 1e-10:
             continue  # no energy transfer in this trajectory
@@ -67,7 +63,24 @@ def compute_q_de_norm(
         for i, l in zip(indices, segment_lengths, strict=True):
             norm.values[tuple(i)] += l * omega.value
 
-    return norm
+    # TODO handle sorting better
+    norm.values[:] = norm.values[:, :, :, ::-1]
+    return sc.DataArray(
+        norm,
+        coords={
+            "h": orig_grid[0].rename_dims(qx="h"),
+            "k ": orig_grid[1].rename_dims(qy="k"),
+            "l": orig_grid[2].rename_dims(qz="l"),
+            "energy_transfer": orig_grid[3].rename_dims(en="energy_transfer"),
+            # 'h': sc.array(dims=['h'], values=grid[0], unit='1/Å'),
+            # 'k': sc.array(dims=['k'], values=grid[1], unit='1/Å'),
+            # 'l': sc.array(dims=['l'], values=grid[2], unit='1/Å'),
+            # 'energy_transfer': incident_energy - _momentum_to_energy(
+            #     sc.array(dims=['energy_transfer'], values=grid[3][::-1], unit='1/Å'))
+            # 'energy_transfer': incident_energy - _momentum_to_energy(
+            #     sc.array(dims=['energy_transfer'], values=grid[3], unit='1/Å'))
+        },
+    )
 
 
 # TODO move to coord transforms (and use in essspectroscopy)
@@ -162,7 +175,7 @@ def _compute_trajectory_grid_intersections(
     fk = (stop[1] - start[1]) / (stop[dim] - start[dim])
     fl = (stop[2] - start[2]) / (stop[dim] - start[dim])
     for mom in grid[dim]:
-        if (start[dim] < mom < stop[dim]) or (stop[dim] < mom < start[dim]):
+        if (start[dim] <= mom < stop[dim]) or (stop[dim] <= mom < start[dim]):
             h = fh * (mom - start[dim]) + start[0]
             k = fk * (mom - start[dim]) + start[1]
             l = fl * (mom - start[dim]) + start[2]
@@ -205,8 +218,9 @@ def _compute_trajectory_segment_lengths(
         ]
     ).T
 
-    # Converting to Ef is enough because the diff(energy_transfer) == diff(Ef)
-    # for constant Ei.
+    # delta_e = abs(diff(energy_transfer))
+    #         = abs(-diff(Ef))   # because Ei is constant
+    #         = diff(Ef)         # because kf (and thus Ef) is sorted in ascending order
     delta_e = np.diff(
         _momentum_to_energy(
             sc.array(dims=["kf"], values=segment_ends[:, 3], unit="1/Å")

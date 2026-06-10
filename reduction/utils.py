@@ -17,12 +17,12 @@ def energy_to_speed(en):
 
 
 def speed_to_energy(v):
-    en = 0.5 * consts.m_n * sc.norm(v) ** 2
+    en = 0.5 * consts.m_n * v**2
     return en.to(unit="meV")
 
 
 def velocity_to_energy(v):
-    en = speed_to_energy(v)
+    en = speed_to_energy(sc.norm(v))
     return en.to(unit="meV")
 
 
@@ -48,7 +48,7 @@ def velocity_between(position0, time0, position1, time1):
 
 def speed_between(position0, time0, position1, time1):
     """Speed from 0 to 1"""
-    return displacement_between(position0, position1) / (time1 - time0)
+    return distance_between(position0, position1) / (time1 - time0)
 
 
 # -----------------------------------------------------

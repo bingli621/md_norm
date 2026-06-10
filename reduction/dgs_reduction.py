@@ -215,7 +215,6 @@ calculate_ei = {
 
 
 calculate_qe = {
-    # "sample_to_detectors": sample_to_detectors,
     "kf_unit_vec": kf_unit_vec_from_positions,
     "vf": vf,
     "ef": ef,
@@ -230,8 +229,6 @@ calculate_qe = {
 
 
 calculate_trajectory_endpoints = {
-    # "vf_gain": vf_gain,
-    # "vf_loss": vf_loss,
     "ef_gain": ef_gain,
     "ef_loss": ef_loss,
     "energy_gain_ratio": en_gain_ratio,

@@ -32,6 +32,8 @@ def compute_q_de_norm(
 
     # TODO sort is bad when we have NaN from OOB delta E (?)
     #  dE -> kf reverses order, if inputs are ordered, then just flip the array
+    # grid = tuple(np.sort(x.values) for x in grid)
+    # grid = tuple(x.values for x in grid)
     grid = (*(x.values for x in grid[:3]), grid[3].values[::-1])
 
     norm = sc.zeros(
@@ -39,10 +41,6 @@ def compute_q_de_norm(
         shape=[len(edge) - 1 for edge in grid],
         unit="meV",
     )
-
-    trimmed, n_trimmed = _trim_nan(grid[3])
-    grid = (*grid[:3], trimmed)
-
     for start, stop, omega in zip(
         trajectory_start, trajectory_stop, solid_angle, strict=True
     ):
@@ -63,45 +61,26 @@ def compute_q_de_norm(
         )
 
         for i, l in zip(indices, segment_lengths, strict=True):
-            norm.values[(*i[:3], i[3] + n_trimmed)] += l * omega.value
+            norm.values[tuple(i)] += l * omega.value
 
-    # TODO handle sorting better?
+    # TODO handle sorting better
     norm.values[:] = norm.values[:, :, :, ::-1]
-    # TODO don't rename, use input dim names
     return sc.DataArray(
         norm,
-        # coords={
-        #     'h': orig_grid[0],
-        #     'k': orig_grid[1],
-        #     'l': orig_grid[2],
-        #     'energy_transfer': orig_grid[3],
-        # },
         coords={
             "h": orig_grid[0].rename_dims(qx="h"),
             "k ": orig_grid[1].rename_dims(qy="k"),
             "l": orig_grid[2].rename_dims(qz="l"),
             "energy_transfer": orig_grid[3].rename_dims(en="energy_transfer"),
+            # 'h': sc.array(dims=['h'], values=grid[0], unit='1/Å'),
+            # 'k': sc.array(dims=['k'], values=grid[1], unit='1/Å'),
+            # 'l': sc.array(dims=['l'], values=grid[2], unit='1/Å'),
+            # 'energy_transfer': incident_energy - _momentum_to_energy(
+            #     sc.array(dims=['energy_transfer'], values=grid[3][::-1], unit='1/Å'))
+            # 'energy_transfer': incident_energy - _momentum_to_energy(
+            #     sc.array(dims=['energy_transfer'], values=grid[3], unit='1/Å'))
         },
     )
-
-
-def _trim_nan(array: np.ndarray) -> tuple[np.ndarray, int]:
-    is_nan = np.isnan(array)
-    trim_start = 0
-    for i, x in enumerate(is_nan):
-        if not x:
-            trim_start = i
-            break
-    trim_end = 0
-    for i, x in enumerate(is_nan[::-1]):
-        if not x:
-            trim_end = i
-            break
-
-    trimmed = array[trim_start : len(array) - trim_end]
-    if np.isnan(trimmed).any():
-        raise ValueError("Array contains interior NaN")
-    return trimmed, trim_start
 
 
 # TODO move to coord transforms (and use in essspectroscopy)
@@ -234,7 +213,7 @@ def _compute_trajectory_segment_lengths(
     centers = _midpoints(segment_ends)
     indices = np.stack(
         [
-            [_index_of(center, grid[dim]) for center in centers[:, dim]]
+            np.searchsorted(grid[dim], centers[:, dim], side="right") - 1
             for dim in range(len(grid))
         ]
     ).T
@@ -249,15 +228,6 @@ def _compute_trajectory_segment_lengths(
     )
 
     return indices, delta_e
-
-
-# TODO optimise (needs to handle NaN)
-def _index_of(point: float, array: np.ndarray) -> int:
-    """Assumes that `array` is sorted."""
-    for i, val in enumerate(array):
-        if val > point:
-            return i - 1
-    raise ValueError("Element not in array")  # should never happen (? maybe with NaNs)
 
 
 def _is_in_grid(

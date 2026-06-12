@@ -78,7 +78,7 @@ def compute_q_de_norm(
         # },
         coords={
             "h": orig_grid[0].rename_dims(qx="h"),
-            "k ": orig_grid[1].rename_dims(qy="k"),
+            "k": orig_grid[1].rename_dims(qy="k"),
             "l": orig_grid[2].rename_dims(qz="l"),
             "energy_transfer": orig_grid[3].rename_dims(en="energy_transfer"),
         },

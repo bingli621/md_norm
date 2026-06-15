@@ -161,32 +161,20 @@ def _make_bins(spec, dim, unit="1/Å"):
     return sc.arange(dim=dim, start=start, stop=stop + step, step=step, unit=unit)
 
 
-def generate_bins(qx=None, qy=None, qz=None, en=None):
+def generate_bins(grid: dict):
     """
     Generate Scipp bin edges for x, y, z, and en.
-
-    Each argument must be:
-      - (min, max)
-      - (start, stop, step)
-
-    Returns
-    -------
-    dict[str, sc.Variable]
-        Bin edges per dimension
     """
     bins = {}
 
-    if qx is not None:
-        bins["qx"] = _make_bins(qx, "qx")
-
-    if qy is not None:
-        bins["qy"] = _make_bins(qy, "qy")
-
-    if qz is not None:
-        bins["qz"] = _make_bins(qz, "qz")
-
-    if en is not None:
-        bins["en"] = _make_bins(en, "en", unit="meV")
+    for key, value in grid.items():
+        if key in ("qx", "qy", "qz"):
+            unit = "1/Å"
+        elif key == "en":
+            unit = "meV"
+        else:  # HKL are dimensionless
+            unit = "dimensionless"
+        bins[key] = _make_bins(value, key, unit)
 
     return bins
 
@@ -201,6 +189,8 @@ def generate_plot_coords_and_title(bins):
             )
         else:
             plot_coords.append(key)
+    if not plot_title:  # powder
+        pass
 
     return plot_coords, plot_title
 
@@ -246,17 +236,32 @@ calculate_trajectory_endpoints = {
 # dgs_reduction = calculate_ei | calculate_qe
 
 
-def mdnorm(events, bins, trajectory_start, trajectory_stop, solid_angles, ei, rrm=0):
+def mdnorm(events, grid: dict, norm_factors, rrm=0):
 
+    bins = generate_bins(grid)
     plot_coords, plot_title = generate_plot_coords_and_title(bins)
 
     data_hist = sc.bin(events, **bins).hist()
+
+    ei = norm_factors.coords["ei"]["rrm", rrm]
+    qm = norm_factors.coords["q_m"]["rrm", rrm]
+    qM = norm_factors.coords["q_M"]["rrm", rrm]
+    kf_m = norm_factors.coords["kf_m_mag"]["rrm", rrm]
+    kf_M = norm_factors.coords["kf_M_mag"]["rrm", rrm]
+
+    trajectory_start = (
+        qm.fields.x.copy(),
+        qm.fields.y.copy(),
+        qm.fields.z.copy(),
+        kf_m,
+    )
+    trajectory_stop = (qM.fields.x.copy(), qM.fields.y.copy(), qM.fields.z.copy(), kf_M)
 
     norm = compute_q_de_norm(
         trajectory_start=tuple(zip(*trajectory_start)),
         trajectory_stop=tuple(zip(*trajectory_stop)),
         # Using calculated solid angles:
-        solid_angle=solid_angles,
+        solid_angle=norm_factors.coords["d_omega"],
         grid=tuple(bins.values()),
         incident_energy=ei,
     )

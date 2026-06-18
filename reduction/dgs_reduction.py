@@ -239,6 +239,13 @@ calculate_trajectory_endpoints = {
 def mdnorm(events, grid: dict, norm_factors, rrm=0):
 
     bins = generate_bins(grid)
+    bins_tuple = (
+        bins["qx"].rename(qx="h"),
+        bins["qy"].rename(qy="k"),
+        bins["qz"].rename(qz="l"),
+        bins["en"].rename(en="energy_transfer"),
+    )
+
     plot_coords, plot_title = generate_plot_coords_and_title(bins)
 
     data_hist = sc.bin(events, **bins).hist()
@@ -249,20 +256,28 @@ def mdnorm(events, grid: dict, norm_factors, rrm=0):
     kf_m = norm_factors.coords["kf_m_mag"]["rrm", rrm]
     kf_M = norm_factors.coords["kf_M_mag"]["rrm", rrm]
 
-    trajectory_start = (
-        qm.fields.x.copy(),
-        qm.fields.y.copy(),
-        qm.fields.z.copy(),
-        kf_m,
+    start = (
+        sc.concat(
+            [qm.fields.x.copy(), qm.fields.y.copy(), qm.fields.z.copy(), kf_m],
+            dim="q-e",
+        )
+        .transpose(["pixel_id", "q-e"])
+        .rename_dims(pixel_id="pixel")
     )
-    trajectory_stop = (qM.fields.x.copy(), qM.fields.y.copy(), qM.fields.z.copy(), kf_M)
+    stop = (
+        sc.concat(
+            [qM.fields.x.copy(), qM.fields.y.copy(), qM.fields.z.copy(), kf_M],
+            dim="q-e",
+        )
+        .transpose(["pixel_id", "q-e"])
+        .rename_dims(pixel_id="pixel")
+    )
 
     norm = compute_q_de_norm(
-        trajectory_start=tuple(zip(*trajectory_start)),
-        trajectory_stop=tuple(zip(*trajectory_stop)),
-        # Using calculated solid angles:
+        trajectory_start=start,
+        trajectory_stop=stop,
         solid_angle=norm_factors.coords["d_omega"],
-        grid=tuple(bins.values()),
+        grid=bins_tuple,
         incident_energy=ei,
     )
     norm = norm.rename(h="qx", k="qy", l="qz", energy_transfer="en")

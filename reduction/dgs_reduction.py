@@ -276,7 +276,7 @@ def mdnorm(events, grid: dict, norm_factors, rrm=0):
     norm = compute_q_de_norm(
         trajectory_start=start,
         trajectory_stop=stop,
-        solid_angle=norm_factors.coords["d_omega"],
+        solid_angle=norm_factors.coords["d_omega"].rename_dims(pixel_id="pixel"),
         grid=bins_tuple,
         incident_energy=ei,
     )

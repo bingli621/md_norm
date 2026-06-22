@@ -45,25 +45,13 @@ def determine_INS_windows(
     return norm_factors
 
 
-def monitor_single_pulse(tof_monitor):
-    """Return monitor TOA COM and counts"""
-    counts = sc.array(
-        dims=["rrm"],
-        values=[
-            tof_monitor.Intensity.sum(),
-        ],
-        unit="counts",
-    )
+def monitor_single_pulse(tof_monitor, unit="us"):
+    """Return monitor TOA COM and counts, time unit is microsecond"""
+    counts = sc.array(dims=["rrm"], values=[tof_monitor.Intensity.sum()], unit="counts")
     toa_com = np.sum(tof_monitor.Intensity * tof_monitor.xaxis) / np.sum(
         tof_monitor.Intensity
     )
-    toa_com = sc.array(
-        dims=["rrm"],
-        values=[
-            toa_com,
-        ],
-        unit="us",
-    )
+    toa_com = sc.array(dims=["rrm"], values=[toa_com], unit=unit)
     data = sc.DataArray(
         data=counts, coords={"time_on_monitor": sc.to_unit(toa_com, "s")}
     )

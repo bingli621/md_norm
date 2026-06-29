@@ -252,14 +252,18 @@ def mdnorm(events, grid: dict, norm_factors, rrm=0):
 
     plot_coords, plot_title = generate_plot_coords_and_title(bins)
 
-    # TODO convert from cross section to S(Q,E) by multiple ki/kf
-    data_hist = sc.bin(events, **bins).hist()
-
     ei = norm_factors.coords["ei"]["rrm", rrm]
     qm = norm_factors.coords["q_m"]["rrm", rrm]
     qM = norm_factors.coords["q_M"]["rrm", rrm]
     kf_m = norm_factors.coords["kf_m_mag"]["rrm", rrm]
     kf_M = norm_factors.coords["kf_M_mag"]["rrm", rrm]
+
+    # convert from cross section to S(Q,E) by multiple ki/kf
+    sqe_coords = {k: events.coords[k] for k in bins.keys()}
+    sqe = sc.DataArray(
+        data=events.data * sc.sqrt(ei / events.coords["ef"]), coords=sqe_coords
+    )
+    sqe_hist = sc.bin(sqe, **bins).hist()
 
     start = (
         sc.concat(
@@ -287,7 +291,7 @@ def mdnorm(events, grid: dict, norm_factors, rrm=0):
     )
     norm = norm.rename(h="qx", k="qy", l="qz", energy_transfer="en")
 
-    data = (data_hist.squeeze().transpose()) / norm.squeeze()
+    data = (sqe_hist.squeeze().transpose()) / norm.squeeze()
     # fix a bug in the printing of steradian
     sc.units.aliases["counts/meV/sr"] = sc.units.Unit("counts/meV/sr")
 

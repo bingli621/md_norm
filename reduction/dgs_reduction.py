@@ -1,6 +1,6 @@
 import numpy as np
 import scipp as sc
-from utils import *
+from reduction.utils import *
 from reduction._single_crystal import compute_q_de_norm
 
 
@@ -70,19 +70,28 @@ def assign_rrm(events, norm_factors):
 
     # Select the (rrm,) slice corresponding to each event pixel
     # dims = (events, rrm)
-    tmin = toa_min["pixel_id", pid].rename_dims({"pixel_id": "events"})
-    tmax = toa_max["pixel_id", pid].rename_dims({"pixel_id": "events"})
+    # tmin = toa_min["pixel_id", pid].rename_dims({"pixel_id": "events"})
+    # tmax = toa_max["pixel_id", pid].rename_dims({"pixel_id": "events"})
+
+    pid_vals = pid.values
+    toa_vals = toa.values
+
+    tmin_vals = toa_min.values[pid_vals]  # shape: (events, rrm)
+    tmax_vals = toa_max.values[pid_vals]
+
+    rrm = (toa_vals[:, None] >= tmin_vals).sum(axis=1) - 1
+    rrm %= tmin_vals.shape[1]
 
     # ------------------
     # Assign RRM from toa_min
     # ------------------
-    passed = toa >= tmin  # dims=(events, rrm)
+    # passed = toa >= tmin  # dims=(events, rrm)
 
-    rrm = passed.values.sum(axis=1) - 1
-    n_rrm = tmin.sizes["rrm"]
+    # rrm = passed.values.sum(axis=1) - 1
+    # n_rrm = tmin.sizes["rrm"]
 
-    # Wrap around: toa < first toa_min -> largest rrm
-    rrm[rrm < 0] = n_rrm - 1
+    # # Wrap around: toa < first toa_min -> largest rrm
+    # rrm[rrm < 0] = n_rrm - 1
 
     events.coords["rrm"] = sc.array(dims=["events"], values=rrm)
 
@@ -92,36 +101,37 @@ def assign_rrm(events, norm_factors):
     # ------------------
     # Mask invalid events
     # ------------------
-    inside = (toa >= tmin) & (toa < tmax)  # dims=(events, rrm)
-    mask = sc.any(inside, dim="rrm")
-    events.masks["outside"] = ~mask
+    # inside = (toa >= tmin) & (toa < tmax)  # dims=(events, rrm)
+    # mask = sc.any(inside, dim="rrm")
+    # events.masks["outside"] = ~mask
+
+    row = np.arange(rrm.size)
+
+    valid = (toa_vals >= tmin_vals[row, rrm]) & (toa_vals < tmax_vals[row, rrm])
+    events.masks["outside"] = sc.array(dims=["events"], values=~valid)
 
     # ------------------
     # Add coordinates to events
     # ------------------
+    events.coords["sample_position"] = norm_factors.coords["sample_position"]
+
+    coords = norm_factors.coords
 
     events.coords["ei"] = sc.array(
-        dims=["events"],
-        values=norm_factors.coords["ei"].values[rrm],
-        unit=norm_factors.coords["ei"].unit,
+        dims=["events"], values=coords["ei"].values[rrm], unit=coords["ei"].unit
     )
     events.coords["ki"] = sc.vectors(
-        dims=["events"],
-        values=norm_factors.coords["ki"].values[rrm],
-        unit=norm_factors.coords["ki"].unit,
+        dims=["events"], values=coords["ki"].values[rrm], unit=coords["ki"].unit
     )
-
     events.coords["time_on_sample"] = sc.array(
         dims=["events"],
-        values=norm_factors.coords["time_on_sample"].values[rrm],
-        unit=norm_factors.coords["time_on_sample"].unit,
+        values=coords["time_on_sample"].values[rrm],
+        unit=coords["time_on_sample"].unit,
     )
-
-    events.coords["sample_position"] = norm_factors.coords["sample_position"]
     events.coords["detector_positions"] = sc.vectors(
         dims=["events"],
-        values=norm_factors.coords["detector_positions"].values[pid.values],
-        unit=norm_factors.coords["detector_positions"].unit,
+        values=coords["detector_positions"].values[pid.values],
+        unit=coords["detector_positions"].unit,
     )
 
     return events
@@ -223,6 +233,12 @@ calculate_trajectory_endpoints = {
 
 # dgs_reduction = calculate_ei | calculate_qe
 
+calculate_solid_angle = {
+    "detector_geometry": detector_geometry,
+    "pixel_normal_vector": pixel_normal_vector,
+    "pixel_solid_angle": calculate_rectangle_solid_angle,
+}
+
 
 def mdnorm(events, grid: dict, norm_factors, rrm=0):
 
@@ -236,6 +252,7 @@ def mdnorm(events, grid: dict, norm_factors, rrm=0):
 
     plot_coords, plot_title = generate_plot_coords_and_title(bins)
 
+    # TODO convert from cross section to S(Q,E) by multiple ki/kf
     data_hist = sc.bin(events, **bins).hist()
 
     ei = norm_factors.coords["ei"]["rrm", rrm]
@@ -271,5 +288,7 @@ def mdnorm(events, grid: dict, norm_factors, rrm=0):
     norm = norm.rename(h="qx", k="qy", l="qz", energy_transfer="en")
 
     data = (data_hist.squeeze().transpose()) / norm.squeeze()
+    # fix a bug in the printing of steradian
+    sc.units.aliases["counts/meV/sr"] = sc.units.Unit("counts/meV/sr")
 
     return data, plot_coords, plot_title

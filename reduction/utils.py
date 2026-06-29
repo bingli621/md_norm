@@ -1,3 +1,5 @@
+import numpy as np
+from typing import Literal
 import scipp as sc
 import scipp.constants as consts
 
@@ -186,3 +188,77 @@ def q_m(ki, kf_m):
 
 def q_M(ki, kf_M):
     return ki - kf_M
+
+
+# -----------------------------------------------------
+# Calculate detector solid angle
+# -----------------------------------------------------
+def detector_geometry():
+    "'cylinder' or 'sphere'"
+    return sc.scalar("cylinder")
+
+
+def pixel_normal_vector(pixel_position, detector_geometry):
+    match detector_geometry.value:
+        case "cylinder":
+            normal_vec = sc.spatial.as_vectors(
+                pixel_position.fields.x,
+                sc.zeros_like(pixel_position.fields.y),
+                pixel_position.fields.z,
+            )
+        case "cylinder":
+            normal_vec = pixel_position
+        case _:
+            raise ValueError(
+                f"Detector geometry {detector_geometry} is not recogonized."
+            )
+    return normal_vec
+
+
+def _factor(a, b, c):
+    """Four factors of the spherical polygon formula"""
+    real = (sc.dot(a, b) * sc.dot(b, c) - sc.dot(a, c)).values
+    img = sc.dot(a, sc.cross(b, c)).values
+    return real + 1j * img
+
+
+def calculate_rectangle_solid_angle(
+    pixel_position, pixel_width, pixel_height, detector_geometry
+):
+    """Calculate the solid angle of a rectangular detector
+    with the face perpendicular to the normal vector
+    based on https://arxiv.org/pdf/1205.1396"""
+
+    normal_vec = pixel_normal_vector(pixel_position, detector_geometry)
+
+    horizontal_width_vec = sc.spatial.as_vectors(
+        normal_vec.fields.z,
+        0 * normal_vec.fields.y,
+        -normal_vec.fields.x,
+    )
+    horizontal_width_vec /= sc.norm(horizontal_width_vec)
+    height_vec = sc.cross(normal_vec, horizontal_width_vec)
+    height_vec /= sc.norm(height_vec)
+
+    hw = horizontal_width_vec * (pixel_width / 2)
+    hh = height_vec * (pixel_height / 2)
+
+    s1 = pixel_position - hw + hh
+    s2 = pixel_position + hw + hh
+    s3 = pixel_position + hw - hh
+    s4 = pixel_position - hw - hh
+
+    s1 /= sc.norm(s1)
+    s2 /= sc.norm(s2)
+    s3 /= sc.norm(s3)
+    s4 /= sc.norm(s4)
+
+    prod = (
+        _factor(s4, s1, s2)
+        * _factor(s1, s2, s3)
+        * _factor(s2, s3, s4)
+        * _factor(s3, s4, s1)
+    )
+
+    omega = np.angle(prod)
+    return sc.array(dims=["pixel_id"], values=omega, unit="steradian")

@@ -257,6 +257,7 @@ def mdnorm(events, grid: dict, norm_factors, rrm=0):
     qM = norm_factors.coords["q_M"]["rrm", rrm]
     kf_m = norm_factors.coords["kf_m_mag"]["rrm", rrm]
     kf_M = norm_factors.coords["kf_M_mag"]["rrm", rrm]
+    incident_flux = norm_factors.coords["monitor_counts"]["rrm", rrm]
 
     # convert from cross section to S(Q,E) by multiple ki/kf
     sqe_coords = {k: events.coords[k] for k in bins.keys()}
@@ -288,6 +289,7 @@ def mdnorm(events, grid: dict, norm_factors, rrm=0):
         solid_angle=norm_factors.coords["d_omega"].rename_dims(pixel_id="pixel"),
         grid=bins_tuple,
         incident_energy=ei,
+        incident_flux=incident_flux,
     )
     norm = norm.rename(h="qx", k="qy", l="qz", energy_transfer="en")
 

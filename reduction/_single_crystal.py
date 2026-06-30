@@ -15,6 +15,7 @@ def compute_q_de_norm(
     solid_angle: sc.Variable,
     grid: tuple[sc.Variable, sc.Variable, sc.Variable, sc.Variable],
     incident_energy: sc.Variable,
+    incident_flux: sc.Variable,
 ) -> sc.DataArray:
     """TODO
 
@@ -32,7 +33,7 @@ def compute_q_de_norm(
         _flip_array(
             _energy_to_final_momentum(
                 energy_transfer=grid[3], incident_energy=incident_energy
-            ).rename(energy_transfer='kf')
+            ).rename(energy_transfer="kf")
         ),
     )
 
@@ -42,17 +43,19 @@ def compute_q_de_norm(
         trajectory_start, trajectory_stop, grid
     )
     coverage = _compute_detector_coverage(
-        segment_ends=intersections, solid_angle=solid_angle
+        segment_ends=intersections,
+        solid_angle=solid_angle,
+        incident_flux=incident_flux,
     )
-    coverage.coords['energy_transfer'] = incident_energy - _momentum_to_energy(
-        coverage.coords.pop('kf')
+    coverage.coords["energy_transfer"] = incident_energy - _momentum_to_energy(
+        coverage.coords.pop("kf")
     )
     norm = coverage.hist(
         {
-            'h': grid[0],
-            'k': grid[1],
-            'l': grid[2],
-            'energy_transfer': grid_energy_transfer,
+            "h": grid[0],
+            "k": grid[1],
+            "l": grid[2],
+            "energy_transfer": grid_energy_transfer,
         }
     )
 
@@ -85,7 +88,7 @@ def _energy_to_final_momentum(
     final_energy = incident_energy - energy_transfer
     return sc.to_unit(
         sc.sqrt(2 * sc.constants.m_n / sc.constants.hbar**2 * final_energy),
-        '1/Å',
+        "1/Å",
         copy=False,
     )
 
@@ -96,7 +99,7 @@ def _flip_array(x: sc.Variable) -> sc.Variable:
 
 def _momentum_to_energy(mom: sc.Variable) -> sc.Variable:
     return sc.to_unit(
-        sc.constants.hbar**2 / (2 * sc.constants.m_n) * mom**2, 'meV', copy=False
+        sc.constants.hbar**2 / (2 * sc.constants.m_n) * mom**2, "meV", copy=False
     )
 
 
@@ -111,8 +114,8 @@ def _compute_trajectory_grid_intersections(
     traj_right = np.maximum(start.values, stop.values)
 
     for dim in range(4):
-        slope = (stop - start) / (stop['q-e', dim] - start['q-e', dim])
-        pos = slope * (grid[dim] - start['q-e', dim]) + start
+        slope = (stop - start) / (stop["q-e", dim] - start["q-e", dim])
+        pos = slope * (grid[dim] - start["q-e", dim]) + start
 
         # The condition here is right-inclusive even though binning is right-exclusive.
         # This is ok because this will lead to an intersection with distance 0 to
@@ -130,30 +133,31 @@ def _compute_trajectory_grid_intersections(
     sorted = np.stack(
         [np.take_along_axis(inter[:, :, i], idx, axis=0) for i in range(4)], axis=2
     )
-    return sc.array(dims=['intersection', *start.dims], values=sorted, unit='1/Å')
+    return sc.array(dims=["intersection", *start.dims], values=sorted, unit="1/Å")
 
 
 def _compute_detector_coverage(
     segment_ends: sc.Variable,
     solid_angle: sc.Variable,
+    incident_flux: sc.Variable,
 ) -> sc.DataArray:
-    centers = sc.midpoints(segment_ends, dim='intersection')
+    centers = sc.midpoints(segment_ends, dim="intersection")
     energy = _momentum_to_energy(segment_ends)
     energy_delta = (
-        energy['intersection', 1:]['q-e', 3] - energy['intersection', :-1]['q-e', 3]
+        energy["intersection", 1:]["q-e", 3] - energy["intersection", :-1]["q-e", 3]
     )
     return (
         sc.DataArray(
-            energy_delta * solid_angle,
+            energy_delta * solid_angle * incident_flux,
             coords={
-                'h': centers['q-e', 0],
-                'k': centers['q-e', 1],
-                'l': centers['q-e', 2],
-                'kf': centers['q-e', 3],
-                'pixel': sc.arange('pixel', segment_ends.sizes['pixel'], unit=None),
+                "h": centers["q-e", 0],
+                "k": centers["q-e", 1],
+                "l": centers["q-e", 2],
+                "kf": centers["q-e", 3],
+                "pixel": sc.arange("pixel", segment_ends.sizes["pixel"], unit=None),
             },
         )
-        .flatten(to='observation')
+        .flatten(to="observation")
         .copy()
     )
 

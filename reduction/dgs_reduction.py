@@ -179,18 +179,23 @@ def generate_bins(grid: dict):
 
 def generate_plot_coords_and_title(bins):
     plot_coords = []
-    plot_title = ""
+    plot_title = []
     for key, value in bins.items():
         if value.size == 2:
-            plot_title += (
-                f"{key}=({value.values[0]:.3g}, {value.values[1]:.3g}) [{value.unit}], "
+            plot_title.append(
+                f"{key}=({value.values[0]:.3g}, {value.values[1]:.3g}) [{value.unit}]"
             )
         else:
             plot_coords.append(key)
     if not plot_title:  # powder
-        pass
-
-    return plot_coords, plot_title
+        for key, value in bins.items():
+            plot_title.append(
+                f"{key}=({value.values[0]:.3g}, {value.values[-11]:.3g}) [{value.unit}]"
+            )
+    plot_title_str = "\n".join(
+        ", ".join(plot_title[i : i + 2]) for i in range(0, len(plot_title), 2)
+    )
+    return plot_coords, plot_title_str
 
 
 calculate_ei = {

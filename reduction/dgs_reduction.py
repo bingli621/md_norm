@@ -61,7 +61,8 @@ def monitor_single_pulse(tof_monitor, unit="us"):
 
 
 # FIXME
-def monitor_multi_pulse(tof_monitor, rrm=22, threshold_fraction=0.02):
+# FIXME unit inconsistency
+def monitor_multi_pulse(tof_monitor, rrm=22, threshold_fraction=0.02, unit="us"):
     """
     Detect (Hopefully!) all RRM pulses in the pre-sample monitor return centroid ToA like single_pulse function.
 
@@ -114,7 +115,8 @@ def monitor_multi_pulse(tof_monitor, rrm=22, threshold_fraction=0.02):
         )
 
     # Part below spits out the expected and detected ToAs
-    print(f"  Expected ~{n_expected} frames (RRM={rrm}, M1 at half speed)")
+    # print(f"  Expected ~{n_expected} frames (RRM={rrm}, M1 at half speed)")
+    print(f"  Expected ~{n_expected} frames (RRM={rrm})")
     print(f"  Detected {len(peaks)} peaks")
     print(
         f"  Min distance used: {min_distance} bins ({min_distance / n_bins * total_time * 1e6:.1f} µs)"

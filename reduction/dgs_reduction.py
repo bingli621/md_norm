@@ -1,7 +1,9 @@
 import numpy as np
 import scipp as sc
-from reduction.utils import *
+from scipy.signal import find_peaks
+
 from reduction._single_crystal import compute_q_de_norm
+from reduction.utils import *
 
 
 def determine_INS_windows(
@@ -56,6 +58,114 @@ def monitor_single_pulse(tof_monitor, unit="us"):
         data=counts, coords={"time_on_monitor": sc.to_unit(toa_com, "s")}
     )
     return data
+
+
+# FIXME
+def monitor_multi_pulse(tof_monitor, rrm=22, threshold_fraction=0.02):
+    """
+    Detect (Hopefully!) all RRM pulses in the pre-sample monitor return centroid ToA like single_pulse function.
+
+    Uses find_peaks with adaptive distance to avoid splitting broad
+    peaks or merging close neighbours.
+
+    Parameters
+    ----------
+    tof_monitor        : McStas monitor object (xaxis in seconds, Intensity)
+    rrm                : RRM factor — used to estimate expected peak spacing.
+                         Note: if M1 runs at half speed (by design to reduce
+                         frame overlap), the actual number of transmitted
+                         frames is RRM/2, and this function accounts for that.
+    threshold_fraction : Peak prominence. Hopefuly reduces the errors on 'noisy data'
+
+    Final result is hopefully an accurate array of RRMs that can be reduced?
+    """
+    intensity = np.asarray(tof_monitor.Intensity, dtype=float)  # intensity in monitor
+    xaxis = np.asarray(tof_monitor.xaxis, dtype=float)  # seconds
+
+    n_bins = len(intensity)
+    total_time = xaxis[-1] - xaxis[0]
+
+    # Expected number of frames is set to RRM/2 since M1 runs at half speed
+    # n_expected = rrm // 2
+    n_expected = rrm
+
+    # Minimum bin separation = half the expected inter-peak spacing
+    # To prevent two local maxima on one peak being counted separately
+    # bins_per_frame = n_bins / n_expected
+    # min_distance = max(
+    #     3, int(bins_per_frame * 0.4)
+    # )  # Either 40% or 3 bins, depending on how coarsely you bin your data
+    min_distance = 1
+
+    # Prominence threshold: ignore peaks smaller than fraction of global max
+    prominence = intensity.max() * threshold_fraction
+
+    peaks, props = find_peaks(
+        intensity,
+        prominence=prominence,
+        distance=min_distance,
+        width=2,  # must span at least 2 bins — filters single-bin noise spikes
+    )
+
+    if len(peaks) == 0:
+        raise ValueError(
+            f"No peaks found in monitor spectrum. "
+            f"Try lowering threshold_fraction (currently {threshold_fraction})."
+        )
+
+    # Part below spits out the expected and detected ToAs
+    print(f"  Expected ~{n_expected} frames (RRM={rrm}, M1 at half speed)")
+    print(f"  Detected {len(peaks)} peaks")
+    print(
+        f"  Min distance used: {min_distance} bins ({min_distance / n_bins * total_time * 1e6:.1f} µs)"
+    )
+
+    # For each detected peak, find its connected region above half-prominence
+    # and compute the intensity-weighted centroid within that region
+    half_prom = props["prominences"] / 2
+    left_bases = props["left_bases"]
+    right_bases = props["right_bases"]
+
+    centroids_s = []
+    counts = []
+
+    for i, peak_idx in enumerate(peaks):
+        # Integration window: use the peak's base-to-base region
+        lo = left_bases[i]
+        hi = right_bases[i] + 1  # +1 for inclusive slice
+
+        region_x = xaxis[lo:hi]
+        region_I = intensity[lo:hi]
+
+        # Only include bins above half the local background
+        # (avoids including the flat tail between peaks in the centroid)
+        local_bg = min(intensity[lo], intensity[hi - 1])
+        above_bg = region_I > local_bg
+        if above_bg.sum() < 1:
+            above_bg = np.ones_like(above_bg, dtype=bool)
+
+        centroid = np.sum(region_x[above_bg] * region_I[above_bg]) / np.sum(
+            region_I[above_bg]
+        )
+        centroids_s.append(centroid)
+        counts.append(region_I[above_bg].sum())
+
+        print(f"    Peak {i:2d}: t={centroid * 1e6:.2f} µs  counts={counts[-1]:.3e}")
+
+    centroids_s = np.array(centroids_s)
+    counts_arr = np.array(counts)
+
+    # Sanity check: warn if peak count is far from expected
+    if abs(len(peaks) - n_expected) > 2:
+        print(
+            f"  WARNING: detected {len(peaks)} peaks but expected ~{n_expected}. "
+            f"Consider adjusting threshold_fraction or checking the monitor data."
+        )
+
+    toa_com = sc.array(dims=["rrm"], values=centroids_s, unit="s")
+    counts = sc.array(dims=["rrm"], values=counts_arr, unit="counts")
+
+    return sc.DataArray(data=counts, coords={"time_on_monitor": toa_com})
 
 
 # TODO unwrap frame

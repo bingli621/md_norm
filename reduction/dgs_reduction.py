@@ -119,7 +119,7 @@ def monitor_multi_pulse(tof_monitor, rrm=22, threshold_fraction=0.02, unit="us")
     print(f"  Expected ~{n_expected} frames (RRM={rrm})")
     print(f"  Detected {len(peaks)} peaks")
     print(
-        f"  Min distance used: {min_distance} bins ({min_distance / n_bins * total_time * 1e6:.1f} µs)"
+        f"  Min distance used: {min_distance} bins ({min_distance / n_bins * total_time:.1f} {unit})"
     )
 
     # For each detected peak, find its connected region above half-prominence
@@ -152,7 +152,7 @@ def monitor_multi_pulse(tof_monitor, rrm=22, threshold_fraction=0.02, unit="us")
         centroids_s.append(centroid)
         counts.append(region_I[above_bg].sum())
 
-        print(f"    Peak {i:2d}: t={centroid * 1e6:.2f} µs  counts={counts[-1]:.3e}")
+        print(f"    Peak {i:2d}: t={centroid:.2f} {unit}  counts={counts[-1]:.3e}")
 
     centroids_s = np.array(centroids_s)
     counts_arr = np.array(counts)
@@ -164,10 +164,10 @@ def monitor_multi_pulse(tof_monitor, rrm=22, threshold_fraction=0.02, unit="us")
             f"Consider adjusting threshold_fraction or checking the monitor data."
         )
 
-    toa_com = sc.array(dims=["rrm"], values=centroids_s, unit="s")
+    toa_com = sc.array(dims=["rrm"], values=centroids_s, unit=unit)
     counts = sc.array(dims=["rrm"], values=counts_arr, unit="counts")
 
-    return sc.DataArray(data=counts, coords={"time_on_monitor": toa_com})
+    return sc.DataArray(data=counts, coords={"time_on_monitor": toa_com.to(unit="s")})
 
 
 # TODO unwrap frame

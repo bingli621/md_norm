@@ -311,7 +311,7 @@ def generate_plot_coords_and_title(bins):
 
 
 calculate_ei = {
-    "time_on_source": time_on_source,
+    # "time_on_source": time_on_source,
     "vi": vi_from_one_monitor,
     "ei": ei,
     "time_on_sample": time_on_sample,

@@ -1,5 +1,4 @@
 import numpy as np
-from typing import Literal
 import scipp as sc
 import scipp.constants as consts
 
@@ -58,10 +57,10 @@ def speed_between(position0, time0, position1, time1):
 # -----------------------------------------------------
 
 
-def time_on_source():
-    """Default time on time is 0.0 ms"""
-    t0 = sc.scalar(value=0.0, unit="ms")
-    return t0.to(unit="s")
+# def time_on_source():
+#     """Default time on time is 0.0 ms"""
+#     t0 = sc.scalar(value=0.0, unit="ms")
+#     return t0.to(unit="s")
 
 
 def vi_from_one_monitor(

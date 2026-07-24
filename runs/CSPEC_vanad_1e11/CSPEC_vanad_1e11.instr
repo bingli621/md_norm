@@ -11,11 +11,11 @@
 * European Spallation Source Data Management and 
 * Software Centre
 * 
-* Instrument: CSPEC_vanad_1e10
+* Instrument: CSPEC_vanad_1e11
 * 
 * %Identification
 * Written by: McCode Py-Generator
-* Date: 15:17:27 on July 22, 2026
+* Date: 08:44:19 on July 23, 2026
 * Origin: ESS DMSC
 * %INSTRUMENT_SITE: Generated_instruments
 * 
@@ -86,8 +86,8 @@
 * %End 
 ********************************************************************************/
 
-DEFINE INSTRUMENT CSPEC_vanad_1e10 (
-double lambda_min = 3, // Parameter type (double) added by McCode py-generator
+DEFINE INSTRUMENT CSPEC_vanad_1e11 (
+double lambda_min = 5, // Parameter type (double) added by McCode py-generator
 double dist_focus = 1.9, // Parameter type (double) added by McCode py-generator
 double AC_Power = 2, // Parameter type (double) added by McCode py-generator
 double move_x = 0.0163, // Parameter type (double) added by McCode py-generator
@@ -321,7 +321,7 @@ long  total_rays_sent; // USERVAR added by McCode py-generator
 
 INITIALIZE 
 %{
-// Start of initialize for generated CSPEC_vanad_1e10
+// Start of initialize for generated CSPEC_vanad_1e11
 
  v0 =3956.035/lambda_min;
  Freq_PS=Freq_M/2;
@@ -1993,7 +1993,7 @@ AT (0, 0, 0.00000001) RELATIVE tof
 
 COMPONENT TOF_Sample_AllLambda_zoom = TOF_monitor(
  nt = 10000, filename = "TOF_Sample_AllLambda_zoom",
- tmin = 95000, tmax = 150000,
+ tmin = 175000, tmax = 235000,
  restore_neutron = 1)
 AT (0, 0, 0.00000001) RELATIVE TOF_Sample_AllLambda
 
@@ -2049,7 +2049,7 @@ AT (0, 0, 0.0) RELATIVE Sample
 
 FINALLY 
 %{
-// Start of finally for generated CSPEC_vanad_1e10
+// Start of finally for generated CSPEC_vanad_1e11
 %}
 
 END

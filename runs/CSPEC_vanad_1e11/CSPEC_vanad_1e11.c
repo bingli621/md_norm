@@ -1,9 +1,9 @@
 /* Automatically generated file. Do not edit. 
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
- * Instrument: CSPEC_vanad_1e10.instr (CSPEC_vanad_1e10)
- * Date:       Wed Jul 22 15:17:28 2026
- * File:       ./CSPEC_vanad_1e10.c
+ * Instrument: CSPEC_vanad_1e11.instr (CSPEC_vanad_1e11)
+ * Date:       Thu Jul 23 08:44:20 2026
+ * File:       ./CSPEC_vanad_1e11.c
  * CFLAGS=
  */
 
@@ -7002,7 +7002,7 @@ int plane_intersect(double *t, double x, double y, double z,
 
 
 /* *****************************************************************************
-* Start of instrument 'CSPEC_vanad_1e10' generated code
+* Start of instrument 'CSPEC_vanad_1e11' generated code
 ***************************************************************************** */
 
 #ifdef MC_TRACE_ENABLED
@@ -7012,15 +7012,15 @@ int traceenabled = 0;
 #endif
 #define MCSTAS "/home/b55k/harryrich11.b55k/miniforge3/envs/mcstas/share/mcstas/resources/"
 int   defaultmain         = 1;
-char  instrument_name[]   = "CSPEC_vanad_1e10";
-char  instrument_source[] = "CSPEC_vanad_1e10.instr";
+char  instrument_name[]   = "CSPEC_vanad_1e11";
+char  instrument_source[] = "CSPEC_vanad_1e11.instr";
 char *instrument_exe      = NULL; /* will be set to argv[0] in main */
-char  instrument_code[]   = "Instrument CSPEC_vanad_1e10 source code CSPEC_vanad_1e10.instr is not embedded in this executable.\n  Use --source option when running mcstas.\n";
+char  instrument_code[]   = "Instrument CSPEC_vanad_1e11 source code CSPEC_vanad_1e11.instr is not embedded in this executable.\n  Use --source option when running mcstas.\n";
 
 int main(int argc, char *argv[]){return mccode_main(argc, argv);}
 
 /* *****************************************************************************
-* instrument 'CSPEC_vanad_1e10' and components DECLARE
+* instrument 'CSPEC_vanad_1e11' and components DECLARE
 ***************************************************************************** */
 
 /* Instrument parameters: structure and a table for the initialisation
@@ -7091,7 +7091,7 @@ struct instrument_logic_struct {
 };
 
 struct _instrument_struct {
-  char   _name[256]; /* the name of this instrument e.g. 'CSPEC_vanad_1e10' */
+  char   _name[256]; /* the name of this instrument e.g. 'CSPEC_vanad_1e11' */
 /* Counters per component instance */
   double counter_AbsorbProp[229]; /* absorbed events in PROP routines */
   double counter_N[229], counter_P[229], counter_P2[229]; /* event counters after each component instance */
@@ -7108,7 +7108,7 @@ struct _instrument_struct *instrument = & _instrument_var;
 
 int numipar = 54;
 struct mcinputtable_struct mcinputtable[] = {
-  "lambda_min", &(_instrument_var._parameters.lambda_min), instr_type_double, "3", "",
+  "lambda_min", &(_instrument_var._parameters.lambda_min), instr_type_double, "5", "",
   "dist_focus", &(_instrument_var._parameters.dist_focus), instr_type_double, "1.9", "",
   "AC_Power", &(_instrument_var._parameters.AC_Power), instr_type_double, "2", "",
   "move_x", &(_instrument_var._parameters.move_x), instr_type_double, "0.0163", "",
@@ -15601,10 +15601,10 @@ char options_string[512];
 #undef compcurname
 #undef compcurtype
 #undef compcurindex
-/* end of instrument 'CSPEC_vanad_1e10' and components DECLARE */
+/* end of instrument 'CSPEC_vanad_1e11' and components DECLARE */
 
 /* *****************************************************************************
-* instrument 'CSPEC_vanad_1e10' and components INITIALISE
+* instrument 'CSPEC_vanad_1e11' and components INITIALISE
 ***************************************************************************** */
 
 double index_getdistance(int first_index, int second_index)
@@ -33828,8 +33828,8 @@ int _TOF_Sample_AllLambda_zoom_setpos(void)
   _TOF_Sample_AllLambda_zoom_var._parameters.ymax = 0.05;
   _TOF_Sample_AllLambda_zoom_var._parameters.xwidth = 0;
   _TOF_Sample_AllLambda_zoom_var._parameters.yheight = 0;
-  _TOF_Sample_AllLambda_zoom_var._parameters.tmin = 95000;
-  _TOF_Sample_AllLambda_zoom_var._parameters.tmax = 150000;
+  _TOF_Sample_AllLambda_zoom_var._parameters.tmin = 175000;
+  _TOF_Sample_AllLambda_zoom_var._parameters.tmax = 235000;
   _TOF_Sample_AllLambda_zoom_var._parameters.dt = 1.0;
   _TOF_Sample_AllLambda_zoom_var._parameters.restore_neutron = 1;
   _TOF_Sample_AllLambda_zoom_var._parameters.nowritefile = 0;
@@ -33875,8 +33875,8 @@ int _TOF_Sample_AllLambda_zoom_setpos(void)
         mccomp_param_nexus(nxhandle,"0221_TOF_Sample_AllLambda_zoom", "ymax", "0.05", "0.05","MCNUM");
         mccomp_param_nexus(nxhandle,"0221_TOF_Sample_AllLambda_zoom", "xwidth", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0221_TOF_Sample_AllLambda_zoom", "yheight", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0221_TOF_Sample_AllLambda_zoom", "tmin", "0", "95000","MCNUM");
-        mccomp_param_nexus(nxhandle,"0221_TOF_Sample_AllLambda_zoom", "tmax", "0", "150000","MCNUM");
+        mccomp_param_nexus(nxhandle,"0221_TOF_Sample_AllLambda_zoom", "tmin", "0", "175000","MCNUM");
+        mccomp_param_nexus(nxhandle,"0221_TOF_Sample_AllLambda_zoom", "tmax", "0", "235000","MCNUM");
         mccomp_param_nexus(nxhandle,"0221_TOF_Sample_AllLambda_zoom", "dt", "1.0", "1.0","MCNUM");
         mccomp_param_nexus(nxhandle,"0221_TOF_Sample_AllLambda_zoom", "restore_neutron", "0", "1","int");
         mccomp_param_nexus(nxhandle,"0221_TOF_Sample_AllLambda_zoom", "nowritefile", "0", "0","int");
@@ -35873,16 +35873,16 @@ _class_Incoherent *class_Incoherent_init(_class_Incoherent *_comp
 
 
 
-int init(void) { /* called by mccode_main for CSPEC_vanad_1e10:INITIALISE */
+int init(void) { /* called by mccode_main for CSPEC_vanad_1e11:INITIALISE */
   DEBUG_INSTR();
   // Initialise rng
   srandom(_hash(mcseed-1));
 
   /* code_main/parseoptions/readparams sets instrument parameters value */
-  stracpy(instrument->_name, "CSPEC_vanad_1e10", 256);
+  stracpy(instrument->_name, "CSPEC_vanad_1e11", 256);
 
-  /* Instrument 'CSPEC_vanad_1e10' INITIALISE */
-  SIG_MESSAGE("[CSPEC_vanad_1e10] INITIALISE [(null):-1]");
+  /* Instrument 'CSPEC_vanad_1e11' INITIALISE */
+  SIG_MESSAGE("[CSPEC_vanad_1e11] INITIALISE [(null):-1]");
   #define lambda_min (instrument->_parameters.lambda_min)
   #define dist_focus (instrument->_parameters.dist_focus)
   #define AC_Power (instrument->_parameters.AC_Power)
@@ -35938,7 +35938,7 @@ int init(void) { /* called by mccode_main for CSPEC_vanad_1e10:INITIALISE */
   #define enable_M1 (instrument->_parameters.enable_M1)
   #define enable_M2 (instrument->_parameters.enable_M2)
 {
-// Start of initialize for generated CSPEC_vanad_1e10
+// Start of initialize for generated CSPEC_vanad_1e11
 
  v0 =3956.035/lambda_min;
  Freq_PS=Freq_M/2;
@@ -39237,12 +39237,12 @@ if (!SCATTERED) ABSORB;
 #define total_N_sent (_particle->total_N_sent)
 #define total_rays_sent (_particle->total_rays_sent)
 /* *****************************************************************************
-* instrument 'CSPEC_vanad_1e10' TRACE
+* instrument 'CSPEC_vanad_1e11' TRACE
 ***************************************************************************** */
 
 #ifndef FUNNEL
 #pragma acc routine
-int raytrace(_class_particle* _particle) { /* single event propagation, called by mccode_main for CSPEC_vanad_1e10:TRACE */
+int raytrace(_class_particle* _particle) { /* single event propagation, called by mccode_main for CSPEC_vanad_1e11:TRACE */
 
   /* init variables and counters for TRACE */
   #undef ABSORB0
@@ -45224,7 +45224,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
 #undef ABSORB
 #undef ABSORB0
 /* *****************************************************************************
-* instrument 'CSPEC_vanad_1e10' and components SAVE
+* instrument 'CSPEC_vanad_1e11' and components SAVE
 ***************************************************************************** */
 
 _class_Monitor_nD *class_Monitor_nD_save(_class_Monitor_nD *_comp
@@ -45478,7 +45478,7 @@ _class_Divergence_monitor *class_Divergence_monitor_save(_class_Divergence_monit
 
 
 
-int save(FILE *handle) { /* called by mccode_main for CSPEC_vanad_1e10:SAVE */
+int save(FILE *handle) { /* called by mccode_main for CSPEC_vanad_1e11:SAVE */
   if (!handle) siminfo_init(NULL);
 
   /* call iteratively all components SAVE */
@@ -45744,7 +45744,7 @@ int save(FILE *handle) { /* called by mccode_main for CSPEC_vanad_1e10:SAVE */
 } /* save */
 
 /* *****************************************************************************
-* instrument 'CSPEC_vanad_1e10' and components FINALLY
+* instrument 'CSPEC_vanad_1e11' and components FINALLY
 ***************************************************************************** */
 
 _class_Monitor_nD *class_Monitor_nD_finally(_class_Monitor_nD *_comp
@@ -46079,7 +46079,7 @@ _class_Divergence_monitor *class_Divergence_monitor_finally(_class_Divergence_mo
 
 
 
-int finally(void) { /* called by mccode_main for CSPEC_vanad_1e10:FINALLY */
+int finally(void) { /* called by mccode_main for CSPEC_vanad_1e11:FINALLY */
 #pragma acc update host(_Origin_var)
 #pragma acc update host(_ESS_Source_var)
 #pragma acc update host(_Instrument_Direction_var)
@@ -46312,8 +46312,8 @@ int finally(void) { /* called by mccode_main for CSPEC_vanad_1e10:FINALLY */
   siminfo_init(NULL);
   save(siminfo_file); /* save data when simulation ends */
 
-  /* Instrument 'CSPEC_vanad_1e10' FINALLY */
-  SIG_MESSAGE("[CSPEC_vanad_1e10] FINALLY [(null):-1]");
+  /* Instrument 'CSPEC_vanad_1e11' FINALLY */
+  SIG_MESSAGE("[CSPEC_vanad_1e11] FINALLY [(null):-1]");
   #define lambda_min (instrument->_parameters.lambda_min)
   #define dist_focus (instrument->_parameters.dist_focus)
   #define AC_Power (instrument->_parameters.AC_Power)
@@ -46369,7 +46369,7 @@ int finally(void) { /* called by mccode_main for CSPEC_vanad_1e10:FINALLY */
   #define enable_M1 (instrument->_parameters.enable_M1)
   #define enable_M2 (instrument->_parameters.enable_M2)
 {
-// Start of finally for generated CSPEC_vanad_1e10
+// Start of finally for generated CSPEC_vanad_1e11
 }
   #undef lambda_min
   #undef dist_focus
@@ -46749,7 +46749,7 @@ int finally(void) { /* called by mccode_main for CSPEC_vanad_1e10:FINALLY */
 } /* finally */
 
 /* *****************************************************************************
-* instrument 'CSPEC_vanad_1e10' and components DISPLAY
+* instrument 'CSPEC_vanad_1e11' and components DISPLAY
 ***************************************************************************** */
 
   #define magnify     mcdis_magnify
@@ -47627,7 +47627,7 @@ _class_Incoherent *class_Incoherent_display(_class_Incoherent *_comp
   #undef cylinder
   #undef sphere
 
-int display(void) { /* called by mccode_main for CSPEC_vanad_1e10:DISPLAY */
+int display(void) { /* called by mccode_main for CSPEC_vanad_1e11:DISPLAY */
   printf("MCDISPLAY: start\n");
 
   /* call iteratively all components DISPLAY */
@@ -48966,4 +48966,4 @@ int mccode_main(int argc, char *argv[])
 } /* mccode_main */
 /* End of file "mccode_main.c". */
 
-/* end of generated C code ./CSPEC_vanad_1e10.c */
+/* end of generated C code ./CSPEC_vanad_1e11.c */

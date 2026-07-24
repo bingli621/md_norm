@@ -61,7 +61,6 @@ def monitor_single_pulse(tof_monitor, unit="us"):
 
 
 # FIXME
-# FIXME unit inconsistency
 def monitor_multi_pulse(tof_monitor, rrm=22, threshold_fraction=0.02, unit="us"):
     """
     Detect (Hopefully!) all RRM pulses in the pre-sample monitor return centroid ToA like single_pulse function.
@@ -105,7 +104,7 @@ def monitor_multi_pulse(tof_monitor, rrm=22, threshold_fraction=0.02, unit="us")
         intensity,
         prominence=prominence,
         distance=min_distance,
-        width=2,  # must span at least 2 bins — filters single-bin noise spikes
+        width=1,  # must span at least 2 bins — filters single-bin noise spikes
     )
 
     if len(peaks) == 0:
@@ -377,9 +376,10 @@ def mdnorm(events, grid: dict, norm_factors, rrm=0):
     incident_flux = norm_factors.coords["monitor_counts"]["rrm", rrm]
 
     # convert from cross section to S(Q,E) by multiple ki/kf
-    sqe_coords = {k: events.coords[k] for k in bins.keys()}
+    events_rrm = events[events.coords["rrm"] == rrm]
+    sqe_coords = {k: events_rrm.coords[k] for k in bins.keys()}
     sqe = sc.DataArray(
-        data=events.data * sc.sqrt(ei / events.coords["ef"]), coords=sqe_coords
+        data=events_rrm.data * sc.sqrt(ei / events_rrm.coords["ef"]), coords=sqe_coords
     )
     sqe_hist = sc.bin(sqe, **bins).hist()
 

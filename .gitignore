@@ -1,3 +1,7 @@
 *.pyc
 reduction/__pycache__/*.*
 .DS_Store
+runs/CSPEC_vanad_1e11/mccode.h5
+runs/TREX_vanad_1e11/mccode.h5
+reduction/__pycache__/dgs_reduction.cpython-314.pyc
+reduction/__pycache__/utils.cpython-314.pyc

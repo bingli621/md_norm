@@ -11,11 +11,11 @@
 * European Spallation Source Data Management and 
 * Software Centre
 * 
-* Instrument: TREX_generated
+* Instrument: TREX_vanad_1e11
 * 
 * %Identification
 * Written by: McCode Py-Generator
-* Date: 13:16:48 on May 18, 2026
+* Date: 16:08:57 on July 21, 2026
 * Origin: ESS DMSC
 * %INSTRUMENT_SITE: Generated_instruments
 * 
@@ -41,7 +41,7 @@
 * %End 
 ********************************************************************************/
 
-DEFINE INSTRUMENT TREX_generated (
+DEFINE INSTRUMENT TREX_vanad_1e11 (
 double L0 = 4.78, // Parameter type (double) added by McCode py-generator
 double d_Li = 0.845, // Parameter type (double) added by McCode py-generator
 int RRM = 8, // Parameter type (int) added by McCode py-generator
@@ -152,7 +152,7 @@ char setSMl[256], setSMt[256],setSMt_M[256],setSMt_P[256], setSMlhdiv[256], setS
 
 INITIALIZE 
 %{
-// Start of initialize for generated TREX_generated
+// Start of initialize for generated TREX_vanad_1e11
 
 
 // Source type
@@ -1962,7 +1962,7 @@ COMPONENT P_monitor_ToF_2 = Monitor_nD(
  zmin = 0, zmax = 0,
  bins = 0, min = -1e40,
  max = 1e40, restore_neutron = 1,
- radius = 0, options = "time limits [0.16 : 0.25] bins = 100",
+ radius = 0, options = "time limits [0.16 : 0.25] bins = 801",
  filename = "P_monitor_tof_2.dat", geometry = "NULL",
  nowritefile = 0, nexus_bins = 0,
  username1 = "NULL", username2 = "NULL",
@@ -1970,38 +1970,30 @@ COMPONENT P_monitor_ToF_2 = Monitor_nD(
 AT (0, 0, 1E-6) RELATIVE Sample_pos
 ROTATED (0.0, 0.0, 0.0) RELATIVE Sample_pos
 
-SPLIT 20 COMPONENT Sample = Incoherent(
- geometry = 0, radius = 0,
- xwidth = 0.01, yheight = 0.03,
- zdepth = 0.002, thickness = 0,
- target_x = 0, target_y = 0,
- target_z = 0, focus_r = 0,
- focus_xw = 0, focus_yh = 0,
- focus_aw = 0, focus_ah = 0,
- target_index = + 1, pack = 1,
- p_interact = 1, f_QE = 0,
- gamma = 0, Etrans = 0,
- deltaE = 0, sigma_abs = 0,
- sigma_inc = 100, Vc = 13.827,
- concentric = 0, order = 1)
+SPLIT 10 COMPONENT Sample = Incoherent(
+ geometry = 0, radius = 0.012,
+ xwidth = 0, yheight = 0.04,
+ zdepth = 0, thickness = 0.00025,
+ p_interact = 0.8, concentric = 0,
+ order = 0)
 AT (0, 0, 0.015) RELATIVE Sample_pos
 ROTATED (0, 0, 0) RELATIVE Sample_pos
 EXTEND %{
 
-  if (!SCATTERED) ABSORB;
+if (!SCATTERED) ABSORB;
     
 %}
 
 COMPONENT Trex_banana_det = Monitor_nD(
  user1 = "", user2 = "",
  user3 = "", xwidth = 0,
- yheight = 4, zdepth = 0,
+ yheight = 2.2, zdepth = 0,
  xmin = 0, xmax = 0,
  ymin = 0, ymax = 0,
  zmin = 0, zmax = 0,
  bins = 0, min = -1e40,
  max = 1e40, restore_neutron = 1,
- radius = 3, options = "mantid banana theta bins=221 limits=[5, 135] y bins=136, neutron pixel min=0 t, list all neutrons",
+ radius = 3, options = "mantid banana theta bins=360 limits=[-36, 144] y bins=88, neutron pixel min=0 t, list all neutrons",
  filename = "direct_event_banana_signal.dat", geometry = "NULL",
  nowritefile = 0, nexus_bins = 0,
  username1 = "NULL", username2 = "NULL",
@@ -2011,7 +2003,7 @@ ROTATED (0, 0, 0) RELATIVE Sample
 
 FINALLY 
 %{
-// Start of finally for generated TREX_generated
+// Start of finally for generated TREX_vanad_1e11
 %}
 
 END

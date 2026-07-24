@@ -1,9 +1,9 @@
 /* Automatically generated file. Do not edit. 
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
- * Instrument: TREX_vanad.instr (TREX_vanad)
- * Date:       Tue May 19 09:59:52 2026
- * File:       ./TREX_vanad.c
+ * Instrument: TREX_vanad_1e11.instr (TREX_vanad_1e11)
+ * Date:       Tue Jul 21 16:08:58 2026
+ * File:       ./TREX_vanad_1e11.c
  * CFLAGS=   -DUSE_OFF 
  */
 
@@ -18,7 +18,7 @@
 #pragma warning(disable: 4068)
 #endif
 
-#define MCCODE_STRING " 3.6.21, git"
+#define MCCODE_STRING " 3.7.6, git"
 #define FLAVOR        "mcstas"
 #define FLAVOR_UPPER  "MCSTAS"
 
@@ -237,7 +237,7 @@ void particle_uservar_init(_class_particle *p){
 * %Identification
 * Written by: KN
 * Date:    Aug 29, 1997
-* Release: mcstas 3.6.21
+* Release: mcstas 3.7.6
 * Version: $Revision$
 *
 * Runtime system header for McStas/McXtrace.
@@ -423,7 +423,7 @@ clock_t times (struct tms *__buffer) {
 
 /* the version string is replaced when building distribution with mkdist */
 #ifndef MCCODE_STRING
-#  define MCCODE_STRING " 3.6.21, git"
+#  define MCCODE_STRING " 3.7.6, git"
 #endif
 
 #ifndef MCCODE_DATE
@@ -431,11 +431,11 @@ clock_t times (struct tms *__buffer) {
 #endif
 
 #ifndef MCCODE_VERSION
-#  define MCCODE_VERSION "3.6.21"
+#  define MCCODE_VERSION "3.7.6"
 #endif
 
 #ifndef __MCCODE_VERSION__
-#define __MCCODE_VERSION__ 306021L
+#define __MCCODE_VERSION__ 307006L
 #endif
 
 #ifndef MCCODE_NAME
@@ -794,7 +794,9 @@ int _getcomp_index(char* compname);
      "POS: %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g, %g\n", \
      name, c.x, c.y, c.z, t[0][0], t[0][1], t[0][2], \
      t[1][0], t[1][1], t[1][2], t[2][0], t[2][1], t[2][2]); \
-     printf("Component %30s AT (%g,%g,%g)\n", name, c.x, c.y, c.z); }
+     fflush(stdout);\
+     printf("Component %30s AT (%g,%g,%g)\n", name, c.x, c.y, c.z);\
+     fflush(stdout);}
 #define DEBUG_INSTR_END() if(!mcdotrace); else printf("INSTRUMENT END:\n");
 #define DEBUG_ENTER() if(!mcdotrace); else printf("ENTER:\n");
 #define DEBUG_COMP(c) if(!mcdotrace); else printf("COMP: \"%s\"\n", c);
@@ -896,6 +898,9 @@ double _rand0max(double max, randstate_t* state);
 double _randminmax(double min, double max, randstate_t* state);
 #pragma acc routine
 double _randtriangle(randstate_t* state);
+// version which pass randstate_t* as opague void*
+#pragma acc routine
+double _rand01_opague(void* state);
 
 
 #ifdef USE_OPENCL
@@ -1482,7 +1487,14 @@ NXhandle nxhandle;
 /** Include header files to avoid implicit declarations (not allowed on LLVM) */
 #include <ctype.h>
 #include <sys/types.h>
+#ifndef _MSC_EXTENSIONS
 #include <dirent.h>
+#else
+/* McCode includes its own 'dirent' for use with MSVC on Windows */
+#include <windirent.h>
+#define popen _popen
+#define pclose _pclose
+#endif
 #include <errno.h>
 
 // UNIX specific headers (non-Windows)
@@ -4371,11 +4383,11 @@ void mcdis_rectangle(char* plane, double x, double y, double z,
 }
 
 void mcdis_circle(char *plane, double x, double y, double z, double r){
-  printf("MCDISPLAY: circle('%s',%g,%g,%g,%g)\n", plane, x, y, z, r);
+  printf("MCDISPLAY: mcdiscircle('%s',%g,%g,%g,%g)\n", plane, x, y, z, r);
 }
 
 void mcdis_new_circle(double x, double y, double z, double r, double nx, double ny, double nz){
-  printf("MCDISPLAY: new_circle(%g,%g,%g,%g,%g,%g,%g)\n", x, y, z, r, nx, ny, nz);
+  printf("MCDISPLAY: mcdisnew_circle(%g,%g,%g,%g,%g,%g,%g)\n", x, y, z, r, nx, ny, nz);
 }
 
 
@@ -4430,7 +4442,7 @@ void mcdis_legacy_box(double x, double y, double z,
 void mcdis_box(double x, double y, double z,
 	       double width, double height, double length, double thickness, double nx, double ny, double nz){
   if (mcdotrace==2) {
-    printf("MCDISPLAY: box(%g,%g,%g,%g,%g,%g,%g,%g,%g,%g)\n", x, y, z, width, height, length, thickness, nx, ny, nz);
+    printf("MCDISPLAY: mcdisbox(%g,%g,%g,%g,%g,%g,%g,%g,%g,%g)\n", x, y, z, width, height, length, thickness, nx, ny, nz);
   } else {
     mcdis_legacy_box(x, y, z, width, height, length);
     if (thickness)
@@ -4476,7 +4488,7 @@ Draws a cylinder with center at (x,y,z) with extent (r,height).
 void mcdis_cylinder( double x, double y, double z,
         double r, double height, double thickness, double nx, double ny, double nz){
   if (mcdotrace==2) {
-      printf("MCDISPLAY: cylinder(%g, %g, %g, %g, %g, %g, %g, %g, %g)\n",
+      printf("MCDISPLAY: mcdiscylinder(%g, %g, %g, %g, %g, %g, %g, %g, %g)\n",
          x, y, z, r, height, thickness, nx, ny, nz);
   } else {
     mcdis_legacy_cylinder(x, y, z,
@@ -4489,7 +4501,7 @@ void mcdis_cylinder( double x, double y, double z,
 void mcdis_cone( double x, double y, double z,
         double r, double height, double nx, double ny, double nz){
   if (mcdotrace==2) {
-    printf("MCDISPLAY: cone(%g, %g, %g, %g, %g, %g, %g, %g)\n",
+    printf("MCDISPLAY: mcdiscone(%g, %g, %g, %g, %g, %g, %g, %g)\n",
        x, y, z, r, height, nx, ny, nz);
   } else {
     mcdis_Circle(x, y, z, r, nx, ny, nz);
@@ -4504,7 +4516,7 @@ void mcdis_cone( double x, double y, double z,
  * The disc axis is along the vector nx,ny,nz.*/
 void mcdis_disc( double x, double y, double z,
         double r, double nx, double ny, double nz){
-  printf("MCDISPLAY: disc(%g, %g, %g, %g, %g, %g, %g)\n",
+  printf("MCDISPLAY: mcdisdisc(%g, %g, %g, %g, %g, %g, %g)\n",
      x, y, z, r, nx, ny, nz);
 }
 
@@ -4512,14 +4524,14 @@ void mcdis_disc( double x, double y, double z,
  * The annulus axis is along the vector nx,ny,nz.*/
 void mcdis_annulus( double x, double y, double z,
         double outer_radius, double inner_radius, double nx, double ny, double nz){
-  printf("MCDISPLAY: annulus(%g, %g, %g, %g, %g, %g, %g, %g)\n",
+  printf("MCDISPLAY: mcdisannulus(%g, %g, %g, %g, %g, %g, %g, %g)\n",
      x, y, z, outer_radius, inner_radius, nx, ny, nz);
 }
 
 /* draws a sphere with center at (x,y,z) with extent (r)*/
 void mcdis_sphere(double x, double y, double z, double r){
   if (mcdotrace==2) {
-    printf("MCDISPLAY: sphere(%g,%g,%g,%g)\n", x, y, z, r);
+    printf("MCDISPLAY: mcdissphere(%g,%g,%g,%g)\n", x, y, z, r);
   } else {
     double nx,ny,nz;
     int i;
@@ -4661,7 +4673,7 @@ void mcdis_polygon(int count, ...){
 /* END NEW POLYGON IMPLEMENTATION*/
 
 /*
-void mcdis_polygon(double x1, double y1, double z1,
+void polygon(double x1, double y1, double z1,
                 double x2, double y2, double z2){
   printf("MCDISPLAY: polygon(2,%g,%g,%g,%g,%g,%g)\n",
          x1,y1,z1,x2,y2,z2);
@@ -5912,6 +5924,16 @@ double _rand01(randstate_t* state) {
 	randnum /= (double) MC_RAND_MAX + 1;
 	return randnum;
 }
+double _rand01_opague(void* opague_state) {
+	randstate_t* state = (randstate_t*)opague_state;
+	// Following lines exactly like in _rand01 just above (repeated to
+	// avoid another layer of indirection):
+	double randnum;
+	randnum = (double) _random();
+	// TODO: can we mult instead of div?
+	randnum /= (double) MC_RAND_MAX + 1;
+	return randnum;
+}
 // Return a random number between 1 and -1
 double _randpm1(randstate_t* state) {
 	double randnum;
@@ -6936,7 +6958,7 @@ int plane_intersect(double *t, double x, double y, double z,
 
 
 /* *****************************************************************************
-* Start of instrument 'TREX_vanad' generated code
+* Start of instrument 'TREX_vanad_1e11' generated code
 ***************************************************************************** */
 
 #ifdef MC_TRACE_ENABLED
@@ -6944,17 +6966,17 @@ int traceenabled = 1;
 #else
 int traceenabled = 0;
 #endif
-#define MCSTAS "/opt/anaconda3/envs/mcstas/share/mcstas/resources/"
+#define MCSTAS "/home/b55k/harryrich11.b55k/miniforge3/envs/mcstas/share/mcstas/resources/"
 int   defaultmain         = 1;
-char  instrument_name[]   = "TREX_vanad";
-char  instrument_source[] = "TREX_vanad.instr";
+char  instrument_name[]   = "TREX_vanad_1e11";
+char  instrument_source[] = "TREX_vanad_1e11.instr";
 char *instrument_exe      = NULL; /* will be set to argv[0] in main */
-char  instrument_code[]   = "Instrument TREX_vanad source code TREX_vanad.instr is not embedded in this executable.\n  Use --source option when running mcstas.\n";
+char  instrument_code[]   = "Instrument TREX_vanad_1e11 source code TREX_vanad_1e11.instr is not embedded in this executable.\n  Use --source option when running mcstas.\n";
 
 int main(int argc, char *argv[]){return mccode_main(argc, argv);}
 
 /* *****************************************************************************
-* instrument 'TREX_vanad' and components DECLARE
+* instrument 'TREX_vanad_1e11' and components DECLARE
 ***************************************************************************** */
 
 /* Instrument parameters: structure and a table for the initialisation
@@ -6980,7 +7002,7 @@ struct instrument_logic_struct {
 };
 
 struct _instrument_struct {
-  char   _name[256]; /* the name of this instrument e.g. 'TREX_vanad' */
+  char   _name[256]; /* the name of this instrument e.g. 'TREX_vanad_1e11' */
 /* Counters per component instance */
   double counter_AbsorbProp[168]; /* absorbed events in PROP routines */
   double counter_N[168], counter_P[168], counter_P2[168]; /* event counters after each component instance */
@@ -17988,10 +18010,10 @@ char setSMl[256], setSMt[256],setSMt_M[256],setSMt_P[256], setSMlhdiv[256], setS
 #undef compcurname
 #undef compcurtype
 #undef compcurindex
-/* end of instrument 'TREX_vanad' and components DECLARE */
+/* end of instrument 'TREX_vanad_1e11' and components DECLARE */
 
 /* *****************************************************************************
-* instrument 'TREX_vanad' and components INITIALISE
+* instrument 'TREX_vanad_1e11' and components INITIALISE
 ***************************************************************************** */
 
 double index_getdistance(int first_index, int second_index)
@@ -32671,11 +32693,11 @@ int _Sample_setpos(void)
   _Sample_var._index=165;
   int current_setpos_index = 165;
   _Sample_var._parameters.geometry[0]='\0';
-  _Sample_var._parameters.radius = 0;
-  _Sample_var._parameters.xwidth = 0.01;
-  _Sample_var._parameters.yheight = 0.03;
-  _Sample_var._parameters.zdepth = 0.002;
-  _Sample_var._parameters.thickness = 0;
+  _Sample_var._parameters.radius = 0.012;
+  _Sample_var._parameters.xwidth = 0;
+  _Sample_var._parameters.yheight = 0.04;
+  _Sample_var._parameters.zdepth = 0;
+  _Sample_var._parameters.thickness = 0.00025;
   _Sample_var._parameters.target_x = 0;
   _Sample_var._parameters.target_y = 0;
   _Sample_var._parameters.target_z = 0;
@@ -32684,18 +32706,18 @@ int _Sample_setpos(void)
   _Sample_var._parameters.focus_yh = 0;
   _Sample_var._parameters.focus_aw = 0;
   _Sample_var._parameters.focus_ah = 0;
-  _Sample_var._parameters.target_index = + 1;
+  _Sample_var._parameters.target_index = 0;
   _Sample_var._parameters.pack = 1;
-  _Sample_var._parameters.p_interact = 1;
+  _Sample_var._parameters.p_interact = 0.8;
   _Sample_var._parameters.f_QE = 0;
   _Sample_var._parameters.gamma = 0;
   _Sample_var._parameters.Etrans = 0;
   _Sample_var._parameters.deltaE = 0;
-  _Sample_var._parameters.sigma_abs = 0;
-  _Sample_var._parameters.sigma_inc = 100;
+  _Sample_var._parameters.sigma_abs = 5.08;
+  _Sample_var._parameters.sigma_inc = 5.08;
   _Sample_var._parameters.Vc = 13.827;
   _Sample_var._parameters.concentric = 0;
-  _Sample_var._parameters.order = 1;
+  _Sample_var._parameters.order = 0;
 
 
   /* component Sample=Incoherent() AT ROTATED */
@@ -32731,11 +32753,11 @@ int _Sample_setpos(void)
     MPI_MASTER(
         mccomp_placement_type_nexus(nxhandle,"0164_Sample", _Sample_var._position_absolute, _Sample_var._rotation_absolute, "Incoherent");
         mccomp_param_nexus(nxhandle,"0164_Sample", "geometry", 0, 0, "char*");
-        mccomp_param_nexus(nxhandle,"0164_Sample", "radius", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0164_Sample", "xwidth", "0", "0.01","MCNUM");
-        mccomp_param_nexus(nxhandle,"0164_Sample", "yheight", "0", "0.03","MCNUM");
-        mccomp_param_nexus(nxhandle,"0164_Sample", "zdepth", "0", "0.002","MCNUM");
-        mccomp_param_nexus(nxhandle,"0164_Sample", "thickness", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0164_Sample", "radius", "0", "0.012","MCNUM");
+        mccomp_param_nexus(nxhandle,"0164_Sample", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0164_Sample", "yheight", "0", "0.04","MCNUM");
+        mccomp_param_nexus(nxhandle,"0164_Sample", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0164_Sample", "thickness", "0", "0.00025","MCNUM");
         mccomp_param_nexus(nxhandle,"0164_Sample", "target_x", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0164_Sample", "target_y", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0164_Sample", "target_z", "0", "0","MCNUM");
@@ -32744,18 +32766,18 @@ int _Sample_setpos(void)
         mccomp_param_nexus(nxhandle,"0164_Sample", "focus_yh", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0164_Sample", "focus_aw", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0164_Sample", "focus_ah", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0164_Sample", "target_index", "0", "+ 1","int");
+        mccomp_param_nexus(nxhandle,"0164_Sample", "target_index", "0", "0","int");
         mccomp_param_nexus(nxhandle,"0164_Sample", "pack", "1", "1","MCNUM");
-        mccomp_param_nexus(nxhandle,"0164_Sample", "p_interact", "1", "1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0164_Sample", "p_interact", "1", "0.8","MCNUM");
         mccomp_param_nexus(nxhandle,"0164_Sample", "f_QE", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0164_Sample", "gamma", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0164_Sample", "Etrans", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0164_Sample", "deltaE", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0164_Sample", "sigma_abs", "5.08", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0164_Sample", "sigma_inc", "5.08", "100","MCNUM");
+        mccomp_param_nexus(nxhandle,"0164_Sample", "sigma_abs", "5.08", "5.08","MCNUM");
+        mccomp_param_nexus(nxhandle,"0164_Sample", "sigma_inc", "5.08", "5.08","MCNUM");
         mccomp_param_nexus(nxhandle,"0164_Sample", "Vc", "13.827", "13.827","MCNUM");
         mccomp_param_nexus(nxhandle,"0164_Sample", "concentric", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0164_Sample", "order", "0", "1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0164_Sample", "order", "0", "0","MCNUM");
       );
     }
   } else {
@@ -32814,7 +32836,7 @@ int _Trex_banana_det_setpos(void)
   else 
   _Trex_banana_det_var._parameters.user9[0]='\0';
   _Trex_banana_det_var._parameters.xwidth = 0;
-  _Trex_banana_det_var._parameters.yheight = 4;
+  _Trex_banana_det_var._parameters.yheight = 2.2;
   _Trex_banana_det_var._parameters.zdepth = 0;
   _Trex_banana_det_var._parameters.xmin = 0;
   _Trex_banana_det_var._parameters.xmax = 0;
@@ -32827,8 +32849,8 @@ int _Trex_banana_det_setpos(void)
   _Trex_banana_det_var._parameters.max = 1e40;
   _Trex_banana_det_var._parameters.restore_neutron = 1;
   _Trex_banana_det_var._parameters.radius = 3;
-  if("mantid banana theta bins=221 limits=[5, 135] y bins=136, neutron pixel min=0 t, list all neutrons" && strlen("mantid banana theta bins=221 limits=[5, 135] y bins=136, neutron pixel min=0 t, list all neutrons"))
-    stracpy(_Trex_banana_det_var._parameters.options, "mantid banana theta bins=221 limits=[5, 135] y bins=136, neutron pixel min=0 t, list all neutrons" ? "mantid banana theta bins=221 limits=[5, 135] y bins=136, neutron pixel min=0 t, list all neutrons" : "", 16384);
+  if("mantid banana theta bins=360 limits=[-36, 144] y bins=88, neutron pixel min=0 t, list all neutrons" && strlen("mantid banana theta bins=360 limits=[-36, 144] y bins=88, neutron pixel min=0 t, list all neutrons"))
+    stracpy(_Trex_banana_det_var._parameters.options, "mantid banana theta bins=360 limits=[-36, 144] y bins=88, neutron pixel min=0 t, list all neutrons" ? "mantid banana theta bins=360 limits=[-36, 144] y bins=88, neutron pixel min=0 t, list all neutrons" : "", 16384);
   else 
   _Trex_banana_det_var._parameters.options[0]='\0';
   if("direct_event_banana_signal.dat" && strlen("direct_event_banana_signal.dat"))
@@ -32926,7 +32948,7 @@ int _Trex_banana_det_setpos(void)
         mccomp_param_nexus(nxhandle,"0165_Trex_banana_det", "user8", "", "", "char*");
         mccomp_param_nexus(nxhandle,"0165_Trex_banana_det", "user9", "", "", "char*");
         mccomp_param_nexus(nxhandle,"0165_Trex_banana_det", "xwidth", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0165_Trex_banana_det", "yheight", "0", "4","MCNUM");
+        mccomp_param_nexus(nxhandle,"0165_Trex_banana_det", "yheight", "0", "2.2","MCNUM");
         mccomp_param_nexus(nxhandle,"0165_Trex_banana_det", "zdepth", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0165_Trex_banana_det", "xmin", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0165_Trex_banana_det", "xmax", "0", "0","MCNUM");
@@ -32939,7 +32961,7 @@ int _Trex_banana_det_setpos(void)
         mccomp_param_nexus(nxhandle,"0165_Trex_banana_det", "max", "1e40", "1e40","MCNUM");
         mccomp_param_nexus(nxhandle,"0165_Trex_banana_det", "restore_neutron", "0", "1","int");
         mccomp_param_nexus(nxhandle,"0165_Trex_banana_det", "radius", "0", "3","MCNUM");
-        mccomp_param_nexus(nxhandle,"0165_Trex_banana_det", "options", "NULL", "mantid banana theta bins=221 limits=[5, 135] y bins=136, neutron pixel min=0 t, list all neutrons", "char*");
+        mccomp_param_nexus(nxhandle,"0165_Trex_banana_det", "options", "NULL", "mantid banana theta bins=360 limits=[-36, 144] y bins=88, neutron pixel min=0 t, list all neutrons", "char*");
         mccomp_param_nexus(nxhandle,"0165_Trex_banana_det", "filename", "NULL", "direct_event_banana_signal.dat", "char*");
         mccomp_param_nexus(nxhandle,"0165_Trex_banana_det", "geometry", "NULL", "NULL", "char*");
         mccomp_param_nexus(nxhandle,"0165_Trex_banana_det", "nowritefile", "0", "0","int");
@@ -34582,16 +34604,16 @@ _class_Incoherent *class_Incoherent_init(_class_Incoherent *_comp
 
 
 
-int init(void) { /* called by mccode_main for TREX_vanad:INITIALISE */
+int init(void) { /* called by mccode_main for TREX_vanad_1e11:INITIALISE */
   DEBUG_INSTR();
   // Initialise rng
   srandom(_hash(mcseed-1));
 
   /* code_main/parseoptions/readparams sets instrument parameters value */
-  stracpy(instrument->_name, "TREX_vanad", 256);
+  stracpy(instrument->_name, "TREX_vanad_1e11", 256);
 
-  /* Instrument 'TREX_vanad' INITIALISE */
-  SIG_MESSAGE("[TREX_vanad] INITIALISE [(null):-1]");
+  /* Instrument 'TREX_vanad_1e11' INITIALISE */
+  SIG_MESSAGE("[TREX_vanad_1e11] INITIALISE [(null):-1]");
   #define L0 (instrument->_parameters.L0)
   #define d_Li (instrument->_parameters.d_Li)
   #define RRM (instrument->_parameters.RRM)
@@ -34602,7 +34624,7 @@ int init(void) { /* called by mccode_main for TREX_vanad:INITIALISE */
   #define b_rot (instrument->_parameters.b_rot)
   #define coll (instrument->_parameters.coll)
 {
-// Start of initialize for generated TREX_vanad
+// Start of initialize for generated TREX_vanad_1e11
 
 
 // Source type
@@ -37457,7 +37479,7 @@ void class_Incoherent_trace(_class_Incoherent *_comp
 
 if (_comp->_index == 165) { // EXTEND 'Sample'
 
-  if (!SCATTERED) ABSORB;
+if (!SCATTERED) ABSORB;
     
 }
 
@@ -37493,12 +37515,12 @@ if (_comp->_index == 165) { // EXTEND 'Sample'
 } /* class_Incoherent_trace */
 
 /* *****************************************************************************
-* instrument 'TREX_vanad' TRACE
+* instrument 'TREX_vanad_1e11' TRACE
 ***************************************************************************** */
 
 #ifndef FUNNEL
 #pragma acc routine
-int raytrace(_class_particle* _particle) { /* single event propagation, called by mccode_main for TREX_vanad:TRACE */
+int raytrace(_class_particle* _particle) { /* single event propagation, called by mccode_main for TREX_vanad_1e11:TRACE */
 
   /* init variables and counters for TRACE */
   #undef ABSORB0
@@ -40953,7 +40975,7 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
     if (!ABSORBED) {
     _class_particle Split_Sample_particle=*_particle;
     int Split_Sample_counter;
-    int SplitS_Sample = 20;
+    int SplitS_Sample = 10;
     #pragma acc loop independent
     for (Split_Sample_counter = 0; Split_Sample_counter< SplitS_Sample; Split_Sample_counter++) {
       randstate_t randbackup = *_particle->randstate;
@@ -41020,6 +41042,11 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
 
 /* loop to generate events and call raytrace() propagate them */
 void raytrace_all(unsigned long long ncount, unsigned long seed) {
+
+  // if on GPU and mcdotrace just exit
+  #ifdef OPENACC
+  if (!mcdotrace) {
+  #endif
 
   /* CPU-loop */
   unsigned long long loops;
@@ -41088,6 +41115,12 @@ void raytrace_all(unsigned long long ncount, unsigned long seed) {
   MPI_MASTER(
   printf("*** TRACE end *** \n");
   );
+
+  // if on GPU and mcdotrace just exit
+  #ifdef OPENACC
+  }
+  #endif
+
 } /* raytrace_all */
 
 #endif //no-FUNNEL
@@ -41098,6 +41131,10 @@ void raytrace_all(unsigned long long ncount, unsigned long seed) {
 // switch between cpu/gpu.
 void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
 
+  // if on GPU and mcdotrace just exit
+  #ifdef OPENACC
+  if (!mcdotrace) {
+  #endif
   // set up outer (CPU) loop / particle batches
   unsigned long long loops;
 
@@ -43665,6 +43702,10 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
   free(pbuffer);
 
   printf("\n");
+  // if on GPU and mcdotrace just exit
+  #ifdef OPENACC
+  }
+  #endif
 } /* raytrace_all_funnel */
 #endif // FUNNEL
 
@@ -43701,7 +43742,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
 #undef ABSORB
 #undef ABSORB0
 /* *****************************************************************************
-* instrument 'TREX_vanad' and components SAVE
+* instrument 'TREX_vanad_1e11' and components SAVE
 ***************************************************************************** */
 
 _class_Progress_bar *class_Progress_bar_save(_class_Progress_bar *_comp
@@ -43878,7 +43919,7 @@ _class_L_monitor *class_L_monitor_save(_class_L_monitor *_comp
 
 
 
-int save(FILE *handle) { /* called by mccode_main for TREX_vanad:SAVE */
+int save(FILE *handle) { /* called by mccode_main for TREX_vanad_1e11:SAVE */
   if (!handle) siminfo_init(NULL);
 
   /* call iteratively all components SAVE */
@@ -44080,7 +44121,7 @@ int save(FILE *handle) { /* called by mccode_main for TREX_vanad:SAVE */
 } /* save */
 
 /* *****************************************************************************
-* instrument 'TREX_vanad' and components FINALLY
+* instrument 'TREX_vanad_1e11' and components FINALLY
 ***************************************************************************** */
 
 _class_Progress_bar *class_Progress_bar_finally(_class_Progress_bar *_comp
@@ -44365,7 +44406,7 @@ _class_Guide_honeycomb *class_Guide_honeycomb_finally(_class_Guide_honeycomb *_c
 
 
 
-int finally(void) { /* called by mccode_main for TREX_vanad:FINALLY */
+int finally(void) { /* called by mccode_main for TREX_vanad_1e11:FINALLY */
 #pragma acc update host(_origin_var)
 #pragma acc update host(_ESS_source_var)
 #pragma acc update host(_source_monitor_xy_var)
@@ -44537,8 +44578,8 @@ int finally(void) { /* called by mccode_main for TREX_vanad:FINALLY */
   siminfo_init(NULL);
   save(siminfo_file); /* save data when simulation ends */
 
-  /* Instrument 'TREX_vanad' FINALLY */
-  SIG_MESSAGE("[TREX_vanad] FINALLY [(null):-1]");
+  /* Instrument 'TREX_vanad_1e11' FINALLY */
+  SIG_MESSAGE("[TREX_vanad_1e11] FINALLY [(null):-1]");
   #define L0 (instrument->_parameters.L0)
   #define d_Li (instrument->_parameters.d_Li)
   #define RRM (instrument->_parameters.RRM)
@@ -44549,7 +44590,7 @@ int finally(void) { /* called by mccode_main for TREX_vanad:FINALLY */
   #define b_rot (instrument->_parameters.b_rot)
   #define coll (instrument->_parameters.coll)
 {
-// Start of finally for generated TREX_vanad
+// Start of finally for generated TREX_vanad_1e11
 }
   #undef L0
   #undef d_Li
@@ -44763,7 +44804,7 @@ int finally(void) { /* called by mccode_main for TREX_vanad:FINALLY */
 } /* finally */
 
 /* *****************************************************************************
-* instrument 'TREX_vanad' and components DISPLAY
+* instrument 'TREX_vanad_1e11' and components DISPLAY
 ***************************************************************************** */
 
   #define magnify     mcdis_magnify
@@ -45678,7 +45719,7 @@ _class_Incoherent *class_Incoherent_display(_class_Incoherent *_comp
   #undef cylinder
   #undef sphere
 
-int display(void) { /* called by mccode_main for TREX_vanad:DISPLAY */
+int display(void) { /* called by mccode_main for TREX_vanad_1e11:DISPLAY */
   printf("MCDISPLAY: start\n");
 
   /* call iteratively all components DISPLAY */
@@ -46765,4 +46806,4 @@ int mccode_main(int argc, char *argv[])
 } /* mccode_main */
 /* End of file "mccode_main.c". */
 
-/* end of generated C code ./TREX_vanad.c */
+/* end of generated C code ./TREX_vanad_1e11.c */

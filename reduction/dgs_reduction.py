@@ -1,9 +1,39 @@
+import glob
+import os
+
+import mcstastox as mx
 import numpy as np
 import scipp as sc
 from scipy.signal import find_peaks
 
 from reduction._single_crystal import compute_q_de_norm
 from reduction.utils import *
+
+
+def merge_data(path, source_name="ESS_source", sample_name="Sample"):
+    data_files = []
+    os.chdir(path)
+    for f in glob.glob("**/*.h5", recursive=True):
+        data_files.append(f)
+    print(f"Found {len(data_files)} data files in {path}")
+
+    events_binned = None
+    for f in data_files:
+        data_path, filename = os.path.split(f)
+
+        with mx.Read(data_path, filename=filename) as mcstas_data:
+            scipp_data_group = mcstas_data.export_scipp(
+                source_name=source_name,
+                sample_name=sample_name,
+            )
+        if events_binned is None:
+            events_binned = scipp_data_group["events"]
+        else:
+            events_binned = events_binned.bins.concatenate(events_binned)
+
+        # sample_position = events_binned.coords["sample_position"]
+    det_positions = scipp_data_group["positions"]
+    return events_binned, det_positions
 
 
 def determine_INS_windows(

@@ -1,11 +1,27 @@
-*.pyc
+# pixi environments
+.pixi/*
+!.pixi/config.toml
+
+# Pytest
+.pytest_cache/
+
+# VS Code
+.vscode/
+#MacOS
 .DS_Store
 
+# McStas Data
 runs/*/mccode.h5
 runs/*/*/mccode.h5
 runs/TREX_Cold_Sample_Vana_SingleEi_MultiEi/
 
-reduction/__pycache__/*.pyc
-reduction/__pycache__/_single_crystal.cpython-314.pyc
-reduction/__pycache__/dgs_reduction.cpython-314.pyc
-reduction/__pycache__/utils.cpython-314.pyc
+*out*
+*_mcdisplay
+
+# OFF files
+OFF_files
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo

@@ -1,0 +1,108 @@
+/********************************************************************************
+* 
+* McStas, neutron ray-tracing package
+*         Copyright (C) 1997-2008, All rights reserved
+*         Risoe National Laboratory, Roskilde, Denmark
+*         Institut Laue Langevin, Grenoble, France
+* 
+* This file was written by McStasScript, which is a 
+* python based McStas instrument generator written by 
+* Mads Bertelsen in 2019 while employed at the 
+* European Spallation Source Data Management and 
+* Software Centre
+* 
+* Instrument: TREX
+* 
+* %Identification
+* Written by: Bing Li
+* Date: 17:36:21 on August 03, 2026
+* Origin: DMSC
+* %INSTRUMENT_SITE: Generated_instruments
+* 
+* !!Please write a short instrument description (1 line) here!!
+* 
+* %Description
+* Please write a longer instrument description here!
+* 
+* 
+* %Parameters
+* 
+* %Link 
+* 
+* %End 
+********************************************************************************/
+
+DEFINE INSTRUMENT TREX (
+)
+
+DECLARE 
+%{
+%}
+
+INITIALIZE 
+%{
+// Start of initialize for generated TREX
+%}
+
+TRACE 
+COMPONENT source = ESS_butterfly(
+ sector = "W", beamline = 7,
+ yheight = 0.03, cold_frac = 0.5,
+ dist = 2, focus_xw = 0.095,
+ focus_yh = 0.035, Lmin = 1.4705,
+ Lmax = 3.3295, n_pulses = 1,
+ acc_power = 2)
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT source_monitor_xy = Monitor_nD(
+ xwidth = 0.1, yheight = 0.04,
+ restore_neutron = 1, options = "x limits [-0.06:0.06] bins = 100, y limits [-0.03:0.03] bins = 100",
+ filename = "source_monitor_xy.dat")
+AT (-0.002, 0, 1.8953) ABSOLUTE
+
+COMPONENT source_monitor_div = Monitor_nD(
+ xwidth = 0.09, yheight = 0.03,
+ restore_neutron = 1, options = "hdiv limits [-4.5:4.5] bins = 100, vdiv limits [-2.5:2.5] bins = 100",
+ filename = "source_monitor_div.dat")
+AT (-0.002, 0, 1.8954) ABSOLUTE
+
+COMPONENT source_monitor_lam = Monitor_nD(
+ xwidth = 0.09, yheight = 0.03,
+ restore_neutron = 1, options = "lambda limits [0.5:7.0] bins = 130",
+ filename = "source_monitor_lam.dat")
+AT (-0.002, 0, 1.8955) ABSOLUTE
+
+COMPONENT guide_0 = Guide_anyshape_r(
+ geometry = "./OFF_files/try0.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_1 = Guide_anyshape_r(
+ geometry = "./OFF_files/try1.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_3 = Guide_anyshape_r(
+ geometry = "./OFF_files/try3.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_4 = Guide_anyshape_r(
+ geometry = "./OFF_files/try4.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_5 = Guide_anyshape_r(
+ geometry = "./OFF_files/try5.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_7 = Guide_anyshape_r(
+ geometry = "./OFF_files/try7.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_8 = Guide_anyshape_r(
+ geometry = "./OFF_files/try8.off")
+AT (0, 0, 0) ABSOLUTE
+
+FINALLY 
+%{
+// Start of finally for generated TREX
+%}
+
+END

@@ -1,9 +1,9 @@
 /* Automatically generated file. Do not edit. 
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
- * Instrument: /Users/bingli/Documents/GitHub/mdnorm/instrument/TREX.instr (TREX)
- * Date:       Mon Aug  3 17:36:29 2026
- * File:       ./TREX.c
+ * Instrument: TRex.instr (TRex)
+ * Date:       Tue Aug  4 17:40:11 2026
+ * File:       ./TRex.c
  * CFLAGS=  -DUSE_OFF 
  */
 
@@ -18,7 +18,7 @@
 #pragma warning(disable: 4068)
 #endif
 
-#define MCCODE_STRING " 3.7.14, git"
+#define MCCODE_STRING " 3.7.15, git"
 #define FLAVOR        "mcstas"
 #define FLAVOR_UPPER  "MCSTAS"
 
@@ -237,7 +237,7 @@ void particle_uservar_init(_class_particle *p){
 * %Identification
 * Written by: KN
 * Date:    Aug 29, 1997
-* Release: mcstas 3.7.14
+* Release: mcstas 3.7.15
 * Version: $Revision$
 *
 * Runtime system header for McStas/McXtrace.
@@ -423,7 +423,7 @@ clock_t times (struct tms *__buffer) {
 
 /* the version string is replaced when building distribution with mkdist */
 #ifndef MCCODE_STRING
-#  define MCCODE_STRING " 3.7.14, git"
+#  define MCCODE_STRING " 3.7.15, git"
 #endif
 
 #ifndef MCCODE_DATE
@@ -431,11 +431,11 @@ clock_t times (struct tms *__buffer) {
 #endif
 
 #ifndef MCCODE_VERSION
-#  define MCCODE_VERSION "3.7.14"
+#  define MCCODE_VERSION "3.7.15"
 #endif
 
 #ifndef __MCCODE_VERSION__
-#define __MCCODE_VERSION__ 307014L
+#define __MCCODE_VERSION__ 307015L
 #endif
 
 #ifndef MCCODE_NAME
@@ -6974,7 +6974,7 @@ int plane_intersect(double *t, double x, double y, double z,
 
 
 /* *****************************************************************************
-* Start of instrument 'TREX' generated code
+* Start of instrument 'TRex' generated code
 ***************************************************************************** */
 
 #ifdef MC_TRACE_ENABLED
@@ -6984,42 +6984,51 @@ int traceenabled = 0;
 #endif
 #define MCSTAS "/Users/bingli/Documents/GitHub/mdnorm/.pixi/envs/default/share/mcstas/resources/"
 int   defaultmain         = 1;
-char  instrument_name[]   = "TREX";
-char  instrument_source[] = "/Users/bingli/Documents/GitHub/mdnorm/instrument/TREX.instr";
+char  instrument_name[]   = "TRex";
+char  instrument_source[] = "TRex.instr";
 char *instrument_exe      = NULL; /* will be set to argv[0] in main */
-char  instrument_code[]   = "Instrument TREX source code /Users/bingli/Documents/GitHub/mdnorm/instrument/TREX.instr is not embedded in this executable.\n  Use --source option when running mcstas.\n";
+char  instrument_code[]   = "Instrument TRex source code TRex.instr is not embedded in this executable.\n  Use --source option when running mcstas.\n";
 
 int main(int argc, char *argv[]){return mccode_main(argc, argv);}
 
 /* *****************************************************************************
-* instrument 'TREX' and components DECLARE
+* instrument 'TRex' and components DECLARE
 ***************************************************************************** */
 
 /* Instrument parameters: structure and a table for the initialisation
    (Used in e.g. inputparse and I/O function (e.g. detector_out) */
 
 struct _struct_instrument_parameters {
-  char TREX_has_no_parameter;
+  MCNUM L0;
+  MCNUM d_Li;
+  int mod_type;
+  int bender;
+  MCNUM b_rot;
 };
 typedef struct _struct_instrument_parameters _class_instrument_parameters;
 
 struct _instrument_struct {
-  char   _name[256]; /* the name of this instrument e.g. 'TREX' */
+  char   _name[256]; /* the name of this instrument e.g. 'TRex' */
 /* Counters per component instance */
-  double counter_AbsorbProp[13]; /* absorbed events in PROP routines */
-  double counter_N[13], counter_P[13], counter_P2[13]; /* event counters after each component instance */
-  _class_particle _trajectory[13]; /* current trajectory for STORE/RESTORE */
+  double counter_AbsorbProp[50]; /* absorbed events in PROP routines */
+  double counter_N[50], counter_P[50], counter_P2[50]; /* event counters after each component instance */
+  _class_particle _trajectory[50]; /* current trajectory for STORE/RESTORE */
 /* Components position table (absolute and relative coords) */
-  Coords _position_relative[13]; /* positions of all components */
-  Coords _position_absolute[13];
+  Coords _position_relative[50]; /* positions of all components */
+  Coords _position_absolute[50];
   _class_instrument_parameters _parameters; /* instrument parameters */
 } _instrument_var;
 struct _instrument_struct *instrument = & _instrument_var;
 #pragma acc declare create ( _instrument_var )
 #pragma acc declare create ( instrument )
 
-int numipar = 0;
+int numipar = 5;
 struct mcinputtable_struct mcinputtable[] = {
+  "L0", &(_instrument_var._parameters.L0), instr_type_double, "2.4", "",
+  "d_Li", &(_instrument_var._parameters.d_Li), instr_type_double, "0.845", "",
+  "mod_type", &(_instrument_var._parameters.mod_type), instr_type_int, "1", "",
+  "bender", &(_instrument_var._parameters.bender), instr_type_int, "0", "",
+  "b_rot", &(_instrument_var._parameters.b_rot), instr_type_double, "-0.5", "",
   NULL, NULL, instr_type_double, ""
 };
 
@@ -15130,6 +15139,1491 @@ void ExtendedReflecFunc(double mc_pol_q, double *mc_pol_par, double *mc_pol_r) {
 /* end of ref-lib.c */
 
 
+/* Shared user declarations for all components types 'Pol_bender'. */
+/*****************************************************************************
+*
+* McStas, neutron ray-tracing package
+*         Copyright 1997-2006, All rights reserved
+*         Risoe National Laboratory, Roskilde, Denmark
+*         Institut Laue Langevin, Grenoble, France
+*
+* Library: share/pol-lib.h
+*
+* %Identification
+* Written by: Peter Christiansen
+* Date: August, 2006
+* Origin: RISOE
+* Release: McStas 1.10
+* Version: $Revision: 4382 $
+*
+* This file is to be imported by polarisation components.
+* It handles some shared functions.
+*
+* This library may be used directly as an external library. 
+* It has no dependency.
+*
+* Usage: within SHARE
+* %include "pol-lib"
+*
+****************************************************************************/
+
+#ifndef POL_LIB_H
+#define POL_LIB_H "$Revision: 4382 $"
+
+// Constant used
+#define mc_pol_omegaL (-2 * PI * 29.16e6) /* MHz*rad/Tesla */
+#define mc_pol_mu0 (4*M_PI*1e-7)
+
+/*example field functions should have a variable set of arguments*/
+#include <stdarg.h>
+#include <stddef.h>
+/*macros for some stuff*/
+#ifndef MCSTAS_R_H
+#include <mcstas-r.h>
+#endif
+
+
+typedef int mcmagnet_field_func (double, double, double, double, double *, double *, double *, void *);
+typedef void mcmagnet_prec_func (Coords, Rotation, _class_particle *, double);
+typedef va_list mcmagnet_data;
+
+/*here's where the mcstas magnet stack is declared*/
+/*the magnet stack*/
+
+typedef struct mcmagnet_field_info {
+  int func_id;
+  Rotation *rot;
+  Coords *pos;
+  double *field_parameters;
+  int stop;
+} mcmagnet_field_info;
+
+void mc_pol_set_timestep(double);
+void mc_pol_set_angular_accuracy(double);
+
+#define mcmagnet_pack(dest,id,rotation,position,stopbit,args) \
+  do { \
+    mcmagnet_field_info * mctmp_p; \
+    mctmp_p=(dest); \
+    mctmp_p->func_id=id;\
+    mctmp_p->rot=(rotation); \
+    mctmp_p->pos=(position); \
+    mctmp_p->stop=(stopbit); \
+    mctmp_p->field_parameters=(args); \
+  } while (0);
+
+#define mcmagnet_reset() \
+  do { \
+    mcMagneticField=NULL; \
+    mcMagnetData=NULL; \
+    MAGNET_OFF; \
+  } while (0);
+
+#define mcmagnet_free(mcmagnet_desc) \
+  do { \
+    mcmagnet_field_info * mctmp_p=(mcmagnet_desc); \
+    if (mctmp_p!=NULL) { \
+      if (mctmp_p->data!=NULL) free(mctmp_p->data); \
+      free(mctmp_p); \
+    } \
+  } while(0);
+
+#define MCMAGNET_STOP_ARG INT_MIN
+
+void mcmagnet_print_active();
+void mcmagnet_print_field(mcmagnet_field_info *);
+void mcmagnet_print_stack();
+
+void *mcmagnet_init_par_backend(int dummy, ...);
+
+int mcmagnet_get_field(_class_particle *_particle, double x, double y, double z, double t, double *bx,double *by, double *bz, double Bprms[8]);
+void *mcmagnet_push(_class_particle *_particle, int func_id, Rotation *magnet_rot, Coords *magnet_pos, int stopbit, double Bprms[8]);
+void *mcmagnet_pop(_class_particle *_particle);
+
+/*main magnetic field dispatcher function - every request goes through here*/
+int field_dispatcher(int field_id, double x, double y, double z, double t, double *bx, double *by, double *bz, void *data);
+
+/*example functions for magnetic fields*/
+int const_magnetic_field(double x, double y, double z, double t, double *bx, double *by, double *bz, void *data);
+int rot_magnetic_field(double x, double y, double z, double t, double *bx, double *by, double *bz, void *data);
+int majorana_magnetic_field(double x, double y, double z, double t, double *bx, double *by, double *bz, void *data);
+int gradient_magnetic_field(double x, double y, double z, double t, double *bx, double *by, double *bz, void *data);
+
+/* Routines used for Monochromator and guides/mirrors 
+ * in the special (usual) case where
+ * the up direction is parallel to the y-axis and 
+ * the down direction is anti-parallel to the y-axis */
+void GetMonoPolFNFM(double, double, double*, double*);
+void GetMonoPolRefProb(double, double, double, double*);
+void SetMonoPolRefOut(double, double, double, double*, double*, double*);
+void SetMonoPolTransOut(double, double, double, double*, double*, double*);
+
+// Routines for spin precession in magnetic fields
+void SimpleNumMagnetPrecession(Coords, Rotation, _class_particle *, double);
+
+// Routines to help calculate the required magnetic field
+double GetConstantField(double, double, double);
+
+#endif
+
+/* end of pol-lib.h */
+/****************************************************************************
+*
+* McStas, neutron ray-tracing package
+*         Copyright 1997-2006, All rights reserved
+*         Risoe National Laboratory, Roskilde, Denmark
+*         Institut Laue Langevin, Grenoble, France
+*
+* Library: share/pol-lib.c
+*
+* %Identification
+* Written by: Erik B Knudsen, Astrid Rømer & Peter Christiansen
+* Date: Oct 08
+* Origin: RISOE
+* Release: McStas 1.12
+* Version: $Revision: 4466 $
+*
+* This file is to be imported by polarisation components.
+* It handles some shared functions.
+* Embedded within instrument in runtime mode.
+* Variable names have prefix 'mc_pol_' for 'McStas Polarisation'
+* to avoid conflicts
+*
+* Usage: within SHARE
+* %include "pol-lib"
+*
+****************************************************************************/
+
+#ifndef POL_LIB_H
+#include "pol-lib.h"
+#endif
+
+#include<sys/stat.h>
+
+
+/*******************************************************************************
+*
+* McCode, neutron/xray ray-tracing package
+*         Copyright (C) 1997-2015, All rights reserved
+*         Risoe National Laboratory, Roskilde, Denmark
+*         Institut Laue Langevin, Grenoble, France
+*
+* Runtime: share/interpolation.h
+*
+* %Identification
+* Written by: EF
+* Date:    May 5th 2015
+* Release: McStas X.Y/McXtrace X.Y
+* Version: $Revision: 5455 $
+*
+* Table interpolation routines (header)
+*
+* Usage: Automatically embbeded in the c code whenever required, with e.g.:
+*   %include "interpolation-lib"
+*
+* public function:
+* interpolator = interpolator_load(filename, 0, 0, NULL);
+*   or
+* interpolator = interpolator_load(filename, space_dim, field_dim, "regular" or "kdtree");
+*
+* interpolator_info(interpolator);
+* 
+* interpolator_interpolate(interpolator, {x,y,z...}, {bx,by,bz...});
+*   or 
+* interpolator_interpolate3_3(interpolator, x,y,z, &bx,&by,&bz);
+* 
+* interpolator_save(interpolator);
+*
+* Example:
+*   struct interpolator_struct interpolator = 
+*             interpolator_load("filename", space_dim, field_dim, NULL);
+*   interpolator_info(interpolator);
+*   double space[space_dim]={x,y,z};
+*   double field[field_dim]; // will contain interpolated values
+*   interpolator_interpolate(interpolator, space, field); 
+*
+* Data file format:
+* file is a list of rows [x,y,z...    field_x, field_y, ... ]
+*                        | space ... | field  ... |
+*
+* ---------------------------------------------------------------------------------
+*             !! Important notes on table dimensionality etc: !!
+* ---------------------------------------------------------------------------------
+* 1. On GPU's (NVIDIA/OpenACC) only the 'regular' interpolation method is available
+*    and us hence the 'default'. A GPU-compiled instrument will exit with an error
+*    if you decide to force 'kdtree' mode.
+*    ('kdtree' needs the macro R_SWAP which works node connectivity/placement in
+*      the loaded dataset structure - is thus not thread-safe. And difficult to
+*      make 'atomic' / would require 'one file content pr. neutron'... :-( )
+*
+* 2. On CPU's the default is 'NULL'/0, meaning that the library will itself try to
+*    evaluate if a dataset is suitable for 'regular' or 'kdtree'. You may still
+*    request one of the method explicitly if this makes sense in your case.
+*
+* 3. 'regular' means 'quite regular indeed'... Voxels in the volume MUST be of
+*    uniform size AND dimensions of the volume MUST be equal on all spatial axes.
+* ---------------------------------------------------------------------------------
+*/
+
+/*******************************************************************************
+ * begin declaration (.h) section
+ ******************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+#ifndef INTERPOLATOR_DIMENSIONS
+#define INTERPOLATOR_DIMENSIONS 3
+#endif
+
+typedef struct
+{
+  // This is the location of this point (space).
+  short  space_dimensionality;
+  double *v;    // e.g. double []
+  
+  // These are the values for our field at this location.
+  double *data; // e.g. double []
+
+  // This is the point index in the point list.
+  int    index;
+  #pragma acc shape(v[0:space_dimensionality], data[0:space_dimensionality]) init_needed(space_dimensionality)
+} vertex;
+ 
+/* This struct will store each node of our kdtree. */
+typedef struct _treeNode {
+  vertex   *point;
+  int       depth;
+  struct _treeNode *rChild;
+  struct _treeNode *lChild;
+  #pragma acc shape(point[0:1],rChild[0:1],lChild[0:1])
+} treeNode;
+
+struct interpolator_struct {
+  char  method[256];
+  long  space_dimensionality; // [x,y,z...]
+  long  field_dimensionality; // [bx,by,bz...]
+  long  points;
+  char  filename[1024];
+  treeNode *kdtree;    /* for k-d tree */
+  #pragma acc shape(kdtree[0:1])
+  double  *gridx;  /* each grid contains a component of the field */
+  double  *gridy;
+  double  *gridz;
+  long prod;
+  #pragma acc shape(gridx[0:prod],gridy[0:prod],gridz[0:prod]) init_needed(prod)
+  double   min[INTERPOLATOR_DIMENSIONS];
+  double   max[INTERPOLATOR_DIMENSIONS];
+  long     bin[INTERPOLATOR_DIMENSIONS];
+  double   step[INTERPOLATOR_DIMENSIONS];
+  long     constant_step[INTERPOLATOR_DIMENSIONS];
+};
+
+/******************************************************************************/
+// interpolator_info: print information about the interpolator
+void interpolator_info(struct interpolator_struct *interpolator);
+ 
+/*******************************************************************************
+ * interpolator_load: interpolation initialiser, from point cloud
+ *   returns the interpolator structure
+ * The input is mainly the file name, which is a column based text format.
+ * The interpolator->method is set as 'kdtree' or 'regular' as set at points load
+ ******************************************************************************/ 
+struct interpolator_struct *interpolator_load(char *filename, 
+   long space_dimensionality, long field_dimensionality,
+   char *method);
+     
+/*******************************************************************************
+ * interpolator_interpolate: main interpolation routine.
+ *   returns the 'field' value (of length interpolator->field_dimensionality)
+ *   at the given 'space' location (of length interpolator->space_dimensionality)
+ *   The returned array 'field' MUST be pre-allocated.
+ ******************************************************************************/
+#pragma acc routine
+double *interpolator_interpolate(struct interpolator_struct *interpolator,
+  double *space, double *field);
+
+
+/*******************************************************************************
+ * interpolator_interpolate3_3: main interpolation routine for 3D space
+ *   returns the 'field' value (e.g. 3d)
+ *   at the given 'coord' location (e.g. 3d)
+ * The interpolator->method can be 'kdtree' or 'regular' as set at points load
+ ******************************************************************************/
+#pragma acc routine
+double *interpolator_interpolate3_3(struct interpolator_struct *interpolator,
+                    double  x,  double  y,  double  z,
+                    double *bx, double *by, double *bz);
+
+/*******************************************************************************
+*
+* McCode, neutron/xray ray-tracing package
+*         Copyright (C) 1997-2015, All rights reserved
+*         Risoe National Laboratory, Roskilde, Denmark
+*         Institut Laue Langevin, Grenoble, France
+*
+* Runtime: share/interpolation.c
+*
+* %Identification
+* Written by: EF
+* Date:    May 5th 2015
+* Release: McStas X.Y/McXtrace X.Y
+* Version: $Revision: 5455 $
+*
+* Table interpolation routines
+*
+* Usage: Automatically embbeded in the c code whenever required, with e.g.:
+*   %include "interpolation-lib"
+*
+* public function:
+* interpolator = interpolator_load(filename, 0, 0, NULL);
+*   or
+* interpolator = interpolator_load(filename, space_dim, field_dim, "regular" or "kdtree");
+*
+* interpolator_info(interpolator);
+* 
+* interpolator_interpolate(interpolator, {x,y,z...}, {bx,by,bz...});
+*   or 
+* interpolator_interpolate3_3(interpolator, x,y,z, &bx,&by,&bz);
+* 
+* interpolator_save(interpolator);
+*
+* Example:
+*   struct interpolator_struct interpolator = 
+*             interpolator_load("filename", space_dim, field_dim, NULL);
+*   interpolator_info(interpolator);
+*   double space[space_dim]={x,y,z};
+*   double field[field_dim]; // will contain interpolated values
+*   interpolator_interpolate(interpolator, space, field); 
+*
+* Data file format:
+* file is a list of rows [x,y,z...    field_x, field_y, ... ]
+*                        | space ... | field  ... |
+*
+* ---------------------------------------------------------------------------------
+*             !! Important notes on table dimensionality etc: !!
+* ---------------------------------------------------------------------------------
+* 1. On GPU's (NVIDIA/OpenACC) only the 'regular' interpolation method is available
+*    and us hence the 'default'. A GPU-compiled instrument will exit with an error
+*    if you decide to force 'kdtree' mode.
+*    ('kdtree' needs the macro R_SWAP which works node connectivity/placement in
+*      the loaded dataset structure - is thus not thread-safe. And difficult to
+*      make 'atomic' / would require 'one file content pr. neutron'... :-( )
+*
+* 2. On CPU's the default is 'NULL'/0, meaning that the library will itself try to
+*    evaluate if a dataset is suitable for 'regular' or 'kdtree'. You may still
+*    request one of the method explicitly if this makes sense in your case.
+*
+* 3. 'regular' means 'quite regular indeed'... Voxels in the volume MUST be of
+*    uniform size AND dimensions of the volume MUST be equal on all spatial axes.
+* ---------------------------------------------------------------------------------
+*/
+
+/*******************************************************************************
+ * begin declaration (.h) section
+ ******************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+
+/*******************************************************************************
+ * begin k-D tree section
+ ******************************************************************************/
+
+#define R_SQR(x)        ((x) * (x))
+#define R_SWAP(x, y, t) {t tmp; tmp=x; x=y; y=tmp;}
+ 
+ 
+/******************************************************************************/
+
+// kdtree_squaredDistance: Calculate the standard Euclidean distance between 
+//   these two points in whatever dimension we are considering.
+#pragma acc routine
+double kdtree_squaredDistance(vertex* a, vertex* b)
+{
+  int i;
+  double sum = 0;
+  if (!a || !b || a->space_dimensionality != b->space_dimensionality) return 0;
+  
+  for (i = 0; i < a->space_dimensionality; i++) {
+    sum += R_SQR(a->v[i] - b->v[i]);
+  }
+  return sum;
+} // kdtree_squaredDistance
+
+/******************************************************************************/
+// kdtree_borderCheck: Check to see whether or not this node provides a better 
+//   nearest neighbour.
+#pragma acc routine
+void kdtree_borderCheck(vertex *v, treeNode *thisNode,
+                 vertex **currentBest, double *sDist)
+{
+  if (!thisNode || !v || !sDist) return;
+  
+  double thisDist = kdtree_squaredDistance(thisNode->point,v);
+  if (thisDist < *sDist)
+  {
+    *sDist        = thisDist;
+    *currentBest  = thisNode->point;
+  }
+  // Now recurse down the children, checking whether or not we should
+  // go both sides of the splitting plane, or just down one side.
+  int k = (thisNode->depth) % v->space_dimensionality;
+  if (R_SQR(thisNode->point->v[k] - v->v[k]) <= *sDist)
+  {
+   // The distance to the current spliting plane is less than our current
+   // estimate for the shortest distance, we are going to have to traverse
+   // both sides of the splitting plane.
+    kdtree_borderCheck(v, thisNode->lChild, currentBest, sDist);
+    kdtree_borderCheck(v, thisNode->rChild, currentBest, sDist);
+  } else {
+    // We only have to consider one side of the splitting plane.
+    if (thisNode->point->v[k] > (*currentBest)->v[k])
+      kdtree_borderCheck(v, thisNode->lChild, currentBest, sDist);
+    else
+      kdtree_borderCheck(v, thisNode->rChild, currentBest, sDist);
+  }
+} // kdtree_borderCheck
+
+/******************************************************************************/
+
+// kdtree_partition: Note we slightly modify the standard partition algorithm, 
+//   so that we can partition based on only one dimension of the pointset.
+#pragma acc routine
+int kdtree_partition(vertex **points, int d, int left, int right, int pivot)
+{
+  double pivotValue = points[pivot]->v[d];
+  int i;
+  int storeIndex = left;
+  
+  if (!points) return 0;
+
+  R_SWAP(points[pivot], points[right], vertex*);
+
+  for (i = left; i < right; i++) {
+    if (points[i]->v[d] < pivotValue) {
+      R_SWAP(points[storeIndex], points[i], vertex*);
+      storeIndex ++;
+    }
+  }
+  R_SWAP(points[right], points[storeIndex], vertex*);
+
+  return storeIndex;
+} // kdtree_partition
+
+/******************************************************************************/
+// kdtree_splitAboutMedian: Find the median in expected linear time. - We will 
+//   also pivot all the data about the found median, returning the integer giving
+//   the pivot value.
+
+int kdtree_splitAboutMedian(vertex **points, int d, int left, int right)
+{
+  int k = (right-left)/2 +left;
+  if (!points) return 0;
+  
+  // This isn't a perfect uniform distribution, but it doesn't really matter
+  // for this application.
+  while (left < right)
+  {
+    int pivotIndex    = rand() % (right-left)+left;
+    int pivotNewIndex = kdtree_partition(points,d,left,right,pivotIndex);
+    if (k == pivotNewIndex)
+      return k;
+    else if (k < pivotNewIndex)
+      right = pivotNewIndex-1;
+    else
+      left  = pivotNewIndex+1;
+  }
+
+  return left;
+} // kdtree_splitAboutMedian
+
+/******************************************************************************/
+// kdtree_addToTree: create a kd-tree out of a point set
+treeNode* kdtree_addToTree(vertex **points, int left, int right, int depth)
+{
+  // We can modify the number of dimensions in use. This is defined in the
+  // header file.
+
+  if (right < left || !points) return NULL;
+
+  int d = depth % points[0]->space_dimensionality;
+
+  treeNode *node = malloc(sizeof(treeNode));
+  if (!node) {
+    fprintf(stderr,"interpolation-lib: malloc() error in kdtree_addToTree\n");
+    exit(-1);
+  }
+  node->depth    = depth;
+
+  int med      = kdtree_splitAboutMedian(points, d, left, right);
+  node->point  = points[med];
+
+  node->lChild = kdtree_addToTree(points, left,  med-1, depth + 1);
+  node->rChild = kdtree_addToTree(points, med+1, right, depth + 1);
+
+  return node;
+} // kdtree_addToTree
+
+/******************************************************************************/
+// kdtree_nearestNeighbour_helper: helper function for kdtree_nearestNeighbour
+//   used recursively until a close vertex is found
+#pragma acc routine
+void kdtree_nearestNeighbour_helper(vertex* v, treeNode *tree,
+                             vertex **bestV, double *bestDist)
+{
+  if (!v || !tree || !bestDist) return;
+  
+  int k = tree->depth % v->space_dimensionality;
+
+  int left = tree->point->v[k] > v->v[k];
+
+  treeNode *first  = left ? tree->lChild : tree->rChild;
+  treeNode *second = left ? tree->rChild : tree->lChild;
+
+  // investigate first child if present
+  if (first != NULL) {
+    kdtree_nearestNeighbour_helper(v, first, bestV, bestDist);
+  }
+
+  // update result
+  double thisDist = kdtree_squaredDistance(tree->point, v);
+  if ((*bestV == NULL) || (thisDist < *bestDist)) {
+    *bestDist = thisDist;
+    *bestV    = tree->point;
+  }
+
+  // no second child to investigate
+  if (second == NULL) {
+    return;
+  }
+
+  // we only investigate second child if necessary
+  double treek = tree->point->v[k];
+
+  if (R_SQR(treek - v->v[k]) <= *bestDist) {
+    kdtree_borderCheck(v, second, bestV, bestDist);
+  }
+} // kdtree_nearestNeighbour_helper
+
+/******************************************************************************/
+// kdtree_nearestNeighbour: find closest vertex in tree to given vertex coords
+#pragma acc routine
+vertex* kdtree_nearestNeighbour(vertex* v, treeNode *tree) {
+  vertex *bestV = NULL;
+  double bestDist = 0;
+  if (!v || !tree) return NULL;
+
+  kdtree_nearestNeighbour_helper(v, tree, &bestV, &bestDist);
+  v->data = bestV->data;
+  
+  return bestV;
+} // kdtree_nearestNeighbour
+
+#undef R_SQR
+#undef R_SWAP
+
+/*******************************************************************************
+ * end k-D tree section
+ ******************************************************************************/
+
+
+/*******************************************************************************
+ * begin interpolator section
+ ******************************************************************************/
+ 
+/******************************************************************************/
+/* interpolator_double_vector_compare: comparator for double qsort */
+int interpolator_double_vector_compare(void const *a, void const *b) {
+  if (*(double*)a > *(double*)b)
+  {
+    return 1;
+  }
+  else if (*(double*)a < *(double*)b)
+  {
+    return -1;
+  }
+  else
+  {
+    return 0;
+  }
+}
+
+/******************************************************************************/
+/* interpolator_init: initialise an empty interpolator structure */
+struct interpolator_struct *interpolator_init(void) {
+  int dim=0;
+  struct interpolator_struct *interpolator = malloc(sizeof(struct interpolator_struct));
+  if (!interpolator) {
+    fprintf(stderr,"interpolation-lib: malloc() error in interpolator_init\n");
+    exit(-1);
+  }
+  
+  if (!interpolator) return NULL;
+  
+  strcpy(interpolator->method,"NULL");
+  strcpy(interpolator->filename,"NULL");
+  interpolator->points = interpolator->space_dimensionality 
+                       = interpolator->field_dimensionality = 0;
+  interpolator->kdtree = NULL;
+  for (dim=0; dim < INTERPOLATOR_DIMENSIONS; dim++) {
+    interpolator->min[dim] = +FLT_MAX;
+    interpolator->max[dim] = -FLT_MAX;
+    interpolator->bin[dim] = 0;
+    interpolator->step[dim]= 0;
+    interpolator->constant_step[dim] = 1; /* assumes we have constant step. Check done at load. */
+    interpolator->gridx = NULL;
+    interpolator->gridy = NULL;
+    interpolator->gridz = NULL;
+  }
+  return interpolator;
+} /* interpolator_init */
+
+/******************************************************************************/
+// interpolator_offset: determine element offset for an n-dimensional array
+//   used in: interpolator_load and interpolator_interpolate
+#pragma acc routine
+long interpolator_offset(int dim, long *dimInfo, long *indices) {
+  
+  long result=-1;  // where the resultant offset will be stored 
+  int  i;       // loop counter 
+  
+  /* indices check */
+  for (i=0; i < dim; i++) {
+    if (indices[i] < 0)           indices[i]=0;
+    if (indices[i] >= dimInfo[i]) indices[i]=dimInfo[i]-1;
+  }
+  // Perform the general offset calculation for an n-dimensional array 
+  for (i=0; i < dim; i++) {
+    result = i == 0 ? indices[0]
+                    : result * dimInfo[i] + indices[i];
+  }
+  return result; 
+} // interpolator_offset
+
+/******************************************************************************/
+// interpolator_info: print information about the interpolator
+void interpolator_info(struct interpolator_struct *interpolator) {
+  if (!interpolator) return;
+  MPI_MASTER(
+    printf("interpolator: file '%s' with %ld points. Space is %ldD, Field is %ldD. Using method '%s'.\n",
+      interpolator->filename, interpolator->points, 
+      interpolator->space_dimensionality, interpolator->field_dimensionality,
+      interpolator->method);
+  );
+} /* interpolator_info */
+ 
+/*******************************************************************************
+ * interpolator_load: interpolation initialiser, from point cloud
+ *   returns the interpolator structure
+ * The input is mainly the file name, which is a column based text format.
+ * The interpolator->method is set as 'kdtree' or 'regular' as set at points load
+ ******************************************************************************/ 
+struct interpolator_struct *interpolator_load(char *filename, 
+   long space_dimensionality, long field_dimensionality,
+   char *method) {
+
+  struct interpolator_struct *interpolator = interpolator_init();
+  int dim=0;
+  
+  // Read the table with Read Table Lib
+  t_Table table;
+
+  if(!Table_Read(&table, filename, 0) || table.rows <= 0 || !filename || strlen(filename) > 1024) {
+    // Give up!
+    fprintf(stderr, "interpolator_load: ERROR: Could not open file: '%s'.\n", filename);
+    Table_Free(&table);
+    return NULL;
+  }
+
+  #ifdef OPENACC
+  if (method && strlen(method) && (!strcmp(method, "kdtree"))) {
+    fprintf(stderr, "\n\n!! interpolator_load: FATAL ERROR: !! \n'kdtree' is not supported on OpenACC/GPU - only 'regular' works!\n\n");
+    Table_Free(&table);
+    exit(-1);
+  }
+  #endif
+
+  strcpy(interpolator->filename, filename);
+  interpolator->space_dimensionality = space_dimensionality;
+  interpolator->field_dimensionality = field_dimensionality;
+  interpolator->points = table.rows; /* rows= [x,y,z,... field_x, field_y, ... ] */
+  if (method && strlen(method) && strlen(method) < 32)
+    strcpy(interpolator->method, method);
+  else
+    strcpy(interpolator->method, "NULL");
+  
+  /* get columns and determine dimensionality if not set */
+  if (!interpolator->space_dimensionality) {
+    if (table.columns >= 4)
+      interpolator->space_dimensionality=3;
+    else if (table.columns == 2)
+      interpolator->space_dimensionality=1;
+  }
+  if (interpolator->space_dimensionality <= 0 
+   || interpolator->space_dimensionality > INTERPOLATOR_DIMENSIONS) {
+    fprintf(stderr, "interpolator_load: ERROR: Invalid space dimensionality "
+                    "(0 < dim=%li < %i) from file '%s'.\n",
+      interpolator->space_dimensionality, INTERPOLATOR_DIMENSIONS, filename);
+    return NULL;
+  }
+  
+  interpolator->field_dimensionality = table.columns - space_dimensionality;
+  if (interpolator->field_dimensionality <= 0 
+   || interpolator->field_dimensionality > INTERPOLATOR_DIMENSIONS) {
+    fprintf(stderr, "interpolator_load: ERROR: Invalid field dimensionality "
+                    "(0 < dim=%li < %i) from file '%s'.\n",
+      interpolator->field_dimensionality, INTERPOLATOR_DIMENSIONS, filename);
+    return NULL;
+  }
+  
+  /* read space columns to determine if sampling is regular */
+  for (dim=0; dim<interpolator->space_dimensionality; dim++) {
+    double  x_prev=0;
+    long    index;
+    double* vector = (double*) calloc(sizeof(double), table.rows);
+    if (!vector) {
+      fprintf(stderr,"interpolation-lib: vector calloc() error in interpolator_load\n");
+      exit(-1);
+    }
+    interpolator->bin[dim] = 1;
+    /* get min/max and fill vector for sorting */
+    for (index=0; index<table.rows; index++) {
+      double x = Table_Index(table, index, dim);
+      if (x < interpolator->min[dim]) interpolator->min[dim] = x;
+      if (x > interpolator->max[dim]) interpolator->max[dim] = x;
+      vector[index] = x;
+    }
+    /* sort vector */
+    qsort(vector, table.rows, sizeof(double), interpolator_double_vector_compare);
+    
+    /* now count the number of unique values and check constant step */
+    for (index=0; index<table.rows; index++) {
+      double x = vector[index];
+      double this_step = 0;
+      if (!index) x_prev = x;
+      this_step = fabs(x - x_prev);
+      if (this_step)
+        interpolator->bin[dim]++; /* count unique values */
+      if (interpolator->step[dim] <= 0) 
+        interpolator->step[dim] = this_step;
+      if (this_step && fabs(this_step - interpolator->step[dim]) > interpolator->step[dim]*READ_TABLE_STEPTOL) {
+        /* difference of this step with the first one is 'large' */
+        interpolator->constant_step[dim] = 0; /* not constant step -> kd-tree should be used */
+        if (!strcmp(interpolator->method, "NULL") || !strcmp(interpolator->method, "0")) {
+          strcpy(interpolator->method, "kdtree");
+	} else if (!strcmp(interpolator->method, "regular")) { 
+	    // We arrived here with 'regular' explicitly user-selected / required (GPU)
+	    // which leads to wrong results.
+	    fprintf(stderr,"\n\n%s\n\n",
+	      "!! interpolation-lib ERROR: !!\n"
+	      "   You are running the 'regular' interpolation scheme with a file of\n"
+	      "   non-consistent axis 'binning' along one or more axes.\n"
+              "   This combination is not possible.\n"
+	      "   Please either resample the file to a regular grid or run with 'kdtree'\n"
+	      "   (NB: kdtree is available on CPU only)");
+	    exit(-1);
+	}
+      }
+      x_prev = x;
+    }
+    printf("interpolator_load: Axis %d: step=%g, unique values=%li, from file '%s'.\n",
+        dim, interpolator->step[dim], interpolator->bin[dim], filename);
+
+    if (interpolator->step[dim]<=0 || interpolator->bin[dim]<=1) {
+      fprintf(stderr, "interpolator_load: ERROR: Invalid axis %d: step=%g, unique values=%li, from file '%s'.\n",
+        dim, interpolator->step[dim], interpolator->bin[dim], filename);
+      strcpy(interpolator->method,"NULL");
+      return NULL;
+    }
+    free(vector);
+  } /* end for dim(space/axis) */
+
+  /* check kd-tree method */
+  if (!strlen(interpolator->method) || !strcmp(interpolator->method, "NULL") || !strcmp(interpolator->method, "0"))
+    if (strcmp(interpolator->method, "kdtree"))  /* not kdtree ? -> use direct indexing */
+      strcpy(interpolator->method, "regular");
+  
+  /* assign interpolation technique: 'regular' direct indexing */
+  if (!strcmp(interpolator->method, "regular")) {
+    interpolator->kdtree = NULL;
+
+    /* store table values onto the grid: each field component is stored on the
+     * interpolator->grid, and has size=prod(interpolator->bin)
+     */
+    long prod=1; /* the number of elements in the grid */
+    for (dim=0; dim<interpolator->space_dimensionality; dim++)
+      prod *= interpolator->bin[dim];
+    interpolator->prod=prod;
+    for (dim=0; dim<interpolator->field_dimensionality; dim++) {
+      double *array = (double*)calloc(prod, sizeof(double));
+      if (!array) {
+	fprintf(stderr,"interpolation-lib: array calloc() error in interpolator_load\n");
+	exit(-1);
+      }
+      printf("interpolator_load: allocating %g Gb for dim=%d\n",
+        (double)prod/1073741824.0, dim); fflush(NULL);
+      long index;
+      if (!array) {
+        fprintf(stderr, "interpolator_load: ERROR: Not enough memory for field component %i\n"
+                        "  which requires %g Gb, from file '%s'. Will use kd-tree method.\n",
+        dim, (double)prod/1073741824.0, filename);
+        strcpy(interpolator->method,"kdtree");
+        break;
+      }
+      for (index=0; index<table.rows; index++) {
+        long *indices = malloc(interpolator->space_dimensionality*sizeof(long));
+	if (!indices) {
+	  fprintf(stderr,"interpolation-lib: indices malloc() error in interpolator_load\n");
+	  exit(-1);
+	}
+        long this_index;
+        int  axis=0;
+
+        /* compute index 'space' elements of this 'field' value */
+        for (axis=0; axis < interpolator->space_dimensionality; axis++) {
+          double x      = Table_Index(table, index, axis);
+          indices[axis] = round((x - interpolator->min[axis])/interpolator->step[axis]);
+        }
+        this_index = interpolator_offset(interpolator->space_dimensionality,
+                       interpolator->bin, indices);
+        // array[axis1][axis2][...] = field[dim] column after [space] elements
+        array[this_index] = Table_Index(table, index, interpolator->space_dimensionality+dim);
+	free(indices);
+      }
+      if (dim==0)
+	interpolator->gridx = array;
+      if (dim==1)
+        interpolator->gridy = array;
+      if (dim==2)
+        interpolator->gridz = array;
+      #pragma acc data copyin(array[0:prod])
+    } // end for dim(field)
+  } else
+
+  /* assign interpolation technique: kd-tree (when nearest direct indexing fails) */
+  if (!strcmp(interpolator->method, "kdtree")) {
+    // Allocate array of vertex pointers
+    vertex **vertices = calloc(table.rows, sizeof(vertex*));
+    if (!vertices) {
+      fprintf(stderr, "interpolator_load: ERROR: Not enough memory when allocating field with %li vertices from file '%s'\n",
+        interpolator->bin[dim], filename);
+      strcpy(interpolator->method,"NULL");
+      return NULL;
+    }
+
+    // Convert from table to array layout
+    int i, j;
+    long count=0;
+    for (i=0; i < table.rows; i++)
+    {
+      vertex *v    = malloc(sizeof(vertex));
+      double *field= calloc(interpolator->field_dimensionality, sizeof(double));
+      double *coord= calloc(interpolator->space_dimensionality, sizeof(double));
+      if (!v || !field || !coord) {
+	fprintf(stderr,"interpolation-lib: v/field/coord calloc()/malloc() error in interpolator_load\n");
+	exit(-1);
+      }
+      if (v && field && coord) {
+        for (j = 0; j < interpolator->space_dimensionality; j++) {
+          coord[j]    = Table_Index(table, i,     j);
+        }
+        for (j = 0; j < interpolator->field_dimensionality; j++) {
+          field[j] = Table_Index(table, i, interpolator->space_dimensionality + j);
+        }
+        v->space_dimensionality = interpolator->space_dimensionality;
+        v->v    = coord;
+        v->data = field;
+        v->index= i;
+      }
+      vertices[i] = v;
+    }
+
+    interpolator->kdtree = kdtree_addToTree(vertices, 0, table.rows-1, 0); // build treeNode
+    //for (i=0; i<INTERPOLATOR_DIMENSIONS; interpolator->grid[i++] = NULL);  // inactivate grid method
+    interpolator->gridx=NULL;
+    interpolator->gridy=NULL;
+    interpolator->gridz=NULL;
+    free(vertices);
+  } 
+  else
+    fprintf(stderr, "interpolator_load: ERROR: unknown interpolator method %s [file '%s'].\n",
+      interpolator->method, filename);
+  
+  // Free table
+  Table_Free(&table);
+  return interpolator;
+} /* end interpolator_load */
+     
+/*******************************************************************************
+ * interpolator_interpolate: main interpolation routine.
+ *   returns the 'field' value (of length interpolator->field_dimensionality)
+ *   at the given 'space' location (of length interpolator->space_dimensionality)
+ *   The returned array 'field' MUST be pre-allocated.
+ ******************************************************************************/ 
+double *interpolator_interpolate(struct interpolator_struct *interpolator,
+  double *space, double *field)
+{
+  if (!space || !interpolator || !field) return NULL;
+  #ifdef OPENACC
+  #define strcmp str_comp
+  #endif
+  
+  /* k-d tree call ************************************************************/
+  if (!strcmp(interpolator->method, "kdtree") && interpolator->kdtree) {
+    vertex v;
+    int i;
+    v.v = space; 
+    v.space_dimensionality=interpolator->space_dimensionality;
+    vertex *w =kdtree_nearestNeighbour(&v, interpolator->kdtree);
+    if (!w) return NULL;
+    for (i=0; i<interpolator->field_dimensionality; i++){
+        field[i]=w->data[i];
+    }
+    return (w->data);
+
+  } else 
+  
+  /* nearest direct grid element call *****************************************/
+  if (!strcmp(interpolator->method, "regular") && interpolator->gridx) {
+    int axis;
+    long *indices = malloc((int)interpolator->space_dimensionality*sizeof(double));
+    if (!indices) {
+      #ifndef OPENACC
+      fprintf(stderr,"interpolation-lib: indices malloc() error in interpolator_interpolate\n");
+      exit(-1);
+      #endif
+    }
+    for (axis=0; axis < interpolator->space_dimensionality; axis++) {
+      indices[axis] = round((space[axis]-interpolator->min[axis])/interpolator->step[axis]);
+    }
+    long index = interpolator_offset(3, interpolator->bin, indices);
+    for (axis=0; axis < interpolator->field_dimensionality; axis++) {
+      if (axis==0)
+	field[axis] = interpolator->gridx[index];
+      if (axis==1)
+        field[axis] = interpolator->gridy[index];
+      if (axis==2)
+        field[axis] = interpolator->gridz[index];
+    }
+    free(indices);
+    return field;
+  } else {
+    #ifndef OPENACC
+    fprintf(stderr, "interpolator_interpolate: ERROR: invalid interpolator method %s from file '%s'.\n",
+      interpolator->method, interpolator->filename);
+    exit(-1);
+    #endif
+  }
+  
+} // interpolator_interpolate
+
+
+/*******************************************************************************
+ * interpolator_interpolate3_3: main interpolation routine for 3D space
+ *   returns the 'field' value (e.g. 3d)
+ *   at the given 'coord' location (e.g. 3d)
+ * The interpolator->method can be 'kdtree' or 'regular' as set at points load
+ ******************************************************************************/ 
+double *interpolator_interpolate3_3(struct interpolator_struct *interpolator,
+                    double  x,  double  y,  double  z,
+                    double *bx, double *by, double *bz)
+{
+  double coord[3] = { x,y,z };
+  double field[3] = { 0,0,0 };
+  double *ret=NULL;
+  if (interpolator->space_dimensionality != 3 
+   || interpolator->field_dimensionality != 3) return 0;
+  ret = interpolator_interpolate(interpolator, coord, field);
+  *bx = field[0]; *by = field[1]; *bz = field[2];
+  return(ret);
+} /* interpolator_interpolate3_3 */
+
+
+
+
+/*definition of the magnetic stack*/
+#ifndef MCMAGNET_STACKSIZE
+#define MCMAGNET_STACKSIZE 12
+#endif
+
+/*Threshold below which two magnetic fields are considered to be
+ * in the same direction.*/
+#ifndef mc_pol_angular_accuracy
+#define mc_pol_angular_accuracy (1.0*DEG2RAD)
+#endif
+
+/*The maximal timestep taken by neutrons in a const field*/
+#ifndef mc_pol_initial_timestep
+#define mc_pol_initial_timestep 1e-5;
+#endif
+
+#ifdef PROP_MAGNET
+#undef PROP_MAGNET
+#define PROP_MAGNET(dt) \
+  do { \
+    /* change coordinates from local system to lab system. The magnet stack always refers to the lab system. */ \
+    Rotation rotLM; \
+    Coords   posLM = POS_A_CURRENT_COMP; \
+    rot_transpose(ROT_A_CURRENT_COMP, rotLM); \
+    SimpleNumMagnetPrecession(posLM, rotLM, _particle, dt); \
+  } while(0)
+#endif
+
+enum field_functions{
+  tabled=-1,
+  none=0,
+  constant=1,
+  rotating=2,
+  majorana=3,
+  MSF=4,
+  RF=5,
+  gradient=6,
+};
+
+#pragma acc routine seq
+int magnetic_field_dispatcher(int func_id, double x, double y, double z, double t, double *bx,double *by, double *bz, double pars[8]){
+  int retval=1;
+  switch (func_id){
+    case constant: 
+      {
+        retval=const_magnetic_field(x,y,z,t,bx,by,bz, pars);
+        break;
+      }
+    case majorana:
+      {
+        retval=majorana_magnetic_field(x,y,z,t,bx,by,bz, pars);
+        break;
+      }
+    case rotating:
+      {
+        retval=rot_magnetic_field(x,y,z,t,bx,by,bz, pars);
+        break;
+      }
+    case RF:
+      {
+        /*not implemented yet*/
+        break;
+      }
+    case gradient:
+      {
+        retval=gradient_magnetic_field(x,y,z,t,bx,by,bz,pars);
+        break;
+      }
+    case none:
+      {
+        retval=0;*bx=0;*by=0;bz=0;
+      }
+  }
+  return retval;
+}
+
+
+/*traverse the stack and return the magnetic field*/
+#pragma acc routine seq
+int mcmagnet_get_field(_class_particle *_particle, double x, double y, double z, double t, double *bx,double *by, double *bz, double dummy[8]){
+  mcmagnet_field_info *p,**stack;
+  Coords in,loc,b,bsum={0,0,0};
+  Rotation r;
+  /*extract the magnetic field stack experienced by this particle*/
+  stack=((mcmagnet_field_info **) _particle->mcMagnet);
+
+  /*PROP_MAGNET takes care of transforming local "PROP" coordinates to lab system*/
+  in.x=x;in.y=y;in.z=z;
+
+  int i=0,stat=1;
+  p=stack[i];
+  *bx=0;*by=0;*bz=0;
+  if (p==NULL || p->func_id==0){
+    *bx=0;*by=0;*bz=0;
+    return 0;
+  }
+  
+  while(p!=NULL){
+    /*transform to the coordinate system of the particular magnetic function*/
+    loc=coords_sub(rot_apply(*(p->rot),in),*(p->pos));
+    stat=magnetic_field_dispatcher((p->func_id),loc.x,loc.y,loc.z,t,&(b.x),&(b.y),&(b.z),p->field_parameters);
+    /*check if the field function should be garbage collected*/
+    if (!stat){
+      /*transform to the lab system and add up. (resusing loc variable - to now contain the field in lab coords)*/
+      rot_transpose(*(p->rot),r);
+      loc=rot_apply(r,b);
+      bsum.x+=loc.x;bsum.y+=loc.y;bsum.z+=loc.z;
+      //printf("Bs=(%g %g %g), B=(%g %g %g)\n",bsum.x,bsum.y,bsum.z,loc.x,loc.y,loc.z);
+    }
+    if (p->stop) break;
+    p=stack[++i];
+  }
+  /*we now have the magnetic field in lab coords in loc., transfer it back to caller*/
+  *bx=bsum.x;
+  *by=bsum.y;
+  *bz=bsum.z;
+  return 0;
+}
+
+#pragma acc routine seq
+void *mcmagnet_push(_class_particle *_particle, int func_id, Rotation *magnet_rot, Coords *magnet_pos, int stopbit, double prms[8]){
+  /*check if any field has been pushed already*/
+  if (_particle->mcMagnet==NULL){
+    /*No fields exist in the stack so allocate room for it and point _particle->mcMagnet to it*/
+    #ifdef OPENACC
+    _particle->mcMagnet=malloc(MCMAGNET_STACKSIZE*sizeof(mcmagnet_field_info *));
+    /* Lack of a calloc makes us NULLify manually since we check for NULL further down */ 
+    for (int ll=0; ll<MCMAGNET_STACKSIZE; ll++) {
+      ((mcmagnet_field_info **) _particle->mcMagnet)[ll]=NULL;
+    }
+    #else
+    _particle->mcMagnet=calloc(MCMAGNET_STACKSIZE,sizeof(mcmagnet_field_info *));
+    #endif
+    if(!_particle->mcMagnet) {
+      #ifndef OPENACC
+      fprintf(stderr,"pol-lib: malloc() error pushing field to stack\n");
+      exit(-1);
+      #endif
+    }
+  }
+  mcmagnet_field_info **stack=((mcmagnet_field_info **) _particle->mcMagnet);
+
+  /*move the stack one step down start from -2 since we have 0-indexing (i.e. last item is stacksize-1) */
+  int i;
+  for (i=MCMAGNET_STACKSIZE-2;i>=0;i--){
+    stack[i+1]=stack[i];
+  }
+  /*allocate momery for the new stack item*/
+  #ifdef OPENACC
+  stack[0]=malloc(sizeof(mcmagnet_field_info));
+  #else
+  stack[0]=calloc(1, sizeof(mcmagnet_field_info));
+  #endif
+  if(!stack[0]) {
+    #ifndef OPENACC
+    fprintf(stderr,"pol-lib: malloc() error allocating field stack[0]\n");
+    exit(-1);
+    #endif
+  }
+  /*drop the new item in*/
+  mcmagnet_pack(stack[0],func_id,magnet_rot,magnet_pos,stopbit,prms);
+  return NULL;// (void *) stack[0];
+}
+
+#pragma acc routine seq
+void *mcmagnet_pop(_class_particle *_particle) {
+  mcmagnet_field_info **stack=((mcmagnet_field_info **) _particle->mcMagnet);
+  /*free memory for upper element*/
+#ifdef OPENACC
+  free(stack[0]);
+#else
+  free(stack[0]);
+#endif
+  /*move the stack one step up*/
+  int i;
+  for (i=0;i<MCMAGNET_STACKSIZE-2;i++){
+    stack[i]=stack[i+1];
+  }
+  /*if this makes the upper element go NULL also NULL _particle->mcMagnet
+    to flag that precession propagation is no longer needed*/
+  if(stack[0]==NULL){
+    free(_particle->mcMagnet);
+    _particle->mcMagnet=NULL;
+  }
+  return NULL;// (void*) (stack[0]);
+}
+
+/*Example magnetic field functions*/
+#pragma acc routine seq
+int const_magnetic_field(double x, double y, double z, double t,
+    double *bx, double *by, double *bz, void *data) {
+  if (!data) return 1;
+  *bx=((double *)data)[0];
+  *by=((double *)data)[1];
+  *bz=((double *)data)[2];
+  return 0;
+}
+
+#pragma acc routine seq
+int rot_magnetic_field(double x, double y, double z, double t,
+    double *bx, double *by, double *bz, void *data) {
+  /* Field of magnitude By that rotates to x in magnetLength m*/
+  
+  if (!data) return 1;
+  double Bmagnitude=((double *)data)[0];//   = mcMagnetData[1];
+  double magnetLength=((double *)data)[1];// = mcMagnetData[5];
+  *bx =  Bmagnitude * sin(PI/2*z/magnetLength);
+  *by =  Bmagnitude * cos(PI/2*z/magnetLength);
+  *bz =  0;
+  return 0;
+}
+
+#pragma acc routine seq
+int majorana_magnetic_field(double x, double y, double z, double t,
+    double *bx, double *by, double *bz, void *data) {
+  /* Large linearly decreasing (from +Bx to -Bx in magnetLength) component along x axis,
+   * small constant component along y axis
+   */
+  if (!data) return 1;
+  double Blarge       = ((double *)data)[0];
+  double Bsmall       = ((double *)data)[1];
+  double magnetLength = ((double *)data)[2];
+  *bx =  Blarge -2*Blarge*z/magnetLength;
+  *by =  Bsmall;
+  *bz =  0;
+  return 0;
+}
+
+
+#pragma acc routine seq
+int gradient_magnetic_field(double x, double y, double z, double t, double *bx, double *by, double *bz, void *data){
+  double *bp = (double *)data;
+  double *b1=bp;
+  double L=bp[3];
+  double *b2=&(bp[4]);
+  double alpha=(z+L/2.0)/L;
+  *bx=alpha * b1[0] + (1-alpha)*b2[0];
+  *by=alpha * b1[1] + (1-alpha)*b2[1];
+  *bz=alpha * b1[2] + (1-alpha)*b2[2];
+  return 0;
+}
+
+
+/****************************************************************************
+* void GetMonoPolFNFM(double Rup, double Rdown, double *FN, double *FM)
+*
+* ACTION: Calculate FN and FM from reflectivities Rup and Rdown
+*
+* For a monochromator (nuclear and magnetic scattering), the
+* polarisation is done by defining the reflectivity for spin up (Rup)
+* and spin down (Rdown) (which can be negative, see now!) and based on
+* this the nuclear and magnetic structure factors are calculated:
+* FM = sign(Rup)*sqrt(|Rup|) + sign(Rdown)*sqrt(|Rdown|)
+* FN = sign(Rup)*sqrt(|Rup|) - sign(Rdown)*sqrt(|Rdown|)
+*****************************************************************************/
+#pragma acc routine seq
+void GetMonoPolFNFM(double mc_pol_Rup, double mc_pol_Rdown,
+		    double *mc_pol_FN, double *mc_pol_FM) {
+  if (mc_pol_Rup>0)
+    mc_pol_Rup   = sqrt(fabs(mc_pol_Rup));
+  else
+    mc_pol_Rup   = -sqrt(fabs(mc_pol_Rup));
+
+  if (mc_pol_Rdown>0)
+    mc_pol_Rdown = sqrt(fabs(mc_pol_Rdown));
+  else
+    mc_pol_Rdown = -sqrt(fabs(mc_pol_Rdown));
+
+  *mc_pol_FN = 0.5*(mc_pol_Rup + mc_pol_Rdown);
+  *mc_pol_FM = 0.5*(mc_pol_Rup - mc_pol_Rdown);
+  return;
+}
+
+/****************************************************************************
+* void GetMonoPolRefProb(double FN, double FM, double sy, double *prob)
+*
+* ACTION: Calculate reflection probability from sy, FN and FM
+*
+* For a monochromator with up direction along y the reflection
+* probability is given as:
+* prob = FN*FN + 2*FN*FM*sy_in + FM*FM
+*     (= |Rup| + |Rdown| (for sy_in=0))
+* where FN and FM are calculated from Rup and Rdown by GetMonoPolFNFM
+*****************************************************************************/
+#pragma acc routine seq
+void GetMonoPolRefProb(double mc_pol_FN, double mc_pol_FM,
+		       double mc_pol_sy, double *mc_pol_prob) {
+  *mc_pol_prob = mc_pol_FN*mc_pol_FN + mc_pol_FM*mc_pol_FM
+    + 2*mc_pol_FN*mc_pol_FM*mc_pol_sy;
+  return;
+}
+
+/****************************************************************************
+* void SetMonoPolRefOut(double FN, double FM, double refProb,
+*		     double* sx, double* sy, double* sz) {
+*
+* ACTION: Set the outgoing polarisation vector of the reflected neutrons
+* given FN, FM and the reflection probability.
+*
+* For a monochromator with up direction along y the outgoing polarisation
+* is given as:
+*	sx = (FN*FN - FM*FM)*sx_in/R0;
+*	sy = ((FN*FN - FM*FM)*sy_in + 2*FN*FM + FM*FM*sy_in)/R0;
+*	sz = (FN*FN - FM*FM)*sz_in/R0;
+* where sx_in, sy_in, and sz_in is the incoming polarisation, and
+* FN and FM are calculated from Rup and Rdown by GetMonoPolFNFM
+*****************************************************************************/
+#pragma acc routine seq
+void SetMonoPolRefOut(double mc_pol_FN, double mc_pol_FM,
+		      double mc_pol_refProb, double* mc_pol_sx,
+		      double* mc_pol_sy, double* mc_pol_sz) {
+  *mc_pol_sx = (mc_pol_FN*mc_pol_FN - mc_pol_FM*mc_pol_FM)*(*mc_pol_sx)
+    /mc_pol_refProb;
+  *mc_pol_sy = ((mc_pol_FN*mc_pol_FN - mc_pol_FM*mc_pol_FM)*(*mc_pol_sy)
+		+ 2*mc_pol_FN*mc_pol_FM + 2*mc_pol_FM*mc_pol_FM*(*mc_pol_sy))
+    /mc_pol_refProb;
+  *mc_pol_sz = (mc_pol_FN*mc_pol_FN - mc_pol_FM*mc_pol_FM)*(*mc_pol_sz)
+    /mc_pol_refProb;
+  return;
+}
+
+/****************************************************************************
+* void SetMonoPolTransOut(double FN, double FM, double refProb,
+*			  double* sx, double* sy, double* sz) {
+*
+* ACTION: Set the outgoing polarisation vector of the transmitted neutrons
+* given FN, FM and the REFLECTION probability.
+*
+* We use that the polarization is conserved so:
+* s_in = refProb*s_ref+(1-refProb)*s_trans, and then
+* s_trans = (s_in-refProb*s_ref)/(1-refProb)
+* where refProb is calculated using the routine GetMonoPolRefProb
+* and s_ref is calculated by SetMonoPolRefOut
+*****************************************************************************/
+#pragma acc routine seq
+void SetMonoPolTransOut(double mc_pol_FN, double mc_pol_FM,
+			double mc_pol_refProb, double* mc_pol_sx,
+			double* mc_pol_sy, double* mc_pol_sz) {
+  double mc_pol_sx_ref = *mc_pol_sx, mc_pol_sy_ref = *mc_pol_sy;
+  double mc_pol_sz_ref = *mc_pol_sz;
+
+  // By passing 1 as probability we get mc_pol_refProb*s_out_ref
+  SetMonoPolRefOut(mc_pol_FN, mc_pol_FM, 1,
+		   &mc_pol_sx_ref, &mc_pol_sy_ref, &mc_pol_sz_ref);
+  *mc_pol_sx = (*mc_pol_sx - mc_pol_sx_ref)/(1 - mc_pol_refProb);
+  *mc_pol_sy = (*mc_pol_sy - mc_pol_sy_ref)/(1 - mc_pol_refProb);
+  *mc_pol_sz = (*mc_pol_sz - mc_pol_sz_ref)/(1 - mc_pol_refProb);
+  return;
+}
+
+/****************************************************************************
+* void SimpleNumMagnetPrecession(double x, double y, double z, double t,
+*			         double vx, double vy, double vz,
+*			         double* sx, double* sy, double* sz, double dt)
+*
+*****************************************************************************/
+#pragma acc routine seq
+void SimpleNumMagnetPrecession(Coords posMagnet, Rotation rotMagnet, _class_particle *precess_particle, double dt) {
+
+  double Bx, By, Bz, mc_pol_phiz;
+  double BxStart, ByStart, BzStart, Bstart;
+  double BxTemp, ByTemp, BzTemp, Btemp;
+  double mc_pol_timeStep, mc_pol_sp;
+  const double mc_pol_spThreshold  = cos(mc_pol_angular_accuracy);
+  _class_particle ploc=*precess_particle;
+  _class_particle *pp = &ploc;
+  Rotation mc_pol_rotBack;
+  
+  /* change coordinates from current local system to lab system */
+  mccoordschange(posMagnet, rotMagnet, pp);
+  mcmagnet_get_field(pp, pp->x, pp->y, pp->z, pp->t,&BxTemp, &ByTemp, &BzTemp,NULL);
+
+  do {
+
+    Bx = 0; By = 0; Bz = 0; mc_pol_phiz = 0;
+    BxStart = BxTemp; ByStart = ByTemp; BzStart = BzTemp;
+    Bstart = sqrt(BxStart*BxStart + ByStart*ByStart + BzStart*BzStart);
+    
+    mc_pol_timeStep = mc_pol_initial_timestep;
+
+    /*check if we need to take multiple steps of maximum size mc_pol_timeStep*/
+    if(dt<mc_pol_timeStep){
+      mc_pol_timeStep = dt;
+    }
+    double xp,yp,zp; 
+    do {
+      xp = pp->x+ pp->vx*mc_pol_timeStep;
+      yp = pp->y+ pp->vy*mc_pol_timeStep;
+      zp = pp->z+ pp->vz*mc_pol_timeStep;
+
+      mcmagnet_get_field(pp,xp,yp,zp, pp->t+mc_pol_timeStep, &BxTemp, &ByTemp, &BzTemp, NULL);
+      /* not so elegant, but this is how we make sure that the steps decrease
+       when the WHILE condition is not met*/
+      mc_pol_timeStep *= 0.5;
+
+      Btemp = sqrt(BxTemp*BxTemp + ByTemp*ByTemp + BzTemp*BzTemp);
+
+      mc_pol_sp = scalar_prod(BxStart, ByStart, BzStart, BxTemp, ByTemp, BzTemp);
+      mc_pol_sp /= Bstart*Btemp;
+
+    } while (mc_pol_sp<mc_pol_spThreshold && mc_pol_timeStep>FLT_EPSILON);
+
+    mc_pol_timeStep*=2;
+
+    // update coordinate values
+    pp->x = xp;
+    pp->y = yp;
+    pp->z = zp;
+    pp->t += mc_pol_timeStep;
+    dt -= mc_pol_timeStep;
+
+    /*precess around mean magnetic field*/
+    Bx = 0.5 * (BxStart + BxTemp);
+    By = 0.5 * (ByStart + ByTemp);
+    Bz = 0.5 * (BzStart + BzTemp);
+    mc_pol_phiz = fmod(sqrt(Bx*Bx+ By*By+ Bz*Bz) * mc_pol_timeStep*mc_pol_omegaL, 2*PI);
+
+    /* Do the neutron spin precession for the small timestep*/
+    if(!(Bx==0 && By==0 && Bz==0)) {
+
+      double sx_in = pp->sx;
+      double sy_in = pp->sy;
+      double sz_in = pp->sz;
+
+      rotate(pp->sx, pp->sy, pp->sz, sx_in,sy_in,sz_in, mc_pol_phiz, Bx, By, Bz);
+    }
+
+  } while (dt>0);
+
+  /* change back spin coordinates from lab system to local system*/
+  rot_transpose(rotMagnet, mc_pol_rotBack);
+  /*have to do this "manually" since mccordschange does not commute/reverse*/
+  pp->x-=posMagnet.x; pp->y-=posMagnet.y; pp->z-=posMagnet.z;
+  mccoordschange_polarisation(mc_pol_rotBack, &(pp->vx), &(pp->vy), &(pp->vz));
+  mccoordschange_polarisation(mc_pol_rotBack, &(pp->sx), &(pp->sy), &(pp->sz));
+  /*copy back the spin polarization coordinates to the caller*/
+  precess_particle->sx=pp->sx;
+  precess_particle->sy=pp->sy;
+  precess_particle->sz=pp->sz;
+}
+
+/****************************************************************************
+* double GetConstantField(double length, double lambda, double angle)
+*
+* Return the magnetic field in Tesla required to flip a neutron with
+* wavelength lambda(1/velocity), angle degrees, over the specified
+* length(=time*velocity).
+*
+*****************************************************************************/
+#pragma acc routine seq
+double GetConstantField(double mc_pol_length, double mc_pol_lambda,
+			double mc_pol_angle)
+{
+  const double mc_pol_velocity = K2V*2*PI/mc_pol_lambda;
+  const double mc_pol_time = mc_pol_length/mc_pol_velocity;
+
+  // B*omegaL*time = angle
+  return mc_pol_angle*DEG2RAD/mc_pol_omegaL/mc_pol_time; // T
+}
+
+/* end of regular pol-lib.c */
+
+
+
+/* Shared user declarations for all components types 'Slit'. */
+  void
+  slit_print_if (int condition, char* level, char* message, char* component) {
+    if (condition)
+      fprintf (stderr, "Slit: %s: %s: %s\n", component, level, message);
+  }
+  void
+  slit_error_if (int condition, char* message, char* component) {
+    slit_print_if (condition, "Error", message, component);
+    if (condition)
+      exit (-1);
+  }
+  void
+  slit_warning_if (int condition, char* message, char* component) {
+    slit_print_if (condition, "Warning", message, component);
+  }
+
 
 
 /* ************************************************************************** */
@@ -15370,17 +16864,270 @@ _class_Guide_anyshape_r _guide_7_var;
 _class_Guide_anyshape_r _guide_8_var;
 #pragma acc declare create ( _guide_8_var )
 
-int mcNUMCOMP = 11;
+_class_Guide_anyshape_r _guide_10_var;
+#pragma acc declare create ( _guide_10_var )
+
+/* component bender=Pol_bender() [13] DECLARE */
+/* Parameter definition for component type 'Pol_bender' */
+struct _struct_Pol_bender_parameters {
+  /* Component type 'Pol_bender' setting parameters */
+  MCNUM xwidth;
+  MCNUM yheight;
+  MCNUM length;
+  MCNUM radius;
+  MCNUM G;
+  int nslit;
+  MCNUM d;
+  int debug;
+  int endFlat;
+  MCNUM rTopUpPar[5];
+  MCNUM rTopDownPar[5];
+  MCNUM rBotUpPar[5];
+  MCNUM rBotDownPar[5];
+  MCNUM rLeftUpPar[5];
+  MCNUM rLeftDownPar[5];
+  MCNUM rRightUpPar[5];
+  MCNUM rRightDownPar[5];
+  char rTopUpData[16384];
+  char rTopDownData[16384];
+  char rBotUpData[16384];
+  char rBotDownData[16384];
+  char rLeftUpData[16384];
+  char rLeftDownData[16384];
+  char rRightUpData[16384];
+  char rRightDownData[16384];
+  int drawOption;
+  /* Component type 'Pol_bender' private parameters */
+  Coords  localG;
+  Coords  normTopBot;
+  Coords  normIn;
+  Coords  normOut;
+  Coords  pointTop;
+  Coords  pointBot;
+  Coords  pointIn;
+  Coords  pointOut;
+  t_Table  rTopUpTable;
+  t_Table  rTopDownTable;
+  t_Table  rBotUpTable;
+  t_Table  rBotDownTable;
+  t_Table  rLeftUpTable;
+  t_Table  rLeftDownTable;
+  t_Table  rRightUpTable;
+  t_Table  rRightDownTable;
+  int  useTables;
+}; /* _struct_Pol_bender_parameters */
+typedef struct _struct_Pol_bender_parameters _class_Pol_bender_parameters;
+
+/* Parameters for component type 'Pol_bender' */
+struct _struct_Pol_bender {
+  char     _name[256]; /* e.g. bender */
+  char     _type[256]; /* Pol_bender */
+  long     _index; /* e.g. 2 index in TRACE list */
+  Coords   _position_absolute;
+  Coords   _position_relative; /* wrt PREVIOUS */
+  Rotation _rotation_absolute;
+  Rotation _rotation_relative; /* wrt PREVIOUS */
+  int      _rotation_is_identity;
+  int      _position_relative_is_zero;
+  _class_Pol_bender_parameters _parameters;
+};
+typedef struct _struct_Pol_bender _class_Pol_bender;
+_class_Pol_bender _bender_var;
+#pragma acc declare create ( _bender_var )
+
+_class_Guide_anyshape_r _guide_11_var;
+#pragma acc declare create ( _guide_11_var )
+
+/* component slit=Slit() [15] DECLARE */
+/* Parameter definition for component type 'Slit' */
+struct _struct_Slit_parameters {
+  /* Component type 'Slit' setting parameters */
+  MCNUM xmin;
+  MCNUM xmax;
+  MCNUM ymin;
+  MCNUM ymax;
+  MCNUM radius;
+  MCNUM xwidth;
+  MCNUM yheight;
+  /* Component type 'Slit' private parameters */
+  char  isradial;
+}; /* _struct_Slit_parameters */
+typedef struct _struct_Slit_parameters _class_Slit_parameters;
+
+/* Parameters for component type 'Slit' */
+struct _struct_Slit {
+  char     _name[256]; /* e.g. slit */
+  char     _type[256]; /* Slit */
+  long     _index; /* e.g. 2 index in TRACE list */
+  Coords   _position_absolute;
+  Coords   _position_relative; /* wrt PREVIOUS */
+  Rotation _rotation_absolute;
+  Rotation _rotation_relative; /* wrt PREVIOUS */
+  int      _rotation_is_identity;
+  int      _position_relative_is_zero;
+  _class_Slit_parameters _parameters;
+};
+typedef struct _struct_Slit _class_Slit;
+_class_Slit _slit_var;
+#pragma acc declare create ( _slit_var )
+
+_class_Monitor_nD _insert_monitor_xy_var;
+#pragma acc declare create ( _insert_monitor_xy_var )
+
+_class_Monitor_nD _insert_monitor_div_var;
+#pragma acc declare create ( _insert_monitor_div_var )
+
+_class_Monitor_nD _insert_monitor_lam_var;
+#pragma acc declare create ( _insert_monitor_lam_var )
+
+_class_Monitor_nD _inset_monitor_ToF_var;
+#pragma acc declare create ( _inset_monitor_ToF_var )
+
+_class_Guide_anyshape_r _guide_13_var;
+#pragma acc declare create ( _guide_13_var )
+
+_class_Guide_anyshape_r _guide_14_var;
+#pragma acc declare create ( _guide_14_var )
+
+_class_Guide_anyshape_r _guide_15_var;
+#pragma acc declare create ( _guide_15_var )
+
+_class_Guide_anyshape_r _guide_16_var;
+#pragma acc declare create ( _guide_16_var )
+
+_class_Guide_anyshape_r _guide_18_var;
+#pragma acc declare create ( _guide_18_var )
+
+_class_Guide_anyshape_r _guide_19_var;
+#pragma acc declare create ( _guide_19_var )
+
+_class_Guide_anyshape_r _guide_20_var;
+#pragma acc declare create ( _guide_20_var )
+
+_class_Guide_anyshape_r _guide_22_var;
+#pragma acc declare create ( _guide_22_var )
+
+_class_Guide_anyshape_r _guide_23_var;
+#pragma acc declare create ( _guide_23_var )
+
+_class_Guide_anyshape_r _guide_24_var;
+#pragma acc declare create ( _guide_24_var )
+
+_class_Guide_anyshape_r _guide_25_var;
+#pragma acc declare create ( _guide_25_var )
+
+_class_Guide_anyshape_r _guide_27_var;
+#pragma acc declare create ( _guide_27_var )
+
+_class_Guide_anyshape_r _guide_28_var;
+#pragma acc declare create ( _guide_28_var )
+
+_class_Guide_anyshape_r _guide_29_var;
+#pragma acc declare create ( _guide_29_var )
+
+_class_Guide_anyshape_r _guide_30_var;
+#pragma acc declare create ( _guide_30_var )
+
+_class_Guide_anyshape_r _guide_32_var;
+#pragma acc declare create ( _guide_32_var )
+
+_class_Guide_anyshape_r _guide_33_var;
+#pragma acc declare create ( _guide_33_var )
+
+_class_Guide_anyshape_r _guide_34_var;
+#pragma acc declare create ( _guide_34_var )
+
+_class_Guide_anyshape_r _guide_36_var;
+#pragma acc declare create ( _guide_36_var )
+
+_class_Guide_anyshape_r _guide_37_var;
+#pragma acc declare create ( _guide_37_var )
+
+_class_Guide_anyshape_r _guide_39_var;
+#pragma acc declare create ( _guide_39_var )
+
+_class_Guide_anyshape_r _guide_40_var;
+#pragma acc declare create ( _guide_40_var )
+
+_class_Guide_anyshape_r _guide_41_var;
+#pragma acc declare create ( _guide_41_var )
+
+_class_Guide_anyshape_r _guide_42_var;
+#pragma acc declare create ( _guide_42_var )
+
+_class_Guide_anyshape_r _guide_44_var;
+#pragma acc declare create ( _guide_44_var )
+
+_class_Guide_anyshape_r _guide_45_var;
+#pragma acc declare create ( _guide_45_var )
+
+_class_Guide_anyshape_r _guide_46_var;
+#pragma acc declare create ( _guide_46_var )
+
+_class_Guide_anyshape_r _guide_47_var;
+#pragma acc declare create ( _guide_47_var )
+
+/* component BW_Chopper_1=MultiDiskChopper() [48] DECLARE */
+/* Parameter definition for component type 'MultiDiskChopper' */
+struct _struct_MultiDiskChopper_parameters {
+  /* Component type 'MultiDiskChopper' setting parameters */
+  char slit_center[16384];
+  char slit_width[16384];
+  MCNUM nslits;
+  MCNUM delta_y;
+  MCNUM nu;
+  MCNUM nrev;
+  MCNUM ratio;
+  MCNUM jitter;
+  MCNUM delay;
+  MCNUM isfirst;
+  MCNUM phase;
+  MCNUM radius;
+  MCNUM equal;
+  MCNUM abs_out;
+  MCNUM verbose;
+  /* Component type 'MultiDiskChopper' private parameters */
+  double  T;
+  double  To;
+  double  omega;
+  double*  dslit_center;
+  double*  dhslit_width;
+  double*  t0;
+  double*  t1;
+}; /* _struct_MultiDiskChopper_parameters */
+typedef struct _struct_MultiDiskChopper_parameters _class_MultiDiskChopper_parameters;
+
+/* Parameters for component type 'MultiDiskChopper' */
+struct _struct_MultiDiskChopper {
+  char     _name[256]; /* e.g. BW_Chopper_1 */
+  char     _type[256]; /* MultiDiskChopper */
+  long     _index; /* e.g. 2 index in TRACE list */
+  Coords   _position_absolute;
+  Coords   _position_relative; /* wrt PREVIOUS */
+  Rotation _rotation_absolute;
+  Rotation _rotation_relative; /* wrt PREVIOUS */
+  int      _rotation_is_identity;
+  int      _position_relative_is_zero;
+  _class_MultiDiskChopper_parameters _parameters;
+};
+typedef struct _struct_MultiDiskChopper _class_MultiDiskChopper;
+_class_MultiDiskChopper _BW_Chopper_1_var;
+#pragma acc declare create ( _BW_Chopper_1_var )
+
+int mcNUMCOMP = 48;
 
 /* User declarations from instrument definition. Can define functions. */
+double frac; // Used in the Source component. Defines the statistical fraction of eventsemitted from the cold part of the moderator, the value is determined later in the file depending on the moderator type that was chosen
+double lamb_1; // Wavelength min in [AA]
+double lamb_2; // Wavelength max in [AA]
 
 #undef compcurname
 #undef compcurtype
 #undef compcurindex
-/* end of instrument 'TREX' and components DECLARE */
+/* end of instrument 'TRex' and components DECLARE */
 
 /* *****************************************************************************
-* instrument 'TREX' and components INITIALISE
+* instrument 'TRex' and components INITIALISE
 ***************************************************************************** */
 
 double index_getdistance(int first_index, int second_index)
@@ -15424,15 +17171,15 @@ int _source_setpos(void)
   _source_var._parameters.sector[0]='\0';
   _source_var._parameters.beamline = 7;
   _source_var._parameters.yheight = 0.03;
-  _source_var._parameters.cold_frac = 0.5;
+  _source_var._parameters.cold_frac = frac;
   _source_var._parameters.target_index = 0;
   _source_var._parameters.dist = 2;
   _source_var._parameters.focus_xw = 0.095;
   _source_var._parameters.focus_yh = 0.035;
   _source_var._parameters.c_performance = 1;
   _source_var._parameters.t_performance = 1;
-  _source_var._parameters.Lmin = 1.4705;
-  _source_var._parameters.Lmax = 3.3295;
+  _source_var._parameters.Lmin = lamb_1;
+  _source_var._parameters.Lmax = lamb_2;
   _source_var._parameters.tmax_multiplier = 3;
   _source_var._parameters.n_pulses = 1;
   _source_var._parameters.acc_power = 2;
@@ -15471,15 +17218,15 @@ int _source_setpos(void)
         mccomp_param_nexus(nxhandle,"0000_source", "sector", "N", "W", "char*");
         mccomp_param_nexus(nxhandle,"0000_source", "beamline", "1", "7","int");
         mccomp_param_nexus(nxhandle,"0000_source", "yheight", "0.03", "0.03","MCNUM");
-        mccomp_param_nexus(nxhandle,"0000_source", "cold_frac", "0.5", "0.5","MCNUM");
+        mccomp_param_nexus(nxhandle,"0000_source", "cold_frac", "0.5", "frac","MCNUM");
         mccomp_param_nexus(nxhandle,"0000_source", "target_index", "0", "0","int");
         mccomp_param_nexus(nxhandle,"0000_source", "dist", "0", "2","MCNUM");
         mccomp_param_nexus(nxhandle,"0000_source", "focus_xw", "0", "0.095","MCNUM");
         mccomp_param_nexus(nxhandle,"0000_source", "focus_yh", "0", "0.035","MCNUM");
         mccomp_param_nexus(nxhandle,"0000_source", "c_performance", "1", "1","MCNUM");
         mccomp_param_nexus(nxhandle,"0000_source", "t_performance", "1", "1","MCNUM");
-        mccomp_param_nexus(nxhandle,"0000_source", "Lmin", "NONE", "1.4705","MCNUM");
-        mccomp_param_nexus(nxhandle,"0000_source", "Lmax", "NONE", "3.3295","MCNUM");
+        mccomp_param_nexus(nxhandle,"0000_source", "Lmin", "NONE", "lamb_1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0000_source", "Lmax", "NONE", "lamb_2","MCNUM");
         mccomp_param_nexus(nxhandle,"0000_source", "tmax_multiplier", "3", "3","MCNUM");
         mccomp_param_nexus(nxhandle,"0000_source", "n_pulses", "1", "1","int");
         mccomp_param_nexus(nxhandle,"0000_source", "acc_power", "5", "2","MCNUM");
@@ -16581,6 +18328,3241 @@ int _guide_8_setpos(void)
   return(0);
 } /* _guide_8_setpos */
 
+/* component guide_10=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_10_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_10_setpos] component guide_10=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_10_var._name, "guide_10", 16384);
+  stracpy(_guide_10_var._type, "Guide_anyshape_r", 16384);
+  _guide_10_var._index=12;
+  int current_setpos_index = 12;
+  _guide_10_var._parameters.xwidth = 0;
+  _guide_10_var._parameters.yheight = 0;
+  _guide_10_var._parameters.zdepth = 0;
+  _guide_10_var._parameters.center = 0;
+  _guide_10_var._parameters.transmit = 0;
+  _guide_10_var._parameters.R0 = 0.99;
+  _guide_10_var._parameters.Qc = 0.0219;
+  _guide_10_var._parameters.alpha = 0;
+  _guide_10_var._parameters.m = 0;
+  _guide_10_var._parameters.W = 0;
+  if("./OFF_files/try10.off" && strlen("./OFF_files/try10.off"))
+    stracpy(_guide_10_var._parameters.geometry, "./OFF_files/try10.off" ? "./OFF_files/try10.off" : "", 16384);
+  else 
+  _guide_10_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_10=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_10_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_8_var._rotation_absolute, tr1);
+    rot_mul(_guide_10_var._rotation_absolute, tr1, _guide_10_var._rotation_relative);
+    _guide_10_var._rotation_is_identity =  rot_test_identity(_guide_10_var._rotation_relative);
+    _guide_10_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_8_var._position_absolute, _guide_10_var._position_absolute);
+    _guide_10_var._position_relative = rot_apply(_guide_10_var._rotation_absolute, tc1);
+  } /* guide_10=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_10", _guide_10_var._position_absolute, _guide_10_var._rotation_absolute);
+  instrument->_position_absolute[12] = _guide_10_var._position_absolute;
+  instrument->_position_relative[12] = _guide_10_var._position_relative;
+    _guide_10_var._position_relative_is_zero =  coords_test_zero(_guide_10_var._position_relative);
+  instrument->counter_N[12]  = instrument->counter_P[12] = instrument->counter_P2[12] = 0;
+  instrument->counter_AbsorbProp[12]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0011_guide_10", _guide_10_var._position_absolute, _guide_10_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0011_guide_10", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0011_guide_10", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0011_guide_10", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0011_guide_10", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0011_guide_10", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0011_guide_10", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0011_guide_10", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0011_guide_10", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0011_guide_10", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0011_guide_10", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0011_guide_10", "geometry", 0, "./OFF_files/try10.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_10_setpos */
+
+/* component bender=Pol_bender() SETTING, POSITION/ROTATION */
+int _bender_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_bender_setpos] component bender=Pol_bender() SETTING [Pol_bender:0]");
+  stracpy(_bender_var._name, "bender", 16384);
+  stracpy(_bender_var._type, "Pol_bender", 16384);
+  _bender_var._index=13;
+  int current_setpos_index = 13;
+  _bender_var._parameters.xwidth = 0.06384;
+  _bender_var._parameters.yheight = 0.046;
+  _bender_var._parameters.length = 0.05;
+  _bender_var._parameters.radius = 7.2;
+  _bender_var._parameters.G = 9.8;
+  _bender_var._parameters.nslit = 425;
+  _bender_var._parameters.d = 1e-06;
+  _bender_var._parameters.debug = 0;
+  _bender_var._parameters.endFlat = 0;
+  _bender_var._parameters.rTopUpPar[0] = 0.99;
+  _bender_var._parameters.rTopUpPar[1] = 3.02;
+  _bender_var._parameters.rTopUpPar[2] = 4;
+  _bender_var._parameters.rTopUpPar[3] = 0.0219;
+  _bender_var._parameters.rTopUpPar[4] = 0.003;
+  _bender_var._parameters.rTopDownPar[0] = 0.99;
+  _bender_var._parameters.rTopDownPar[1] = 3.02;
+  _bender_var._parameters.rTopDownPar[2] = 4;
+  _bender_var._parameters.rTopDownPar[3] = 0.0219;
+  _bender_var._parameters.rTopDownPar[4] = 0.003;
+  _bender_var._parameters.rBotUpPar[0] = 0.99;
+  _bender_var._parameters.rBotUpPar[1] = 0.0219;
+  _bender_var._parameters.rBotUpPar[2] = 6.07;
+  _bender_var._parameters.rBotUpPar[3] = 2;
+  _bender_var._parameters.rBotUpPar[4] = 0.003;
+  _bender_var._parameters.rBotDownPar[0] = 0.99;
+  _bender_var._parameters.rBotDownPar[1] = 0.0219;
+  _bender_var._parameters.rBotDownPar[2] = 6.07;
+  _bender_var._parameters.rBotDownPar[3] = 2;
+  _bender_var._parameters.rBotDownPar[4] = 0.003;
+  _bender_var._parameters.rLeftUpPar[0] = 0.99;
+  _bender_var._parameters.rLeftUpPar[1] = 0.0219;
+  _bender_var._parameters.rLeftUpPar[2] = 6.07;
+  _bender_var._parameters.rLeftUpPar[3] = 2;
+  _bender_var._parameters.rLeftUpPar[4] = 0.003;
+  _bender_var._parameters.rLeftDownPar[0] = 0.99;
+  _bender_var._parameters.rLeftDownPar[1] = 0.0219;
+  _bender_var._parameters.rLeftDownPar[2] = 6.07;
+  _bender_var._parameters.rLeftDownPar[3] = 2;
+  _bender_var._parameters.rLeftDownPar[4] = 0.003;
+  _bender_var._parameters.rRightUpPar[0] = 0.99;
+  _bender_var._parameters.rRightUpPar[1] = 0.0219;
+  _bender_var._parameters.rRightUpPar[2] = 6.07;
+  _bender_var._parameters.rRightUpPar[3] = 2;
+  _bender_var._parameters.rRightUpPar[4] = 0.003;
+  _bender_var._parameters.rRightDownPar[0] = 0.99;
+  _bender_var._parameters.rRightDownPar[1] = 0.0219;
+  _bender_var._parameters.rRightDownPar[2] = 6.07;
+  _bender_var._parameters.rRightDownPar[3] = 2;
+  _bender_var._parameters.rRightDownPar[4] = 0.003;
+  if("" && strlen(""))
+    stracpy(_bender_var._parameters.rTopUpData, "" ? "" : "", 16384);
+  else 
+  _bender_var._parameters.rTopUpData[0]='\0';
+  if("" && strlen(""))
+    stracpy(_bender_var._parameters.rTopDownData, "" ? "" : "", 16384);
+  else 
+  _bender_var._parameters.rTopDownData[0]='\0';
+  if("" && strlen(""))
+    stracpy(_bender_var._parameters.rBotUpData, "" ? "" : "", 16384);
+  else 
+  _bender_var._parameters.rBotUpData[0]='\0';
+  if("" && strlen(""))
+    stracpy(_bender_var._parameters.rBotDownData, "" ? "" : "", 16384);
+  else 
+  _bender_var._parameters.rBotDownData[0]='\0';
+  if("" && strlen(""))
+    stracpy(_bender_var._parameters.rLeftUpData, "" ? "" : "", 16384);
+  else 
+  _bender_var._parameters.rLeftUpData[0]='\0';
+  if("" && strlen(""))
+    stracpy(_bender_var._parameters.rLeftDownData, "" ? "" : "", 16384);
+  else 
+  _bender_var._parameters.rLeftDownData[0]='\0';
+  if("" && strlen(""))
+    stracpy(_bender_var._parameters.rRightUpData, "" ? "" : "", 16384);
+  else 
+  _bender_var._parameters.rRightUpData[0]='\0';
+  if("" && strlen(""))
+    stracpy(_bender_var._parameters.rRightDownData, "" ? "" : "", 16384);
+  else 
+  _bender_var._parameters.rRightDownData[0]='\0';
+  _bender_var._parameters.drawOption = 2;
+
+
+  /* component bender=Pol_bender() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_bender_var._rotation_absolute,
+      (0.00192)*DEG2RAD, (_instrument_var._parameters.b_rot)*DEG2RAD, (0)*DEG2RAD);
+    rot_transpose(_guide_10_var._rotation_absolute, tr1);
+    rot_mul(_bender_var._rotation_absolute, tr1, _bender_var._rotation_relative);
+    _bender_var._rotation_is_identity =  rot_test_identity(_bender_var._rotation_relative);
+    _bender_var._position_absolute = coords_set(
+      -0.017, 0, 5.399);
+    tc1 = coords_sub(_guide_10_var._position_absolute, _bender_var._position_absolute);
+    _bender_var._position_relative = rot_apply(_bender_var._rotation_absolute, tc1);
+  } /* bender=Pol_bender() AT ROTATED */
+  DEBUG_COMPONENT("bender", _bender_var._position_absolute, _bender_var._rotation_absolute);
+  instrument->_position_absolute[13] = _bender_var._position_absolute;
+  instrument->_position_relative[13] = _bender_var._position_relative;
+    _bender_var._position_relative_is_zero =  coords_test_zero(_bender_var._position_relative);
+  instrument->counter_N[13]  = instrument->counter_P[13] = instrument->counter_P2[13] = 0;
+  instrument->counter_AbsorbProp[13]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0012_bender", _bender_var._position_absolute, _bender_var._rotation_absolute, "Pol_bender");
+        mccomp_param_nexus(nxhandle,"0012_bender", "xwidth", "NONE", "0.06384","MCNUM");
+        mccomp_param_nexus(nxhandle,"0012_bender", "yheight", "NONE", "0.046","MCNUM");
+        mccomp_param_nexus(nxhandle,"0012_bender", "length", "NONE", "0.05","MCNUM");
+        mccomp_param_nexus(nxhandle,"0012_bender", "radius", "NONE", "7.2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0012_bender", "G", "9.8", "9.8","MCNUM");
+        mccomp_param_nexus(nxhandle,"0012_bender", "nslit", "1", "425","int");
+        mccomp_param_nexus(nxhandle,"0012_bender", "d", "0.0", "1e-06","MCNUM");
+        mccomp_param_nexus(nxhandle,"0012_bender", "debug", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0012_bender", "endFlat", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0012_bender", "rTopUpPar", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }", "{ 0.99 , 3.02 , 4.0 , 0.0219 , 0.003 }","MCNUM");
+        mccomp_param_nexus(nxhandle,"0012_bender", "rTopDownPar", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }", "{ 0.99 , 3.02 , 4.0 , 0.0219 , 0.003 }","MCNUM");
+        mccomp_param_nexus(nxhandle,"0012_bender", "rBotUpPar", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }","MCNUM");
+        mccomp_param_nexus(nxhandle,"0012_bender", "rBotDownPar", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }","MCNUM");
+        mccomp_param_nexus(nxhandle,"0012_bender", "rLeftUpPar", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }","MCNUM");
+        mccomp_param_nexus(nxhandle,"0012_bender", "rLeftDownPar", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }","MCNUM");
+        mccomp_param_nexus(nxhandle,"0012_bender", "rRightUpPar", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }","MCNUM");
+        mccomp_param_nexus(nxhandle,"0012_bender", "rRightDownPar", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }","MCNUM");
+        mccomp_param_nexus(nxhandle,"0012_bender", "rTopUpData", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0012_bender", "rTopDownData", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0012_bender", "rBotUpData", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0012_bender", "rBotDownData", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0012_bender", "rLeftUpData", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0012_bender", "rLeftDownData", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0012_bender", "rRightUpData", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0012_bender", "rRightDownData", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0012_bender", "drawOption", "1", "2","int");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _bender_setpos */
+
+/* component guide_11=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_11_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_11_setpos] component guide_11=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_11_var._name, "guide_11", 16384);
+  stracpy(_guide_11_var._type, "Guide_anyshape_r", 16384);
+  _guide_11_var._index=14;
+  int current_setpos_index = 14;
+  _guide_11_var._parameters.xwidth = 0;
+  _guide_11_var._parameters.yheight = 0;
+  _guide_11_var._parameters.zdepth = 0;
+  _guide_11_var._parameters.center = 0;
+  _guide_11_var._parameters.transmit = 0;
+  _guide_11_var._parameters.R0 = 0.99;
+  _guide_11_var._parameters.Qc = 0.0219;
+  _guide_11_var._parameters.alpha = 0;
+  _guide_11_var._parameters.m = 0;
+  _guide_11_var._parameters.W = 0;
+  if("./OFF_files/try11.off" && strlen("./OFF_files/try11.off"))
+    stracpy(_guide_11_var._parameters.geometry, "./OFF_files/try11.off" ? "./OFF_files/try11.off" : "", 16384);
+  else 
+  _guide_11_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_11=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_11_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_bender_var._rotation_absolute, tr1);
+    rot_mul(_guide_11_var._rotation_absolute, tr1, _guide_11_var._rotation_relative);
+    _guide_11_var._rotation_is_identity =  rot_test_identity(_guide_11_var._rotation_relative);
+    _guide_11_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_bender_var._position_absolute, _guide_11_var._position_absolute);
+    _guide_11_var._position_relative = rot_apply(_guide_11_var._rotation_absolute, tc1);
+  } /* guide_11=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_11", _guide_11_var._position_absolute, _guide_11_var._rotation_absolute);
+  instrument->_position_absolute[14] = _guide_11_var._position_absolute;
+  instrument->_position_relative[14] = _guide_11_var._position_relative;
+    _guide_11_var._position_relative_is_zero =  coords_test_zero(_guide_11_var._position_relative);
+  instrument->counter_N[14]  = instrument->counter_P[14] = instrument->counter_P2[14] = 0;
+  instrument->counter_AbsorbProp[14]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0013_guide_11", _guide_11_var._position_absolute, _guide_11_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0013_guide_11", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0013_guide_11", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0013_guide_11", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0013_guide_11", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0013_guide_11", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0013_guide_11", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0013_guide_11", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0013_guide_11", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0013_guide_11", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0013_guide_11", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0013_guide_11", "geometry", 0, "./OFF_files/try11.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_11_setpos */
+
+/* component slit=Slit() SETTING, POSITION/ROTATION */
+int _slit_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_slit_setpos] component slit=Slit() SETTING [Slit:0]");
+  stracpy(_slit_var._name, "slit", 16384);
+  stracpy(_slit_var._type, "Slit", 16384);
+  _slit_var._index=15;
+  int current_setpos_index = 15;
+  _slit_var._parameters.xmin = UNSET;
+  _slit_var._parameters.xmax = UNSET;
+  _slit_var._parameters.ymin = UNSET;
+  _slit_var._parameters.ymax = UNSET;
+  _slit_var._parameters.radius = UNSET;
+  _slit_var._parameters.xwidth = 0.06;
+  _slit_var._parameters.yheight = 0.046;
+
+
+  /* component slit=Slit() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_slit_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_11_var._rotation_absolute, tr1);
+    rot_mul(_slit_var._rotation_absolute, tr1, _slit_var._rotation_relative);
+    _slit_var._rotation_is_identity =  rot_test_identity(_slit_var._rotation_relative);
+    _slit_var._position_absolute = coords_set(
+      -0.017, 0, 5.915);
+    tc1 = coords_sub(_guide_11_var._position_absolute, _slit_var._position_absolute);
+    _slit_var._position_relative = rot_apply(_slit_var._rotation_absolute, tc1);
+  } /* slit=Slit() AT ROTATED */
+  DEBUG_COMPONENT("slit", _slit_var._position_absolute, _slit_var._rotation_absolute);
+  instrument->_position_absolute[15] = _slit_var._position_absolute;
+  instrument->_position_relative[15] = _slit_var._position_relative;
+    _slit_var._position_relative_is_zero =  coords_test_zero(_slit_var._position_relative);
+  instrument->counter_N[15]  = instrument->counter_P[15] = instrument->counter_P2[15] = 0;
+  instrument->counter_AbsorbProp[15]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0014_slit", _slit_var._position_absolute, _slit_var._rotation_absolute, "Slit");
+        mccomp_param_nexus(nxhandle,"0014_slit", "xmin", "UNSET", "UNSET","MCNUM");
+        mccomp_param_nexus(nxhandle,"0014_slit", "xmax", "UNSET", "UNSET","MCNUM");
+        mccomp_param_nexus(nxhandle,"0014_slit", "ymin", "UNSET", "UNSET","MCNUM");
+        mccomp_param_nexus(nxhandle,"0014_slit", "ymax", "UNSET", "UNSET","MCNUM");
+        mccomp_param_nexus(nxhandle,"0014_slit", "radius", "UNSET", "UNSET","MCNUM");
+        mccomp_param_nexus(nxhandle,"0014_slit", "xwidth", "UNSET", "0.06","MCNUM");
+        mccomp_param_nexus(nxhandle,"0014_slit", "yheight", "UNSET", "0.046","MCNUM");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _slit_setpos */
+
+/* component insert_monitor_xy=Monitor_nD() SETTING, POSITION/ROTATION */
+int _insert_monitor_xy_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_insert_monitor_xy_setpos] component insert_monitor_xy=Monitor_nD() SETTING [Monitor_nD:0]");
+  stracpy(_insert_monitor_xy_var._name, "insert_monitor_xy", 16384);
+  stracpy(_insert_monitor_xy_var._type, "Monitor_nD", 16384);
+  _insert_monitor_xy_var._index=16;
+  int current_setpos_index = 16;
+  if("" && strlen(""))
+    stracpy(_insert_monitor_xy_var._parameters.user0, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.user0[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_xy_var._parameters.user1, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.user1[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_xy_var._parameters.user2, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.user2[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_xy_var._parameters.user3, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.user3[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_xy_var._parameters.user4, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.user4[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_xy_var._parameters.user5, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.user5[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_xy_var._parameters.user6, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.user6[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_xy_var._parameters.user7, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.user7[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_xy_var._parameters.user8, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.user8[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_xy_var._parameters.user9, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.user9[0]='\0';
+  _insert_monitor_xy_var._parameters.xwidth = 0.06;
+  _insert_monitor_xy_var._parameters.yheight = 0.046;
+  _insert_monitor_xy_var._parameters.zdepth = 0;
+  _insert_monitor_xy_var._parameters.xmin = 0;
+  _insert_monitor_xy_var._parameters.xmax = 0;
+  _insert_monitor_xy_var._parameters.ymin = 0;
+  _insert_monitor_xy_var._parameters.ymax = 0;
+  _insert_monitor_xy_var._parameters.zmin = 0;
+  _insert_monitor_xy_var._parameters.zmax = 0;
+  _insert_monitor_xy_var._parameters.bins = 0;
+  _insert_monitor_xy_var._parameters.min = -1e40;
+  _insert_monitor_xy_var._parameters.max = 1e40;
+  _insert_monitor_xy_var._parameters.restore_neutron = 1;
+  _insert_monitor_xy_var._parameters.radius = 0;
+  if("x limits [-0.04:0.04] bins = 100, y limits [-0.033:0.033] bins = 100" && strlen("x limits [-0.04:0.04] bins = 100, y limits [-0.033:0.033] bins = 100"))
+    stracpy(_insert_monitor_xy_var._parameters.options, "x limits [-0.04:0.04] bins = 100, y limits [-0.033:0.033] bins = 100" ? "x limits [-0.04:0.04] bins = 100, y limits [-0.033:0.033] bins = 100" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.options[0]='\0';
+  if("insert_monitor_xy.dat" && strlen("insert_monitor_xy.dat"))
+    stracpy(_insert_monitor_xy_var._parameters.filename, "insert_monitor_xy.dat" ? "insert_monitor_xy.dat" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.filename[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_xy_var._parameters.geometry, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.geometry[0]='\0';
+  _insert_monitor_xy_var._parameters.nowritefile = 0;
+  _insert_monitor_xy_var._parameters.nexus_bins = 0;
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_xy_var._parameters.username0, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.username0[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_xy_var._parameters.username1, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.username1[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_xy_var._parameters.username2, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.username2[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_xy_var._parameters.username3, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.username3[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_xy_var._parameters.username4, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.username4[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_xy_var._parameters.username5, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.username5[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_xy_var._parameters.username6, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.username6[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_xy_var._parameters.username7, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.username7[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_xy_var._parameters.username8, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.username8[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_xy_var._parameters.username9, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_xy_var._parameters.username9[0]='\0';
+
+
+  /* component insert_monitor_xy=Monitor_nD() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_insert_monitor_xy_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_slit_var._rotation_absolute, tr1);
+    rot_mul(_insert_monitor_xy_var._rotation_absolute, tr1, _insert_monitor_xy_var._rotation_relative);
+    _insert_monitor_xy_var._rotation_is_identity =  rot_test_identity(_insert_monitor_xy_var._rotation_relative);
+    _insert_monitor_xy_var._position_absolute = coords_set(
+      -0.017, 0.0, 5.9151);
+    tc1 = coords_sub(_slit_var._position_absolute, _insert_monitor_xy_var._position_absolute);
+    _insert_monitor_xy_var._position_relative = rot_apply(_insert_monitor_xy_var._rotation_absolute, tc1);
+  } /* insert_monitor_xy=Monitor_nD() AT ROTATED */
+  DEBUG_COMPONENT("insert_monitor_xy", _insert_monitor_xy_var._position_absolute, _insert_monitor_xy_var._rotation_absolute);
+  instrument->_position_absolute[16] = _insert_monitor_xy_var._position_absolute;
+  instrument->_position_relative[16] = _insert_monitor_xy_var._position_relative;
+    _insert_monitor_xy_var._position_relative_is_zero =  coords_test_zero(_insert_monitor_xy_var._position_relative);
+  instrument->counter_N[16]  = instrument->counter_P[16] = instrument->counter_P2[16] = 0;
+  instrument->counter_AbsorbProp[16]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0015_insert_monitor_xy", _insert_monitor_xy_var._position_absolute, _insert_monitor_xy_var._rotation_absolute, "Monitor_nD");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "user0", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "user1", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "user2", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "user3", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "user4", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "user5", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "user6", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "user7", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "user8", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "user9", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "xwidth", "0", "0.06","MCNUM");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "yheight", "0", "0.046","MCNUM");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "xmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "xmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "ymin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "ymax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "zmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "zmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "min", "-1e40", "-1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "max", "1e40", "1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "restore_neutron", "0", "1","int");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "radius", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "options", "NULL", "x limits [-0.04:0.04] bins = 100, y limits [-0.033:0.033] bins = 100", "char*");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "filename", "NULL", "insert_monitor_xy.dat", "char*");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "geometry", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "nowritefile", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "nexus_bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "username0", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "username1", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "username2", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "username3", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "username4", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "username5", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "username6", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "username7", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "username8", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0015_insert_monitor_xy", "username9", "NULL", "NULL", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _insert_monitor_xy_setpos */
+
+/* component insert_monitor_div=Monitor_nD() SETTING, POSITION/ROTATION */
+int _insert_monitor_div_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_insert_monitor_div_setpos] component insert_monitor_div=Monitor_nD() SETTING [Monitor_nD:0]");
+  stracpy(_insert_monitor_div_var._name, "insert_monitor_div", 16384);
+  stracpy(_insert_monitor_div_var._type, "Monitor_nD", 16384);
+  _insert_monitor_div_var._index=17;
+  int current_setpos_index = 17;
+  if("" && strlen(""))
+    stracpy(_insert_monitor_div_var._parameters.user0, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.user0[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_div_var._parameters.user1, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.user1[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_div_var._parameters.user2, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.user2[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_div_var._parameters.user3, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.user3[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_div_var._parameters.user4, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.user4[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_div_var._parameters.user5, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.user5[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_div_var._parameters.user6, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.user6[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_div_var._parameters.user7, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.user7[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_div_var._parameters.user8, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.user8[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_div_var._parameters.user9, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.user9[0]='\0';
+  _insert_monitor_div_var._parameters.xwidth = 0.06;
+  _insert_monitor_div_var._parameters.yheight = 0.046;
+  _insert_monitor_div_var._parameters.zdepth = 0;
+  _insert_monitor_div_var._parameters.xmin = 0;
+  _insert_monitor_div_var._parameters.xmax = 0;
+  _insert_monitor_div_var._parameters.ymin = 0;
+  _insert_monitor_div_var._parameters.ymax = 0;
+  _insert_monitor_div_var._parameters.zmin = 0;
+  _insert_monitor_div_var._parameters.zmax = 0;
+  _insert_monitor_div_var._parameters.bins = 0;
+  _insert_monitor_div_var._parameters.min = -1e40;
+  _insert_monitor_div_var._parameters.max = 1e40;
+  _insert_monitor_div_var._parameters.restore_neutron = 1;
+  _insert_monitor_div_var._parameters.radius = 0;
+  if("hdiv limits [-2.0:2.0] bins = 201, vdiv limits [-1.0:1.0] bins = 201" && strlen("hdiv limits [-2.0:2.0] bins = 201, vdiv limits [-1.0:1.0] bins = 201"))
+    stracpy(_insert_monitor_div_var._parameters.options, "hdiv limits [-2.0:2.0] bins = 201, vdiv limits [-1.0:1.0] bins = 201" ? "hdiv limits [-2.0:2.0] bins = 201, vdiv limits [-1.0:1.0] bins = 201" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.options[0]='\0';
+  if("insert_monitor_div.dat" && strlen("insert_monitor_div.dat"))
+    stracpy(_insert_monitor_div_var._parameters.filename, "insert_monitor_div.dat" ? "insert_monitor_div.dat" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.filename[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_div_var._parameters.geometry, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.geometry[0]='\0';
+  _insert_monitor_div_var._parameters.nowritefile = 0;
+  _insert_monitor_div_var._parameters.nexus_bins = 0;
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_div_var._parameters.username0, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.username0[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_div_var._parameters.username1, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.username1[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_div_var._parameters.username2, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.username2[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_div_var._parameters.username3, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.username3[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_div_var._parameters.username4, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.username4[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_div_var._parameters.username5, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.username5[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_div_var._parameters.username6, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.username6[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_div_var._parameters.username7, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.username7[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_div_var._parameters.username8, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.username8[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_div_var._parameters.username9, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_div_var._parameters.username9[0]='\0';
+
+
+  /* component insert_monitor_div=Monitor_nD() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_insert_monitor_div_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_insert_monitor_xy_var._rotation_absolute, tr1);
+    rot_mul(_insert_monitor_div_var._rotation_absolute, tr1, _insert_monitor_div_var._rotation_relative);
+    _insert_monitor_div_var._rotation_is_identity =  rot_test_identity(_insert_monitor_div_var._rotation_relative);
+    _insert_monitor_div_var._position_absolute = coords_set(
+      -0.017, 0, 5.9152);
+    tc1 = coords_sub(_insert_monitor_xy_var._position_absolute, _insert_monitor_div_var._position_absolute);
+    _insert_monitor_div_var._position_relative = rot_apply(_insert_monitor_div_var._rotation_absolute, tc1);
+  } /* insert_monitor_div=Monitor_nD() AT ROTATED */
+  DEBUG_COMPONENT("insert_monitor_div", _insert_monitor_div_var._position_absolute, _insert_monitor_div_var._rotation_absolute);
+  instrument->_position_absolute[17] = _insert_monitor_div_var._position_absolute;
+  instrument->_position_relative[17] = _insert_monitor_div_var._position_relative;
+    _insert_monitor_div_var._position_relative_is_zero =  coords_test_zero(_insert_monitor_div_var._position_relative);
+  instrument->counter_N[17]  = instrument->counter_P[17] = instrument->counter_P2[17] = 0;
+  instrument->counter_AbsorbProp[17]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0016_insert_monitor_div", _insert_monitor_div_var._position_absolute, _insert_monitor_div_var._rotation_absolute, "Monitor_nD");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "user0", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "user1", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "user2", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "user3", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "user4", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "user5", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "user6", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "user7", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "user8", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "user9", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "xwidth", "0", "0.06","MCNUM");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "yheight", "0", "0.046","MCNUM");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "xmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "xmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "ymin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "ymax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "zmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "zmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "min", "-1e40", "-1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "max", "1e40", "1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "restore_neutron", "0", "1","int");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "radius", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "options", "NULL", "hdiv limits [-2.0:2.0] bins = 201, vdiv limits [-1.0:1.0] bins = 201", "char*");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "filename", "NULL", "insert_monitor_div.dat", "char*");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "geometry", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "nowritefile", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "nexus_bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "username0", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "username1", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "username2", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "username3", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "username4", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "username5", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "username6", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "username7", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "username8", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0016_insert_monitor_div", "username9", "NULL", "NULL", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _insert_monitor_div_setpos */
+
+/* component insert_monitor_lam=Monitor_nD() SETTING, POSITION/ROTATION */
+int _insert_monitor_lam_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_insert_monitor_lam_setpos] component insert_monitor_lam=Monitor_nD() SETTING [Monitor_nD:0]");
+  stracpy(_insert_monitor_lam_var._name, "insert_monitor_lam", 16384);
+  stracpy(_insert_monitor_lam_var._type, "Monitor_nD", 16384);
+  _insert_monitor_lam_var._index=18;
+  int current_setpos_index = 18;
+  if("" && strlen(""))
+    stracpy(_insert_monitor_lam_var._parameters.user0, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.user0[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_lam_var._parameters.user1, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.user1[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_lam_var._parameters.user2, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.user2[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_lam_var._parameters.user3, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.user3[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_lam_var._parameters.user4, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.user4[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_lam_var._parameters.user5, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.user5[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_lam_var._parameters.user6, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.user6[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_lam_var._parameters.user7, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.user7[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_lam_var._parameters.user8, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.user8[0]='\0';
+  if("" && strlen(""))
+    stracpy(_insert_monitor_lam_var._parameters.user9, "" ? "" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.user9[0]='\0';
+  _insert_monitor_lam_var._parameters.xwidth = 0.06;
+  _insert_monitor_lam_var._parameters.yheight = 0.046;
+  _insert_monitor_lam_var._parameters.zdepth = 0;
+  _insert_monitor_lam_var._parameters.xmin = 0;
+  _insert_monitor_lam_var._parameters.xmax = 0;
+  _insert_monitor_lam_var._parameters.ymin = 0;
+  _insert_monitor_lam_var._parameters.ymax = 0;
+  _insert_monitor_lam_var._parameters.zmin = 0;
+  _insert_monitor_lam_var._parameters.zmax = 0;
+  _insert_monitor_lam_var._parameters.bins = 0;
+  _insert_monitor_lam_var._parameters.min = -1e40;
+  _insert_monitor_lam_var._parameters.max = 1e40;
+  _insert_monitor_lam_var._parameters.restore_neutron = 1;
+  _insert_monitor_lam_var._parameters.radius = 0;
+  if("lambda limits [0.5:7.0] bins = 130" && strlen("lambda limits [0.5:7.0] bins = 130"))
+    stracpy(_insert_monitor_lam_var._parameters.options, "lambda limits [0.5:7.0] bins = 130" ? "lambda limits [0.5:7.0] bins = 130" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.options[0]='\0';
+  if("insert_monitor_lam.dat" && strlen("insert_monitor_lam.dat"))
+    stracpy(_insert_monitor_lam_var._parameters.filename, "insert_monitor_lam.dat" ? "insert_monitor_lam.dat" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.filename[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_lam_var._parameters.geometry, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.geometry[0]='\0';
+  _insert_monitor_lam_var._parameters.nowritefile = 0;
+  _insert_monitor_lam_var._parameters.nexus_bins = 0;
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_lam_var._parameters.username0, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.username0[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_lam_var._parameters.username1, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.username1[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_lam_var._parameters.username2, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.username2[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_lam_var._parameters.username3, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.username3[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_lam_var._parameters.username4, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.username4[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_lam_var._parameters.username5, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.username5[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_lam_var._parameters.username6, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.username6[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_lam_var._parameters.username7, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.username7[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_lam_var._parameters.username8, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.username8[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_insert_monitor_lam_var._parameters.username9, "NULL" ? "NULL" : "", 16384);
+  else 
+  _insert_monitor_lam_var._parameters.username9[0]='\0';
+
+
+  /* component insert_monitor_lam=Monitor_nD() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_insert_monitor_lam_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_insert_monitor_div_var._rotation_absolute, tr1);
+    rot_mul(_insert_monitor_lam_var._rotation_absolute, tr1, _insert_monitor_lam_var._rotation_relative);
+    _insert_monitor_lam_var._rotation_is_identity =  rot_test_identity(_insert_monitor_lam_var._rotation_relative);
+    _insert_monitor_lam_var._position_absolute = coords_set(
+      -0.017, 0, 5.9153);
+    tc1 = coords_sub(_insert_monitor_div_var._position_absolute, _insert_monitor_lam_var._position_absolute);
+    _insert_monitor_lam_var._position_relative = rot_apply(_insert_monitor_lam_var._rotation_absolute, tc1);
+  } /* insert_monitor_lam=Monitor_nD() AT ROTATED */
+  DEBUG_COMPONENT("insert_monitor_lam", _insert_monitor_lam_var._position_absolute, _insert_monitor_lam_var._rotation_absolute);
+  instrument->_position_absolute[18] = _insert_monitor_lam_var._position_absolute;
+  instrument->_position_relative[18] = _insert_monitor_lam_var._position_relative;
+    _insert_monitor_lam_var._position_relative_is_zero =  coords_test_zero(_insert_monitor_lam_var._position_relative);
+  instrument->counter_N[18]  = instrument->counter_P[18] = instrument->counter_P2[18] = 0;
+  instrument->counter_AbsorbProp[18]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0017_insert_monitor_lam", _insert_monitor_lam_var._position_absolute, _insert_monitor_lam_var._rotation_absolute, "Monitor_nD");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "user0", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "user1", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "user2", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "user3", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "user4", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "user5", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "user6", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "user7", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "user8", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "user9", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "xwidth", "0", "0.06","MCNUM");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "yheight", "0", "0.046","MCNUM");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "xmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "xmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "ymin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "ymax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "zmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "zmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "min", "-1e40", "-1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "max", "1e40", "1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "restore_neutron", "0", "1","int");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "radius", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "options", "NULL", "lambda limits [0.5:7.0] bins = 130", "char*");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "filename", "NULL", "insert_monitor_lam.dat", "char*");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "geometry", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "nowritefile", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "nexus_bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "username0", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "username1", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "username2", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "username3", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "username4", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "username5", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "username6", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "username7", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "username8", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0017_insert_monitor_lam", "username9", "NULL", "NULL", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _insert_monitor_lam_setpos */
+
+/* component inset_monitor_ToF=Monitor_nD() SETTING, POSITION/ROTATION */
+int _inset_monitor_ToF_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_inset_monitor_ToF_setpos] component inset_monitor_ToF=Monitor_nD() SETTING [Monitor_nD:0]");
+  stracpy(_inset_monitor_ToF_var._name, "inset_monitor_ToF", 16384);
+  stracpy(_inset_monitor_ToF_var._type, "Monitor_nD", 16384);
+  _inset_monitor_ToF_var._index=19;
+  int current_setpos_index = 19;
+  if("" && strlen(""))
+    stracpy(_inset_monitor_ToF_var._parameters.user0, "" ? "" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.user0[0]='\0';
+  if("" && strlen(""))
+    stracpy(_inset_monitor_ToF_var._parameters.user1, "" ? "" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.user1[0]='\0';
+  if("" && strlen(""))
+    stracpy(_inset_monitor_ToF_var._parameters.user2, "" ? "" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.user2[0]='\0';
+  if("" && strlen(""))
+    stracpy(_inset_monitor_ToF_var._parameters.user3, "" ? "" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.user3[0]='\0';
+  if("" && strlen(""))
+    stracpy(_inset_monitor_ToF_var._parameters.user4, "" ? "" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.user4[0]='\0';
+  if("" && strlen(""))
+    stracpy(_inset_monitor_ToF_var._parameters.user5, "" ? "" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.user5[0]='\0';
+  if("" && strlen(""))
+    stracpy(_inset_monitor_ToF_var._parameters.user6, "" ? "" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.user6[0]='\0';
+  if("" && strlen(""))
+    stracpy(_inset_monitor_ToF_var._parameters.user7, "" ? "" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.user7[0]='\0';
+  if("" && strlen(""))
+    stracpy(_inset_monitor_ToF_var._parameters.user8, "" ? "" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.user8[0]='\0';
+  if("" && strlen(""))
+    stracpy(_inset_monitor_ToF_var._parameters.user9, "" ? "" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.user9[0]='\0';
+  _inset_monitor_ToF_var._parameters.xwidth = 0.07;
+  _inset_monitor_ToF_var._parameters.yheight = 0.07;
+  _inset_monitor_ToF_var._parameters.zdepth = 0;
+  _inset_monitor_ToF_var._parameters.xmin = 0;
+  _inset_monitor_ToF_var._parameters.xmax = 0;
+  _inset_monitor_ToF_var._parameters.ymin = 0;
+  _inset_monitor_ToF_var._parameters.ymax = 0;
+  _inset_monitor_ToF_var._parameters.zmin = 0;
+  _inset_monitor_ToF_var._parameters.zmax = 0;
+  _inset_monitor_ToF_var._parameters.bins = 0;
+  _inset_monitor_ToF_var._parameters.min = -1e40;
+  _inset_monitor_ToF_var._parameters.max = 1e40;
+  _inset_monitor_ToF_var._parameters.restore_neutron = 1;
+  _inset_monitor_ToF_var._parameters.radius = 0;
+  if("t limits [0.0:0.020] bins = 20000" && strlen("t limits [0.0:0.020] bins = 20000"))
+    stracpy(_inset_monitor_ToF_var._parameters.options, "t limits [0.0:0.020] bins = 20000" ? "t limits [0.0:0.020] bins = 20000" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.options[0]='\0';
+  if("inset_monitor_ToF.dat" && strlen("inset_monitor_ToF.dat"))
+    stracpy(_inset_monitor_ToF_var._parameters.filename, "inset_monitor_ToF.dat" ? "inset_monitor_ToF.dat" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.filename[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_inset_monitor_ToF_var._parameters.geometry, "NULL" ? "NULL" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.geometry[0]='\0';
+  _inset_monitor_ToF_var._parameters.nowritefile = 0;
+  _inset_monitor_ToF_var._parameters.nexus_bins = 0;
+  if("NULL" && strlen("NULL"))
+    stracpy(_inset_monitor_ToF_var._parameters.username0, "NULL" ? "NULL" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.username0[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_inset_monitor_ToF_var._parameters.username1, "NULL" ? "NULL" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.username1[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_inset_monitor_ToF_var._parameters.username2, "NULL" ? "NULL" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.username2[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_inset_monitor_ToF_var._parameters.username3, "NULL" ? "NULL" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.username3[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_inset_monitor_ToF_var._parameters.username4, "NULL" ? "NULL" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.username4[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_inset_monitor_ToF_var._parameters.username5, "NULL" ? "NULL" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.username5[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_inset_monitor_ToF_var._parameters.username6, "NULL" ? "NULL" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.username6[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_inset_monitor_ToF_var._parameters.username7, "NULL" ? "NULL" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.username7[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_inset_monitor_ToF_var._parameters.username8, "NULL" ? "NULL" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.username8[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_inset_monitor_ToF_var._parameters.username9, "NULL" ? "NULL" : "", 16384);
+  else 
+  _inset_monitor_ToF_var._parameters.username9[0]='\0';
+
+
+  /* component inset_monitor_ToF=Monitor_nD() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_inset_monitor_ToF_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_insert_monitor_lam_var._rotation_absolute, tr1);
+    rot_mul(_inset_monitor_ToF_var._rotation_absolute, tr1, _inset_monitor_ToF_var._rotation_relative);
+    _inset_monitor_ToF_var._rotation_is_identity =  rot_test_identity(_inset_monitor_ToF_var._rotation_relative);
+    _inset_monitor_ToF_var._position_absolute = coords_set(
+      -0.017, 0, 5.9154);
+    tc1 = coords_sub(_insert_monitor_lam_var._position_absolute, _inset_monitor_ToF_var._position_absolute);
+    _inset_monitor_ToF_var._position_relative = rot_apply(_inset_monitor_ToF_var._rotation_absolute, tc1);
+  } /* inset_monitor_ToF=Monitor_nD() AT ROTATED */
+  DEBUG_COMPONENT("inset_monitor_ToF", _inset_monitor_ToF_var._position_absolute, _inset_monitor_ToF_var._rotation_absolute);
+  instrument->_position_absolute[19] = _inset_monitor_ToF_var._position_absolute;
+  instrument->_position_relative[19] = _inset_monitor_ToF_var._position_relative;
+    _inset_monitor_ToF_var._position_relative_is_zero =  coords_test_zero(_inset_monitor_ToF_var._position_relative);
+  instrument->counter_N[19]  = instrument->counter_P[19] = instrument->counter_P2[19] = 0;
+  instrument->counter_AbsorbProp[19]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0018_inset_monitor_ToF", _inset_monitor_ToF_var._position_absolute, _inset_monitor_ToF_var._rotation_absolute, "Monitor_nD");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "user0", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "user1", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "user2", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "user3", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "user4", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "user5", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "user6", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "user7", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "user8", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "user9", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "xwidth", "0", "0.07","MCNUM");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "yheight", "0", "0.07","MCNUM");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "xmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "xmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "ymin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "ymax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "zmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "zmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "min", "-1e40", "-1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "max", "1e40", "1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "restore_neutron", "0", "1","int");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "radius", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "options", "NULL", "t limits [0.0:0.020] bins = 20000", "char*");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "filename", "NULL", "inset_monitor_ToF.dat", "char*");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "geometry", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "nowritefile", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "nexus_bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "username0", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "username1", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "username2", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "username3", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "username4", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "username5", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "username6", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "username7", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "username8", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0018_inset_monitor_ToF", "username9", "NULL", "NULL", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _inset_monitor_ToF_setpos */
+
+/* component guide_13=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_13_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_13_setpos] component guide_13=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_13_var._name, "guide_13", 16384);
+  stracpy(_guide_13_var._type, "Guide_anyshape_r", 16384);
+  _guide_13_var._index=20;
+  int current_setpos_index = 20;
+  _guide_13_var._parameters.xwidth = 0;
+  _guide_13_var._parameters.yheight = 0;
+  _guide_13_var._parameters.zdepth = 0;
+  _guide_13_var._parameters.center = 0;
+  _guide_13_var._parameters.transmit = 0;
+  _guide_13_var._parameters.R0 = 0.99;
+  _guide_13_var._parameters.Qc = 0.0219;
+  _guide_13_var._parameters.alpha = 0;
+  _guide_13_var._parameters.m = 0;
+  _guide_13_var._parameters.W = 0;
+  if("./OFF_files/try13.off" && strlen("./OFF_files/try13.off"))
+    stracpy(_guide_13_var._parameters.geometry, "./OFF_files/try13.off" ? "./OFF_files/try13.off" : "", 16384);
+  else 
+  _guide_13_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_13=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_13_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_inset_monitor_ToF_var._rotation_absolute, tr1);
+    rot_mul(_guide_13_var._rotation_absolute, tr1, _guide_13_var._rotation_relative);
+    _guide_13_var._rotation_is_identity =  rot_test_identity(_guide_13_var._rotation_relative);
+    _guide_13_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_inset_monitor_ToF_var._position_absolute, _guide_13_var._position_absolute);
+    _guide_13_var._position_relative = rot_apply(_guide_13_var._rotation_absolute, tc1);
+  } /* guide_13=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_13", _guide_13_var._position_absolute, _guide_13_var._rotation_absolute);
+  instrument->_position_absolute[20] = _guide_13_var._position_absolute;
+  instrument->_position_relative[20] = _guide_13_var._position_relative;
+    _guide_13_var._position_relative_is_zero =  coords_test_zero(_guide_13_var._position_relative);
+  instrument->counter_N[20]  = instrument->counter_P[20] = instrument->counter_P2[20] = 0;
+  instrument->counter_AbsorbProp[20]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0019_guide_13", _guide_13_var._position_absolute, _guide_13_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0019_guide_13", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0019_guide_13", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0019_guide_13", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0019_guide_13", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0019_guide_13", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0019_guide_13", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0019_guide_13", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0019_guide_13", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0019_guide_13", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0019_guide_13", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0019_guide_13", "geometry", 0, "./OFF_files/try13.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_13_setpos */
+
+/* component guide_14=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_14_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_14_setpos] component guide_14=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_14_var._name, "guide_14", 16384);
+  stracpy(_guide_14_var._type, "Guide_anyshape_r", 16384);
+  _guide_14_var._index=21;
+  int current_setpos_index = 21;
+  _guide_14_var._parameters.xwidth = 0;
+  _guide_14_var._parameters.yheight = 0;
+  _guide_14_var._parameters.zdepth = 0;
+  _guide_14_var._parameters.center = 0;
+  _guide_14_var._parameters.transmit = 0;
+  _guide_14_var._parameters.R0 = 0.99;
+  _guide_14_var._parameters.Qc = 0.0219;
+  _guide_14_var._parameters.alpha = 0;
+  _guide_14_var._parameters.m = 0;
+  _guide_14_var._parameters.W = 0;
+  if("./OFF_files/try14.off" && strlen("./OFF_files/try14.off"))
+    stracpy(_guide_14_var._parameters.geometry, "./OFF_files/try14.off" ? "./OFF_files/try14.off" : "", 16384);
+  else 
+  _guide_14_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_14=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_14_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_13_var._rotation_absolute, tr1);
+    rot_mul(_guide_14_var._rotation_absolute, tr1, _guide_14_var._rotation_relative);
+    _guide_14_var._rotation_is_identity =  rot_test_identity(_guide_14_var._rotation_relative);
+    _guide_14_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_13_var._position_absolute, _guide_14_var._position_absolute);
+    _guide_14_var._position_relative = rot_apply(_guide_14_var._rotation_absolute, tc1);
+  } /* guide_14=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_14", _guide_14_var._position_absolute, _guide_14_var._rotation_absolute);
+  instrument->_position_absolute[21] = _guide_14_var._position_absolute;
+  instrument->_position_relative[21] = _guide_14_var._position_relative;
+    _guide_14_var._position_relative_is_zero =  coords_test_zero(_guide_14_var._position_relative);
+  instrument->counter_N[21]  = instrument->counter_P[21] = instrument->counter_P2[21] = 0;
+  instrument->counter_AbsorbProp[21]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0020_guide_14", _guide_14_var._position_absolute, _guide_14_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0020_guide_14", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0020_guide_14", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0020_guide_14", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0020_guide_14", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0020_guide_14", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0020_guide_14", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0020_guide_14", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0020_guide_14", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0020_guide_14", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0020_guide_14", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0020_guide_14", "geometry", 0, "./OFF_files/try14.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_14_setpos */
+
+/* component guide_15=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_15_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_15_setpos] component guide_15=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_15_var._name, "guide_15", 16384);
+  stracpy(_guide_15_var._type, "Guide_anyshape_r", 16384);
+  _guide_15_var._index=22;
+  int current_setpos_index = 22;
+  _guide_15_var._parameters.xwidth = 0;
+  _guide_15_var._parameters.yheight = 0;
+  _guide_15_var._parameters.zdepth = 0;
+  _guide_15_var._parameters.center = 0;
+  _guide_15_var._parameters.transmit = 0;
+  _guide_15_var._parameters.R0 = 0.99;
+  _guide_15_var._parameters.Qc = 0.0219;
+  _guide_15_var._parameters.alpha = 0;
+  _guide_15_var._parameters.m = 0;
+  _guide_15_var._parameters.W = 0;
+  if("./OFF_files/try15.off" && strlen("./OFF_files/try15.off"))
+    stracpy(_guide_15_var._parameters.geometry, "./OFF_files/try15.off" ? "./OFF_files/try15.off" : "", 16384);
+  else 
+  _guide_15_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_15=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_15_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_14_var._rotation_absolute, tr1);
+    rot_mul(_guide_15_var._rotation_absolute, tr1, _guide_15_var._rotation_relative);
+    _guide_15_var._rotation_is_identity =  rot_test_identity(_guide_15_var._rotation_relative);
+    _guide_15_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_14_var._position_absolute, _guide_15_var._position_absolute);
+    _guide_15_var._position_relative = rot_apply(_guide_15_var._rotation_absolute, tc1);
+  } /* guide_15=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_15", _guide_15_var._position_absolute, _guide_15_var._rotation_absolute);
+  instrument->_position_absolute[22] = _guide_15_var._position_absolute;
+  instrument->_position_relative[22] = _guide_15_var._position_relative;
+    _guide_15_var._position_relative_is_zero =  coords_test_zero(_guide_15_var._position_relative);
+  instrument->counter_N[22]  = instrument->counter_P[22] = instrument->counter_P2[22] = 0;
+  instrument->counter_AbsorbProp[22]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0021_guide_15", _guide_15_var._position_absolute, _guide_15_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0021_guide_15", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0021_guide_15", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0021_guide_15", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0021_guide_15", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0021_guide_15", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0021_guide_15", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0021_guide_15", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0021_guide_15", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0021_guide_15", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0021_guide_15", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0021_guide_15", "geometry", 0, "./OFF_files/try15.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_15_setpos */
+
+/* component guide_16=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_16_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_16_setpos] component guide_16=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_16_var._name, "guide_16", 16384);
+  stracpy(_guide_16_var._type, "Guide_anyshape_r", 16384);
+  _guide_16_var._index=23;
+  int current_setpos_index = 23;
+  _guide_16_var._parameters.xwidth = 0;
+  _guide_16_var._parameters.yheight = 0;
+  _guide_16_var._parameters.zdepth = 0;
+  _guide_16_var._parameters.center = 0;
+  _guide_16_var._parameters.transmit = 0;
+  _guide_16_var._parameters.R0 = 0.99;
+  _guide_16_var._parameters.Qc = 0.0219;
+  _guide_16_var._parameters.alpha = 0;
+  _guide_16_var._parameters.m = 0;
+  _guide_16_var._parameters.W = 0;
+  if("./OFF_files/try16.off" && strlen("./OFF_files/try16.off"))
+    stracpy(_guide_16_var._parameters.geometry, "./OFF_files/try16.off" ? "./OFF_files/try16.off" : "", 16384);
+  else 
+  _guide_16_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_16=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_16_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_15_var._rotation_absolute, tr1);
+    rot_mul(_guide_16_var._rotation_absolute, tr1, _guide_16_var._rotation_relative);
+    _guide_16_var._rotation_is_identity =  rot_test_identity(_guide_16_var._rotation_relative);
+    _guide_16_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_15_var._position_absolute, _guide_16_var._position_absolute);
+    _guide_16_var._position_relative = rot_apply(_guide_16_var._rotation_absolute, tc1);
+  } /* guide_16=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_16", _guide_16_var._position_absolute, _guide_16_var._rotation_absolute);
+  instrument->_position_absolute[23] = _guide_16_var._position_absolute;
+  instrument->_position_relative[23] = _guide_16_var._position_relative;
+    _guide_16_var._position_relative_is_zero =  coords_test_zero(_guide_16_var._position_relative);
+  instrument->counter_N[23]  = instrument->counter_P[23] = instrument->counter_P2[23] = 0;
+  instrument->counter_AbsorbProp[23]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0022_guide_16", _guide_16_var._position_absolute, _guide_16_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0022_guide_16", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0022_guide_16", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0022_guide_16", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0022_guide_16", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0022_guide_16", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0022_guide_16", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0022_guide_16", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0022_guide_16", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0022_guide_16", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0022_guide_16", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0022_guide_16", "geometry", 0, "./OFF_files/try16.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_16_setpos */
+
+/* component guide_18=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_18_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_18_setpos] component guide_18=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_18_var._name, "guide_18", 16384);
+  stracpy(_guide_18_var._type, "Guide_anyshape_r", 16384);
+  _guide_18_var._index=24;
+  int current_setpos_index = 24;
+  _guide_18_var._parameters.xwidth = 0;
+  _guide_18_var._parameters.yheight = 0;
+  _guide_18_var._parameters.zdepth = 0;
+  _guide_18_var._parameters.center = 0;
+  _guide_18_var._parameters.transmit = 0;
+  _guide_18_var._parameters.R0 = 0.99;
+  _guide_18_var._parameters.Qc = 0.0219;
+  _guide_18_var._parameters.alpha = 0;
+  _guide_18_var._parameters.m = 0;
+  _guide_18_var._parameters.W = 0;
+  if("./OFF_files/try18.off" && strlen("./OFF_files/try18.off"))
+    stracpy(_guide_18_var._parameters.geometry, "./OFF_files/try18.off" ? "./OFF_files/try18.off" : "", 16384);
+  else 
+  _guide_18_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_18=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_18_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_16_var._rotation_absolute, tr1);
+    rot_mul(_guide_18_var._rotation_absolute, tr1, _guide_18_var._rotation_relative);
+    _guide_18_var._rotation_is_identity =  rot_test_identity(_guide_18_var._rotation_relative);
+    _guide_18_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_16_var._position_absolute, _guide_18_var._position_absolute);
+    _guide_18_var._position_relative = rot_apply(_guide_18_var._rotation_absolute, tc1);
+  } /* guide_18=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_18", _guide_18_var._position_absolute, _guide_18_var._rotation_absolute);
+  instrument->_position_absolute[24] = _guide_18_var._position_absolute;
+  instrument->_position_relative[24] = _guide_18_var._position_relative;
+    _guide_18_var._position_relative_is_zero =  coords_test_zero(_guide_18_var._position_relative);
+  instrument->counter_N[24]  = instrument->counter_P[24] = instrument->counter_P2[24] = 0;
+  instrument->counter_AbsorbProp[24]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0023_guide_18", _guide_18_var._position_absolute, _guide_18_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0023_guide_18", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0023_guide_18", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0023_guide_18", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0023_guide_18", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0023_guide_18", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0023_guide_18", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0023_guide_18", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0023_guide_18", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0023_guide_18", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0023_guide_18", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0023_guide_18", "geometry", 0, "./OFF_files/try18.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_18_setpos */
+
+/* component guide_19=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_19_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_19_setpos] component guide_19=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_19_var._name, "guide_19", 16384);
+  stracpy(_guide_19_var._type, "Guide_anyshape_r", 16384);
+  _guide_19_var._index=25;
+  int current_setpos_index = 25;
+  _guide_19_var._parameters.xwidth = 0;
+  _guide_19_var._parameters.yheight = 0;
+  _guide_19_var._parameters.zdepth = 0;
+  _guide_19_var._parameters.center = 0;
+  _guide_19_var._parameters.transmit = 0;
+  _guide_19_var._parameters.R0 = 0.99;
+  _guide_19_var._parameters.Qc = 0.0219;
+  _guide_19_var._parameters.alpha = 0;
+  _guide_19_var._parameters.m = 0;
+  _guide_19_var._parameters.W = 0;
+  if("./OFF_files/try19.off" && strlen("./OFF_files/try19.off"))
+    stracpy(_guide_19_var._parameters.geometry, "./OFF_files/try19.off" ? "./OFF_files/try19.off" : "", 16384);
+  else 
+  _guide_19_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_19=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_19_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_18_var._rotation_absolute, tr1);
+    rot_mul(_guide_19_var._rotation_absolute, tr1, _guide_19_var._rotation_relative);
+    _guide_19_var._rotation_is_identity =  rot_test_identity(_guide_19_var._rotation_relative);
+    _guide_19_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_18_var._position_absolute, _guide_19_var._position_absolute);
+    _guide_19_var._position_relative = rot_apply(_guide_19_var._rotation_absolute, tc1);
+  } /* guide_19=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_19", _guide_19_var._position_absolute, _guide_19_var._rotation_absolute);
+  instrument->_position_absolute[25] = _guide_19_var._position_absolute;
+  instrument->_position_relative[25] = _guide_19_var._position_relative;
+    _guide_19_var._position_relative_is_zero =  coords_test_zero(_guide_19_var._position_relative);
+  instrument->counter_N[25]  = instrument->counter_P[25] = instrument->counter_P2[25] = 0;
+  instrument->counter_AbsorbProp[25]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0024_guide_19", _guide_19_var._position_absolute, _guide_19_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0024_guide_19", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0024_guide_19", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0024_guide_19", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0024_guide_19", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0024_guide_19", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0024_guide_19", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0024_guide_19", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0024_guide_19", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0024_guide_19", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0024_guide_19", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0024_guide_19", "geometry", 0, "./OFF_files/try19.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_19_setpos */
+
+/* component guide_20=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_20_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_20_setpos] component guide_20=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_20_var._name, "guide_20", 16384);
+  stracpy(_guide_20_var._type, "Guide_anyshape_r", 16384);
+  _guide_20_var._index=26;
+  int current_setpos_index = 26;
+  _guide_20_var._parameters.xwidth = 0;
+  _guide_20_var._parameters.yheight = 0;
+  _guide_20_var._parameters.zdepth = 0;
+  _guide_20_var._parameters.center = 0;
+  _guide_20_var._parameters.transmit = 0;
+  _guide_20_var._parameters.R0 = 0.99;
+  _guide_20_var._parameters.Qc = 0.0219;
+  _guide_20_var._parameters.alpha = 0;
+  _guide_20_var._parameters.m = 0;
+  _guide_20_var._parameters.W = 0;
+  if("./OFF_files/try20.off" && strlen("./OFF_files/try20.off"))
+    stracpy(_guide_20_var._parameters.geometry, "./OFF_files/try20.off" ? "./OFF_files/try20.off" : "", 16384);
+  else 
+  _guide_20_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_20=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_20_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_19_var._rotation_absolute, tr1);
+    rot_mul(_guide_20_var._rotation_absolute, tr1, _guide_20_var._rotation_relative);
+    _guide_20_var._rotation_is_identity =  rot_test_identity(_guide_20_var._rotation_relative);
+    _guide_20_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_19_var._position_absolute, _guide_20_var._position_absolute);
+    _guide_20_var._position_relative = rot_apply(_guide_20_var._rotation_absolute, tc1);
+  } /* guide_20=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_20", _guide_20_var._position_absolute, _guide_20_var._rotation_absolute);
+  instrument->_position_absolute[26] = _guide_20_var._position_absolute;
+  instrument->_position_relative[26] = _guide_20_var._position_relative;
+    _guide_20_var._position_relative_is_zero =  coords_test_zero(_guide_20_var._position_relative);
+  instrument->counter_N[26]  = instrument->counter_P[26] = instrument->counter_P2[26] = 0;
+  instrument->counter_AbsorbProp[26]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0025_guide_20", _guide_20_var._position_absolute, _guide_20_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0025_guide_20", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0025_guide_20", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0025_guide_20", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0025_guide_20", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0025_guide_20", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0025_guide_20", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0025_guide_20", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0025_guide_20", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0025_guide_20", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0025_guide_20", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0025_guide_20", "geometry", 0, "./OFF_files/try20.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_20_setpos */
+
+/* component guide_22=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_22_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_22_setpos] component guide_22=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_22_var._name, "guide_22", 16384);
+  stracpy(_guide_22_var._type, "Guide_anyshape_r", 16384);
+  _guide_22_var._index=27;
+  int current_setpos_index = 27;
+  _guide_22_var._parameters.xwidth = 0;
+  _guide_22_var._parameters.yheight = 0;
+  _guide_22_var._parameters.zdepth = 0;
+  _guide_22_var._parameters.center = 0;
+  _guide_22_var._parameters.transmit = 0;
+  _guide_22_var._parameters.R0 = 0.99;
+  _guide_22_var._parameters.Qc = 0.0219;
+  _guide_22_var._parameters.alpha = 0;
+  _guide_22_var._parameters.m = 0;
+  _guide_22_var._parameters.W = 0;
+  if("./OFF_files/try22.off" && strlen("./OFF_files/try22.off"))
+    stracpy(_guide_22_var._parameters.geometry, "./OFF_files/try22.off" ? "./OFF_files/try22.off" : "", 16384);
+  else 
+  _guide_22_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_22=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_22_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_20_var._rotation_absolute, tr1);
+    rot_mul(_guide_22_var._rotation_absolute, tr1, _guide_22_var._rotation_relative);
+    _guide_22_var._rotation_is_identity =  rot_test_identity(_guide_22_var._rotation_relative);
+    _guide_22_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_20_var._position_absolute, _guide_22_var._position_absolute);
+    _guide_22_var._position_relative = rot_apply(_guide_22_var._rotation_absolute, tc1);
+  } /* guide_22=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_22", _guide_22_var._position_absolute, _guide_22_var._rotation_absolute);
+  instrument->_position_absolute[27] = _guide_22_var._position_absolute;
+  instrument->_position_relative[27] = _guide_22_var._position_relative;
+    _guide_22_var._position_relative_is_zero =  coords_test_zero(_guide_22_var._position_relative);
+  instrument->counter_N[27]  = instrument->counter_P[27] = instrument->counter_P2[27] = 0;
+  instrument->counter_AbsorbProp[27]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0026_guide_22", _guide_22_var._position_absolute, _guide_22_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0026_guide_22", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0026_guide_22", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0026_guide_22", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0026_guide_22", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0026_guide_22", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0026_guide_22", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0026_guide_22", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0026_guide_22", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0026_guide_22", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0026_guide_22", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0026_guide_22", "geometry", 0, "./OFF_files/try22.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_22_setpos */
+
+/* component guide_23=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_23_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_23_setpos] component guide_23=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_23_var._name, "guide_23", 16384);
+  stracpy(_guide_23_var._type, "Guide_anyshape_r", 16384);
+  _guide_23_var._index=28;
+  int current_setpos_index = 28;
+  _guide_23_var._parameters.xwidth = 0;
+  _guide_23_var._parameters.yheight = 0;
+  _guide_23_var._parameters.zdepth = 0;
+  _guide_23_var._parameters.center = 0;
+  _guide_23_var._parameters.transmit = 0;
+  _guide_23_var._parameters.R0 = 0.99;
+  _guide_23_var._parameters.Qc = 0.0219;
+  _guide_23_var._parameters.alpha = 0;
+  _guide_23_var._parameters.m = 0;
+  _guide_23_var._parameters.W = 0;
+  if("./OFF_files/try23.off" && strlen("./OFF_files/try23.off"))
+    stracpy(_guide_23_var._parameters.geometry, "./OFF_files/try23.off" ? "./OFF_files/try23.off" : "", 16384);
+  else 
+  _guide_23_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_23=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_23_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_22_var._rotation_absolute, tr1);
+    rot_mul(_guide_23_var._rotation_absolute, tr1, _guide_23_var._rotation_relative);
+    _guide_23_var._rotation_is_identity =  rot_test_identity(_guide_23_var._rotation_relative);
+    _guide_23_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_22_var._position_absolute, _guide_23_var._position_absolute);
+    _guide_23_var._position_relative = rot_apply(_guide_23_var._rotation_absolute, tc1);
+  } /* guide_23=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_23", _guide_23_var._position_absolute, _guide_23_var._rotation_absolute);
+  instrument->_position_absolute[28] = _guide_23_var._position_absolute;
+  instrument->_position_relative[28] = _guide_23_var._position_relative;
+    _guide_23_var._position_relative_is_zero =  coords_test_zero(_guide_23_var._position_relative);
+  instrument->counter_N[28]  = instrument->counter_P[28] = instrument->counter_P2[28] = 0;
+  instrument->counter_AbsorbProp[28]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0027_guide_23", _guide_23_var._position_absolute, _guide_23_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0027_guide_23", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0027_guide_23", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0027_guide_23", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0027_guide_23", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0027_guide_23", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0027_guide_23", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0027_guide_23", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0027_guide_23", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0027_guide_23", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0027_guide_23", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0027_guide_23", "geometry", 0, "./OFF_files/try23.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_23_setpos */
+
+/* component guide_24=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_24_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_24_setpos] component guide_24=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_24_var._name, "guide_24", 16384);
+  stracpy(_guide_24_var._type, "Guide_anyshape_r", 16384);
+  _guide_24_var._index=29;
+  int current_setpos_index = 29;
+  _guide_24_var._parameters.xwidth = 0;
+  _guide_24_var._parameters.yheight = 0;
+  _guide_24_var._parameters.zdepth = 0;
+  _guide_24_var._parameters.center = 0;
+  _guide_24_var._parameters.transmit = 0;
+  _guide_24_var._parameters.R0 = 0.99;
+  _guide_24_var._parameters.Qc = 0.0219;
+  _guide_24_var._parameters.alpha = 0;
+  _guide_24_var._parameters.m = 0;
+  _guide_24_var._parameters.W = 0;
+  if("./OFF_files/try24.off" && strlen("./OFF_files/try24.off"))
+    stracpy(_guide_24_var._parameters.geometry, "./OFF_files/try24.off" ? "./OFF_files/try24.off" : "", 16384);
+  else 
+  _guide_24_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_24=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_24_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_23_var._rotation_absolute, tr1);
+    rot_mul(_guide_24_var._rotation_absolute, tr1, _guide_24_var._rotation_relative);
+    _guide_24_var._rotation_is_identity =  rot_test_identity(_guide_24_var._rotation_relative);
+    _guide_24_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_23_var._position_absolute, _guide_24_var._position_absolute);
+    _guide_24_var._position_relative = rot_apply(_guide_24_var._rotation_absolute, tc1);
+  } /* guide_24=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_24", _guide_24_var._position_absolute, _guide_24_var._rotation_absolute);
+  instrument->_position_absolute[29] = _guide_24_var._position_absolute;
+  instrument->_position_relative[29] = _guide_24_var._position_relative;
+    _guide_24_var._position_relative_is_zero =  coords_test_zero(_guide_24_var._position_relative);
+  instrument->counter_N[29]  = instrument->counter_P[29] = instrument->counter_P2[29] = 0;
+  instrument->counter_AbsorbProp[29]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0028_guide_24", _guide_24_var._position_absolute, _guide_24_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0028_guide_24", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0028_guide_24", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0028_guide_24", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0028_guide_24", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0028_guide_24", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0028_guide_24", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0028_guide_24", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0028_guide_24", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0028_guide_24", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0028_guide_24", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0028_guide_24", "geometry", 0, "./OFF_files/try24.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_24_setpos */
+
+/* component guide_25=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_25_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_25_setpos] component guide_25=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_25_var._name, "guide_25", 16384);
+  stracpy(_guide_25_var._type, "Guide_anyshape_r", 16384);
+  _guide_25_var._index=30;
+  int current_setpos_index = 30;
+  _guide_25_var._parameters.xwidth = 0;
+  _guide_25_var._parameters.yheight = 0;
+  _guide_25_var._parameters.zdepth = 0;
+  _guide_25_var._parameters.center = 0;
+  _guide_25_var._parameters.transmit = 0;
+  _guide_25_var._parameters.R0 = 0.99;
+  _guide_25_var._parameters.Qc = 0.0219;
+  _guide_25_var._parameters.alpha = 0;
+  _guide_25_var._parameters.m = 0;
+  _guide_25_var._parameters.W = 0;
+  if("./OFF_files/try25.off" && strlen("./OFF_files/try25.off"))
+    stracpy(_guide_25_var._parameters.geometry, "./OFF_files/try25.off" ? "./OFF_files/try25.off" : "", 16384);
+  else 
+  _guide_25_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_25=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_25_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_24_var._rotation_absolute, tr1);
+    rot_mul(_guide_25_var._rotation_absolute, tr1, _guide_25_var._rotation_relative);
+    _guide_25_var._rotation_is_identity =  rot_test_identity(_guide_25_var._rotation_relative);
+    _guide_25_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_24_var._position_absolute, _guide_25_var._position_absolute);
+    _guide_25_var._position_relative = rot_apply(_guide_25_var._rotation_absolute, tc1);
+  } /* guide_25=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_25", _guide_25_var._position_absolute, _guide_25_var._rotation_absolute);
+  instrument->_position_absolute[30] = _guide_25_var._position_absolute;
+  instrument->_position_relative[30] = _guide_25_var._position_relative;
+    _guide_25_var._position_relative_is_zero =  coords_test_zero(_guide_25_var._position_relative);
+  instrument->counter_N[30]  = instrument->counter_P[30] = instrument->counter_P2[30] = 0;
+  instrument->counter_AbsorbProp[30]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0029_guide_25", _guide_25_var._position_absolute, _guide_25_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0029_guide_25", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0029_guide_25", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0029_guide_25", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0029_guide_25", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0029_guide_25", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0029_guide_25", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0029_guide_25", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0029_guide_25", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0029_guide_25", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0029_guide_25", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0029_guide_25", "geometry", 0, "./OFF_files/try25.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_25_setpos */
+
+/* component guide_27=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_27_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_27_setpos] component guide_27=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_27_var._name, "guide_27", 16384);
+  stracpy(_guide_27_var._type, "Guide_anyshape_r", 16384);
+  _guide_27_var._index=31;
+  int current_setpos_index = 31;
+  _guide_27_var._parameters.xwidth = 0;
+  _guide_27_var._parameters.yheight = 0;
+  _guide_27_var._parameters.zdepth = 0;
+  _guide_27_var._parameters.center = 0;
+  _guide_27_var._parameters.transmit = 0;
+  _guide_27_var._parameters.R0 = 0.99;
+  _guide_27_var._parameters.Qc = 0.0219;
+  _guide_27_var._parameters.alpha = 0;
+  _guide_27_var._parameters.m = 0;
+  _guide_27_var._parameters.W = 0;
+  if("./OFF_files/try27.off" && strlen("./OFF_files/try27.off"))
+    stracpy(_guide_27_var._parameters.geometry, "./OFF_files/try27.off" ? "./OFF_files/try27.off" : "", 16384);
+  else 
+  _guide_27_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_27=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_27_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_25_var._rotation_absolute, tr1);
+    rot_mul(_guide_27_var._rotation_absolute, tr1, _guide_27_var._rotation_relative);
+    _guide_27_var._rotation_is_identity =  rot_test_identity(_guide_27_var._rotation_relative);
+    _guide_27_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_25_var._position_absolute, _guide_27_var._position_absolute);
+    _guide_27_var._position_relative = rot_apply(_guide_27_var._rotation_absolute, tc1);
+  } /* guide_27=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_27", _guide_27_var._position_absolute, _guide_27_var._rotation_absolute);
+  instrument->_position_absolute[31] = _guide_27_var._position_absolute;
+  instrument->_position_relative[31] = _guide_27_var._position_relative;
+    _guide_27_var._position_relative_is_zero =  coords_test_zero(_guide_27_var._position_relative);
+  instrument->counter_N[31]  = instrument->counter_P[31] = instrument->counter_P2[31] = 0;
+  instrument->counter_AbsorbProp[31]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0030_guide_27", _guide_27_var._position_absolute, _guide_27_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0030_guide_27", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0030_guide_27", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0030_guide_27", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0030_guide_27", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0030_guide_27", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0030_guide_27", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0030_guide_27", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0030_guide_27", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0030_guide_27", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0030_guide_27", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0030_guide_27", "geometry", 0, "./OFF_files/try27.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_27_setpos */
+
+/* component guide_28=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_28_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_28_setpos] component guide_28=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_28_var._name, "guide_28", 16384);
+  stracpy(_guide_28_var._type, "Guide_anyshape_r", 16384);
+  _guide_28_var._index=32;
+  int current_setpos_index = 32;
+  _guide_28_var._parameters.xwidth = 0;
+  _guide_28_var._parameters.yheight = 0;
+  _guide_28_var._parameters.zdepth = 0;
+  _guide_28_var._parameters.center = 0;
+  _guide_28_var._parameters.transmit = 0;
+  _guide_28_var._parameters.R0 = 0.99;
+  _guide_28_var._parameters.Qc = 0.0219;
+  _guide_28_var._parameters.alpha = 0;
+  _guide_28_var._parameters.m = 0;
+  _guide_28_var._parameters.W = 0;
+  if("./OFF_files/try28.off" && strlen("./OFF_files/try28.off"))
+    stracpy(_guide_28_var._parameters.geometry, "./OFF_files/try28.off" ? "./OFF_files/try28.off" : "", 16384);
+  else 
+  _guide_28_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_28=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_28_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_27_var._rotation_absolute, tr1);
+    rot_mul(_guide_28_var._rotation_absolute, tr1, _guide_28_var._rotation_relative);
+    _guide_28_var._rotation_is_identity =  rot_test_identity(_guide_28_var._rotation_relative);
+    _guide_28_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_27_var._position_absolute, _guide_28_var._position_absolute);
+    _guide_28_var._position_relative = rot_apply(_guide_28_var._rotation_absolute, tc1);
+  } /* guide_28=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_28", _guide_28_var._position_absolute, _guide_28_var._rotation_absolute);
+  instrument->_position_absolute[32] = _guide_28_var._position_absolute;
+  instrument->_position_relative[32] = _guide_28_var._position_relative;
+    _guide_28_var._position_relative_is_zero =  coords_test_zero(_guide_28_var._position_relative);
+  instrument->counter_N[32]  = instrument->counter_P[32] = instrument->counter_P2[32] = 0;
+  instrument->counter_AbsorbProp[32]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0031_guide_28", _guide_28_var._position_absolute, _guide_28_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0031_guide_28", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0031_guide_28", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0031_guide_28", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0031_guide_28", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0031_guide_28", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0031_guide_28", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0031_guide_28", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0031_guide_28", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0031_guide_28", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0031_guide_28", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0031_guide_28", "geometry", 0, "./OFF_files/try28.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_28_setpos */
+
+/* component guide_29=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_29_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_29_setpos] component guide_29=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_29_var._name, "guide_29", 16384);
+  stracpy(_guide_29_var._type, "Guide_anyshape_r", 16384);
+  _guide_29_var._index=33;
+  int current_setpos_index = 33;
+  _guide_29_var._parameters.xwidth = 0;
+  _guide_29_var._parameters.yheight = 0;
+  _guide_29_var._parameters.zdepth = 0;
+  _guide_29_var._parameters.center = 0;
+  _guide_29_var._parameters.transmit = 0;
+  _guide_29_var._parameters.R0 = 0.99;
+  _guide_29_var._parameters.Qc = 0.0219;
+  _guide_29_var._parameters.alpha = 0;
+  _guide_29_var._parameters.m = 0;
+  _guide_29_var._parameters.W = 0;
+  if("./OFF_files/try29.off" && strlen("./OFF_files/try29.off"))
+    stracpy(_guide_29_var._parameters.geometry, "./OFF_files/try29.off" ? "./OFF_files/try29.off" : "", 16384);
+  else 
+  _guide_29_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_29=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_29_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_28_var._rotation_absolute, tr1);
+    rot_mul(_guide_29_var._rotation_absolute, tr1, _guide_29_var._rotation_relative);
+    _guide_29_var._rotation_is_identity =  rot_test_identity(_guide_29_var._rotation_relative);
+    _guide_29_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_28_var._position_absolute, _guide_29_var._position_absolute);
+    _guide_29_var._position_relative = rot_apply(_guide_29_var._rotation_absolute, tc1);
+  } /* guide_29=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_29", _guide_29_var._position_absolute, _guide_29_var._rotation_absolute);
+  instrument->_position_absolute[33] = _guide_29_var._position_absolute;
+  instrument->_position_relative[33] = _guide_29_var._position_relative;
+    _guide_29_var._position_relative_is_zero =  coords_test_zero(_guide_29_var._position_relative);
+  instrument->counter_N[33]  = instrument->counter_P[33] = instrument->counter_P2[33] = 0;
+  instrument->counter_AbsorbProp[33]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0032_guide_29", _guide_29_var._position_absolute, _guide_29_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0032_guide_29", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0032_guide_29", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0032_guide_29", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0032_guide_29", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0032_guide_29", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0032_guide_29", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0032_guide_29", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0032_guide_29", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0032_guide_29", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0032_guide_29", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0032_guide_29", "geometry", 0, "./OFF_files/try29.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_29_setpos */
+
+/* component guide_30=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_30_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_30_setpos] component guide_30=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_30_var._name, "guide_30", 16384);
+  stracpy(_guide_30_var._type, "Guide_anyshape_r", 16384);
+  _guide_30_var._index=34;
+  int current_setpos_index = 34;
+  _guide_30_var._parameters.xwidth = 0;
+  _guide_30_var._parameters.yheight = 0;
+  _guide_30_var._parameters.zdepth = 0;
+  _guide_30_var._parameters.center = 0;
+  _guide_30_var._parameters.transmit = 0;
+  _guide_30_var._parameters.R0 = 0.99;
+  _guide_30_var._parameters.Qc = 0.0219;
+  _guide_30_var._parameters.alpha = 0;
+  _guide_30_var._parameters.m = 0;
+  _guide_30_var._parameters.W = 0;
+  if("./OFF_files/try30.off" && strlen("./OFF_files/try30.off"))
+    stracpy(_guide_30_var._parameters.geometry, "./OFF_files/try30.off" ? "./OFF_files/try30.off" : "", 16384);
+  else 
+  _guide_30_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_30=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_30_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_29_var._rotation_absolute, tr1);
+    rot_mul(_guide_30_var._rotation_absolute, tr1, _guide_30_var._rotation_relative);
+    _guide_30_var._rotation_is_identity =  rot_test_identity(_guide_30_var._rotation_relative);
+    _guide_30_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_29_var._position_absolute, _guide_30_var._position_absolute);
+    _guide_30_var._position_relative = rot_apply(_guide_30_var._rotation_absolute, tc1);
+  } /* guide_30=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_30", _guide_30_var._position_absolute, _guide_30_var._rotation_absolute);
+  instrument->_position_absolute[34] = _guide_30_var._position_absolute;
+  instrument->_position_relative[34] = _guide_30_var._position_relative;
+    _guide_30_var._position_relative_is_zero =  coords_test_zero(_guide_30_var._position_relative);
+  instrument->counter_N[34]  = instrument->counter_P[34] = instrument->counter_P2[34] = 0;
+  instrument->counter_AbsorbProp[34]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0033_guide_30", _guide_30_var._position_absolute, _guide_30_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0033_guide_30", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0033_guide_30", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0033_guide_30", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0033_guide_30", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0033_guide_30", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0033_guide_30", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0033_guide_30", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0033_guide_30", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0033_guide_30", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0033_guide_30", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0033_guide_30", "geometry", 0, "./OFF_files/try30.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_30_setpos */
+
+/* component guide_32=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_32_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_32_setpos] component guide_32=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_32_var._name, "guide_32", 16384);
+  stracpy(_guide_32_var._type, "Guide_anyshape_r", 16384);
+  _guide_32_var._index=35;
+  int current_setpos_index = 35;
+  _guide_32_var._parameters.xwidth = 0;
+  _guide_32_var._parameters.yheight = 0;
+  _guide_32_var._parameters.zdepth = 0;
+  _guide_32_var._parameters.center = 0;
+  _guide_32_var._parameters.transmit = 0;
+  _guide_32_var._parameters.R0 = 0.99;
+  _guide_32_var._parameters.Qc = 0.0219;
+  _guide_32_var._parameters.alpha = 0;
+  _guide_32_var._parameters.m = 0;
+  _guide_32_var._parameters.W = 0;
+  if("./OFF_files/try32.off" && strlen("./OFF_files/try32.off"))
+    stracpy(_guide_32_var._parameters.geometry, "./OFF_files/try32.off" ? "./OFF_files/try32.off" : "", 16384);
+  else 
+  _guide_32_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_32=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_32_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_30_var._rotation_absolute, tr1);
+    rot_mul(_guide_32_var._rotation_absolute, tr1, _guide_32_var._rotation_relative);
+    _guide_32_var._rotation_is_identity =  rot_test_identity(_guide_32_var._rotation_relative);
+    _guide_32_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_30_var._position_absolute, _guide_32_var._position_absolute);
+    _guide_32_var._position_relative = rot_apply(_guide_32_var._rotation_absolute, tc1);
+  } /* guide_32=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_32", _guide_32_var._position_absolute, _guide_32_var._rotation_absolute);
+  instrument->_position_absolute[35] = _guide_32_var._position_absolute;
+  instrument->_position_relative[35] = _guide_32_var._position_relative;
+    _guide_32_var._position_relative_is_zero =  coords_test_zero(_guide_32_var._position_relative);
+  instrument->counter_N[35]  = instrument->counter_P[35] = instrument->counter_P2[35] = 0;
+  instrument->counter_AbsorbProp[35]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0034_guide_32", _guide_32_var._position_absolute, _guide_32_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0034_guide_32", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0034_guide_32", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0034_guide_32", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0034_guide_32", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0034_guide_32", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0034_guide_32", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0034_guide_32", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0034_guide_32", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0034_guide_32", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0034_guide_32", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0034_guide_32", "geometry", 0, "./OFF_files/try32.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_32_setpos */
+
+/* component guide_33=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_33_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_33_setpos] component guide_33=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_33_var._name, "guide_33", 16384);
+  stracpy(_guide_33_var._type, "Guide_anyshape_r", 16384);
+  _guide_33_var._index=36;
+  int current_setpos_index = 36;
+  _guide_33_var._parameters.xwidth = 0;
+  _guide_33_var._parameters.yheight = 0;
+  _guide_33_var._parameters.zdepth = 0;
+  _guide_33_var._parameters.center = 0;
+  _guide_33_var._parameters.transmit = 0;
+  _guide_33_var._parameters.R0 = 0.99;
+  _guide_33_var._parameters.Qc = 0.0219;
+  _guide_33_var._parameters.alpha = 0;
+  _guide_33_var._parameters.m = 0;
+  _guide_33_var._parameters.W = 0;
+  if("./OFF_files/try33.off" && strlen("./OFF_files/try33.off"))
+    stracpy(_guide_33_var._parameters.geometry, "./OFF_files/try33.off" ? "./OFF_files/try33.off" : "", 16384);
+  else 
+  _guide_33_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_33=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_33_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_32_var._rotation_absolute, tr1);
+    rot_mul(_guide_33_var._rotation_absolute, tr1, _guide_33_var._rotation_relative);
+    _guide_33_var._rotation_is_identity =  rot_test_identity(_guide_33_var._rotation_relative);
+    _guide_33_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_32_var._position_absolute, _guide_33_var._position_absolute);
+    _guide_33_var._position_relative = rot_apply(_guide_33_var._rotation_absolute, tc1);
+  } /* guide_33=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_33", _guide_33_var._position_absolute, _guide_33_var._rotation_absolute);
+  instrument->_position_absolute[36] = _guide_33_var._position_absolute;
+  instrument->_position_relative[36] = _guide_33_var._position_relative;
+    _guide_33_var._position_relative_is_zero =  coords_test_zero(_guide_33_var._position_relative);
+  instrument->counter_N[36]  = instrument->counter_P[36] = instrument->counter_P2[36] = 0;
+  instrument->counter_AbsorbProp[36]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0035_guide_33", _guide_33_var._position_absolute, _guide_33_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0035_guide_33", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0035_guide_33", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0035_guide_33", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0035_guide_33", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0035_guide_33", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0035_guide_33", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0035_guide_33", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0035_guide_33", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0035_guide_33", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0035_guide_33", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0035_guide_33", "geometry", 0, "./OFF_files/try33.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_33_setpos */
+
+/* component guide_34=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_34_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_34_setpos] component guide_34=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_34_var._name, "guide_34", 16384);
+  stracpy(_guide_34_var._type, "Guide_anyshape_r", 16384);
+  _guide_34_var._index=37;
+  int current_setpos_index = 37;
+  _guide_34_var._parameters.xwidth = 0;
+  _guide_34_var._parameters.yheight = 0;
+  _guide_34_var._parameters.zdepth = 0;
+  _guide_34_var._parameters.center = 0;
+  _guide_34_var._parameters.transmit = 0;
+  _guide_34_var._parameters.R0 = 0.99;
+  _guide_34_var._parameters.Qc = 0.0219;
+  _guide_34_var._parameters.alpha = 0;
+  _guide_34_var._parameters.m = 0;
+  _guide_34_var._parameters.W = 0;
+  if("./OFF_files/try34.off" && strlen("./OFF_files/try34.off"))
+    stracpy(_guide_34_var._parameters.geometry, "./OFF_files/try34.off" ? "./OFF_files/try34.off" : "", 16384);
+  else 
+  _guide_34_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_34=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_34_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_33_var._rotation_absolute, tr1);
+    rot_mul(_guide_34_var._rotation_absolute, tr1, _guide_34_var._rotation_relative);
+    _guide_34_var._rotation_is_identity =  rot_test_identity(_guide_34_var._rotation_relative);
+    _guide_34_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_33_var._position_absolute, _guide_34_var._position_absolute);
+    _guide_34_var._position_relative = rot_apply(_guide_34_var._rotation_absolute, tc1);
+  } /* guide_34=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_34", _guide_34_var._position_absolute, _guide_34_var._rotation_absolute);
+  instrument->_position_absolute[37] = _guide_34_var._position_absolute;
+  instrument->_position_relative[37] = _guide_34_var._position_relative;
+    _guide_34_var._position_relative_is_zero =  coords_test_zero(_guide_34_var._position_relative);
+  instrument->counter_N[37]  = instrument->counter_P[37] = instrument->counter_P2[37] = 0;
+  instrument->counter_AbsorbProp[37]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0036_guide_34", _guide_34_var._position_absolute, _guide_34_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0036_guide_34", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0036_guide_34", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0036_guide_34", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0036_guide_34", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0036_guide_34", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0036_guide_34", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0036_guide_34", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0036_guide_34", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0036_guide_34", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0036_guide_34", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0036_guide_34", "geometry", 0, "./OFF_files/try34.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_34_setpos */
+
+/* component guide_36=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_36_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_36_setpos] component guide_36=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_36_var._name, "guide_36", 16384);
+  stracpy(_guide_36_var._type, "Guide_anyshape_r", 16384);
+  _guide_36_var._index=38;
+  int current_setpos_index = 38;
+  _guide_36_var._parameters.xwidth = 0;
+  _guide_36_var._parameters.yheight = 0;
+  _guide_36_var._parameters.zdepth = 0;
+  _guide_36_var._parameters.center = 0;
+  _guide_36_var._parameters.transmit = 0;
+  _guide_36_var._parameters.R0 = 0.99;
+  _guide_36_var._parameters.Qc = 0.0219;
+  _guide_36_var._parameters.alpha = 0;
+  _guide_36_var._parameters.m = 0;
+  _guide_36_var._parameters.W = 0;
+  if("./OFF_files/try36.off" && strlen("./OFF_files/try36.off"))
+    stracpy(_guide_36_var._parameters.geometry, "./OFF_files/try36.off" ? "./OFF_files/try36.off" : "", 16384);
+  else 
+  _guide_36_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_36=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_36_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_34_var._rotation_absolute, tr1);
+    rot_mul(_guide_36_var._rotation_absolute, tr1, _guide_36_var._rotation_relative);
+    _guide_36_var._rotation_is_identity =  rot_test_identity(_guide_36_var._rotation_relative);
+    _guide_36_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_34_var._position_absolute, _guide_36_var._position_absolute);
+    _guide_36_var._position_relative = rot_apply(_guide_36_var._rotation_absolute, tc1);
+  } /* guide_36=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_36", _guide_36_var._position_absolute, _guide_36_var._rotation_absolute);
+  instrument->_position_absolute[38] = _guide_36_var._position_absolute;
+  instrument->_position_relative[38] = _guide_36_var._position_relative;
+    _guide_36_var._position_relative_is_zero =  coords_test_zero(_guide_36_var._position_relative);
+  instrument->counter_N[38]  = instrument->counter_P[38] = instrument->counter_P2[38] = 0;
+  instrument->counter_AbsorbProp[38]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0037_guide_36", _guide_36_var._position_absolute, _guide_36_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0037_guide_36", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0037_guide_36", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0037_guide_36", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0037_guide_36", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0037_guide_36", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0037_guide_36", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0037_guide_36", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0037_guide_36", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0037_guide_36", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0037_guide_36", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0037_guide_36", "geometry", 0, "./OFF_files/try36.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_36_setpos */
+
+/* component guide_37=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_37_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_37_setpos] component guide_37=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_37_var._name, "guide_37", 16384);
+  stracpy(_guide_37_var._type, "Guide_anyshape_r", 16384);
+  _guide_37_var._index=39;
+  int current_setpos_index = 39;
+  _guide_37_var._parameters.xwidth = 0;
+  _guide_37_var._parameters.yheight = 0;
+  _guide_37_var._parameters.zdepth = 0;
+  _guide_37_var._parameters.center = 0;
+  _guide_37_var._parameters.transmit = 0;
+  _guide_37_var._parameters.R0 = 0.99;
+  _guide_37_var._parameters.Qc = 0.0219;
+  _guide_37_var._parameters.alpha = 0;
+  _guide_37_var._parameters.m = 0;
+  _guide_37_var._parameters.W = 0;
+  if("./OFF_files/try37.off" && strlen("./OFF_files/try37.off"))
+    stracpy(_guide_37_var._parameters.geometry, "./OFF_files/try37.off" ? "./OFF_files/try37.off" : "", 16384);
+  else 
+  _guide_37_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_37=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_37_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_36_var._rotation_absolute, tr1);
+    rot_mul(_guide_37_var._rotation_absolute, tr1, _guide_37_var._rotation_relative);
+    _guide_37_var._rotation_is_identity =  rot_test_identity(_guide_37_var._rotation_relative);
+    _guide_37_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_36_var._position_absolute, _guide_37_var._position_absolute);
+    _guide_37_var._position_relative = rot_apply(_guide_37_var._rotation_absolute, tc1);
+  } /* guide_37=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_37", _guide_37_var._position_absolute, _guide_37_var._rotation_absolute);
+  instrument->_position_absolute[39] = _guide_37_var._position_absolute;
+  instrument->_position_relative[39] = _guide_37_var._position_relative;
+    _guide_37_var._position_relative_is_zero =  coords_test_zero(_guide_37_var._position_relative);
+  instrument->counter_N[39]  = instrument->counter_P[39] = instrument->counter_P2[39] = 0;
+  instrument->counter_AbsorbProp[39]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0038_guide_37", _guide_37_var._position_absolute, _guide_37_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0038_guide_37", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0038_guide_37", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0038_guide_37", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0038_guide_37", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0038_guide_37", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0038_guide_37", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0038_guide_37", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0038_guide_37", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0038_guide_37", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0038_guide_37", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0038_guide_37", "geometry", 0, "./OFF_files/try37.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_37_setpos */
+
+/* component guide_39=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_39_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_39_setpos] component guide_39=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_39_var._name, "guide_39", 16384);
+  stracpy(_guide_39_var._type, "Guide_anyshape_r", 16384);
+  _guide_39_var._index=40;
+  int current_setpos_index = 40;
+  _guide_39_var._parameters.xwidth = 0;
+  _guide_39_var._parameters.yheight = 0;
+  _guide_39_var._parameters.zdepth = 0;
+  _guide_39_var._parameters.center = 0;
+  _guide_39_var._parameters.transmit = 0;
+  _guide_39_var._parameters.R0 = 0.99;
+  _guide_39_var._parameters.Qc = 0.0219;
+  _guide_39_var._parameters.alpha = 0;
+  _guide_39_var._parameters.m = 0;
+  _guide_39_var._parameters.W = 0;
+  if("./OFF_files/try39.off" && strlen("./OFF_files/try39.off"))
+    stracpy(_guide_39_var._parameters.geometry, "./OFF_files/try39.off" ? "./OFF_files/try39.off" : "", 16384);
+  else 
+  _guide_39_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_39=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_39_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_37_var._rotation_absolute, tr1);
+    rot_mul(_guide_39_var._rotation_absolute, tr1, _guide_39_var._rotation_relative);
+    _guide_39_var._rotation_is_identity =  rot_test_identity(_guide_39_var._rotation_relative);
+    _guide_39_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_37_var._position_absolute, _guide_39_var._position_absolute);
+    _guide_39_var._position_relative = rot_apply(_guide_39_var._rotation_absolute, tc1);
+  } /* guide_39=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_39", _guide_39_var._position_absolute, _guide_39_var._rotation_absolute);
+  instrument->_position_absolute[40] = _guide_39_var._position_absolute;
+  instrument->_position_relative[40] = _guide_39_var._position_relative;
+    _guide_39_var._position_relative_is_zero =  coords_test_zero(_guide_39_var._position_relative);
+  instrument->counter_N[40]  = instrument->counter_P[40] = instrument->counter_P2[40] = 0;
+  instrument->counter_AbsorbProp[40]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0039_guide_39", _guide_39_var._position_absolute, _guide_39_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0039_guide_39", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0039_guide_39", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0039_guide_39", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0039_guide_39", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0039_guide_39", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0039_guide_39", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0039_guide_39", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0039_guide_39", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0039_guide_39", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0039_guide_39", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0039_guide_39", "geometry", 0, "./OFF_files/try39.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_39_setpos */
+
+/* component guide_40=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_40_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_40_setpos] component guide_40=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_40_var._name, "guide_40", 16384);
+  stracpy(_guide_40_var._type, "Guide_anyshape_r", 16384);
+  _guide_40_var._index=41;
+  int current_setpos_index = 41;
+  _guide_40_var._parameters.xwidth = 0;
+  _guide_40_var._parameters.yheight = 0;
+  _guide_40_var._parameters.zdepth = 0;
+  _guide_40_var._parameters.center = 0;
+  _guide_40_var._parameters.transmit = 0;
+  _guide_40_var._parameters.R0 = 0.99;
+  _guide_40_var._parameters.Qc = 0.0219;
+  _guide_40_var._parameters.alpha = 0;
+  _guide_40_var._parameters.m = 0;
+  _guide_40_var._parameters.W = 0;
+  if("./OFF_files/try40.off" && strlen("./OFF_files/try40.off"))
+    stracpy(_guide_40_var._parameters.geometry, "./OFF_files/try40.off" ? "./OFF_files/try40.off" : "", 16384);
+  else 
+  _guide_40_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_40=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_40_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_39_var._rotation_absolute, tr1);
+    rot_mul(_guide_40_var._rotation_absolute, tr1, _guide_40_var._rotation_relative);
+    _guide_40_var._rotation_is_identity =  rot_test_identity(_guide_40_var._rotation_relative);
+    _guide_40_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_39_var._position_absolute, _guide_40_var._position_absolute);
+    _guide_40_var._position_relative = rot_apply(_guide_40_var._rotation_absolute, tc1);
+  } /* guide_40=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_40", _guide_40_var._position_absolute, _guide_40_var._rotation_absolute);
+  instrument->_position_absolute[41] = _guide_40_var._position_absolute;
+  instrument->_position_relative[41] = _guide_40_var._position_relative;
+    _guide_40_var._position_relative_is_zero =  coords_test_zero(_guide_40_var._position_relative);
+  instrument->counter_N[41]  = instrument->counter_P[41] = instrument->counter_P2[41] = 0;
+  instrument->counter_AbsorbProp[41]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0040_guide_40", _guide_40_var._position_absolute, _guide_40_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0040_guide_40", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0040_guide_40", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0040_guide_40", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0040_guide_40", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0040_guide_40", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0040_guide_40", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0040_guide_40", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0040_guide_40", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0040_guide_40", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0040_guide_40", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0040_guide_40", "geometry", 0, "./OFF_files/try40.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_40_setpos */
+
+/* component guide_41=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_41_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_41_setpos] component guide_41=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_41_var._name, "guide_41", 16384);
+  stracpy(_guide_41_var._type, "Guide_anyshape_r", 16384);
+  _guide_41_var._index=42;
+  int current_setpos_index = 42;
+  _guide_41_var._parameters.xwidth = 0;
+  _guide_41_var._parameters.yheight = 0;
+  _guide_41_var._parameters.zdepth = 0;
+  _guide_41_var._parameters.center = 0;
+  _guide_41_var._parameters.transmit = 0;
+  _guide_41_var._parameters.R0 = 0.99;
+  _guide_41_var._parameters.Qc = 0.0219;
+  _guide_41_var._parameters.alpha = 0;
+  _guide_41_var._parameters.m = 0;
+  _guide_41_var._parameters.W = 0;
+  if("./OFF_files/try41.off" && strlen("./OFF_files/try41.off"))
+    stracpy(_guide_41_var._parameters.geometry, "./OFF_files/try41.off" ? "./OFF_files/try41.off" : "", 16384);
+  else 
+  _guide_41_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_41=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_41_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_40_var._rotation_absolute, tr1);
+    rot_mul(_guide_41_var._rotation_absolute, tr1, _guide_41_var._rotation_relative);
+    _guide_41_var._rotation_is_identity =  rot_test_identity(_guide_41_var._rotation_relative);
+    _guide_41_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_40_var._position_absolute, _guide_41_var._position_absolute);
+    _guide_41_var._position_relative = rot_apply(_guide_41_var._rotation_absolute, tc1);
+  } /* guide_41=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_41", _guide_41_var._position_absolute, _guide_41_var._rotation_absolute);
+  instrument->_position_absolute[42] = _guide_41_var._position_absolute;
+  instrument->_position_relative[42] = _guide_41_var._position_relative;
+    _guide_41_var._position_relative_is_zero =  coords_test_zero(_guide_41_var._position_relative);
+  instrument->counter_N[42]  = instrument->counter_P[42] = instrument->counter_P2[42] = 0;
+  instrument->counter_AbsorbProp[42]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0041_guide_41", _guide_41_var._position_absolute, _guide_41_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0041_guide_41", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0041_guide_41", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0041_guide_41", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0041_guide_41", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0041_guide_41", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0041_guide_41", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0041_guide_41", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0041_guide_41", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0041_guide_41", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0041_guide_41", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0041_guide_41", "geometry", 0, "./OFF_files/try41.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_41_setpos */
+
+/* component guide_42=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_42_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_42_setpos] component guide_42=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_42_var._name, "guide_42", 16384);
+  stracpy(_guide_42_var._type, "Guide_anyshape_r", 16384);
+  _guide_42_var._index=43;
+  int current_setpos_index = 43;
+  _guide_42_var._parameters.xwidth = 0;
+  _guide_42_var._parameters.yheight = 0;
+  _guide_42_var._parameters.zdepth = 0;
+  _guide_42_var._parameters.center = 0;
+  _guide_42_var._parameters.transmit = 0;
+  _guide_42_var._parameters.R0 = 0.99;
+  _guide_42_var._parameters.Qc = 0.0219;
+  _guide_42_var._parameters.alpha = 0;
+  _guide_42_var._parameters.m = 0;
+  _guide_42_var._parameters.W = 0;
+  if("./OFF_files/try42.off" && strlen("./OFF_files/try42.off"))
+    stracpy(_guide_42_var._parameters.geometry, "./OFF_files/try42.off" ? "./OFF_files/try42.off" : "", 16384);
+  else 
+  _guide_42_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_42=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_42_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_41_var._rotation_absolute, tr1);
+    rot_mul(_guide_42_var._rotation_absolute, tr1, _guide_42_var._rotation_relative);
+    _guide_42_var._rotation_is_identity =  rot_test_identity(_guide_42_var._rotation_relative);
+    _guide_42_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_41_var._position_absolute, _guide_42_var._position_absolute);
+    _guide_42_var._position_relative = rot_apply(_guide_42_var._rotation_absolute, tc1);
+  } /* guide_42=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_42", _guide_42_var._position_absolute, _guide_42_var._rotation_absolute);
+  instrument->_position_absolute[43] = _guide_42_var._position_absolute;
+  instrument->_position_relative[43] = _guide_42_var._position_relative;
+    _guide_42_var._position_relative_is_zero =  coords_test_zero(_guide_42_var._position_relative);
+  instrument->counter_N[43]  = instrument->counter_P[43] = instrument->counter_P2[43] = 0;
+  instrument->counter_AbsorbProp[43]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0042_guide_42", _guide_42_var._position_absolute, _guide_42_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0042_guide_42", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0042_guide_42", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0042_guide_42", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0042_guide_42", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0042_guide_42", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0042_guide_42", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0042_guide_42", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0042_guide_42", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0042_guide_42", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0042_guide_42", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0042_guide_42", "geometry", 0, "./OFF_files/try42.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_42_setpos */
+
+/* component guide_44=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_44_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_44_setpos] component guide_44=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_44_var._name, "guide_44", 16384);
+  stracpy(_guide_44_var._type, "Guide_anyshape_r", 16384);
+  _guide_44_var._index=44;
+  int current_setpos_index = 44;
+  _guide_44_var._parameters.xwidth = 0;
+  _guide_44_var._parameters.yheight = 0;
+  _guide_44_var._parameters.zdepth = 0;
+  _guide_44_var._parameters.center = 0;
+  _guide_44_var._parameters.transmit = 0;
+  _guide_44_var._parameters.R0 = 0.99;
+  _guide_44_var._parameters.Qc = 0.0219;
+  _guide_44_var._parameters.alpha = 0;
+  _guide_44_var._parameters.m = 0;
+  _guide_44_var._parameters.W = 0;
+  if("./OFF_files/try44.off" && strlen("./OFF_files/try44.off"))
+    stracpy(_guide_44_var._parameters.geometry, "./OFF_files/try44.off" ? "./OFF_files/try44.off" : "", 16384);
+  else 
+  _guide_44_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_44=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_44_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_42_var._rotation_absolute, tr1);
+    rot_mul(_guide_44_var._rotation_absolute, tr1, _guide_44_var._rotation_relative);
+    _guide_44_var._rotation_is_identity =  rot_test_identity(_guide_44_var._rotation_relative);
+    _guide_44_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_42_var._position_absolute, _guide_44_var._position_absolute);
+    _guide_44_var._position_relative = rot_apply(_guide_44_var._rotation_absolute, tc1);
+  } /* guide_44=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_44", _guide_44_var._position_absolute, _guide_44_var._rotation_absolute);
+  instrument->_position_absolute[44] = _guide_44_var._position_absolute;
+  instrument->_position_relative[44] = _guide_44_var._position_relative;
+    _guide_44_var._position_relative_is_zero =  coords_test_zero(_guide_44_var._position_relative);
+  instrument->counter_N[44]  = instrument->counter_P[44] = instrument->counter_P2[44] = 0;
+  instrument->counter_AbsorbProp[44]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0043_guide_44", _guide_44_var._position_absolute, _guide_44_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0043_guide_44", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0043_guide_44", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0043_guide_44", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0043_guide_44", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0043_guide_44", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0043_guide_44", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0043_guide_44", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0043_guide_44", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0043_guide_44", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0043_guide_44", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0043_guide_44", "geometry", 0, "./OFF_files/try44.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_44_setpos */
+
+/* component guide_45=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_45_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_45_setpos] component guide_45=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_45_var._name, "guide_45", 16384);
+  stracpy(_guide_45_var._type, "Guide_anyshape_r", 16384);
+  _guide_45_var._index=45;
+  int current_setpos_index = 45;
+  _guide_45_var._parameters.xwidth = 0;
+  _guide_45_var._parameters.yheight = 0;
+  _guide_45_var._parameters.zdepth = 0;
+  _guide_45_var._parameters.center = 0;
+  _guide_45_var._parameters.transmit = 0;
+  _guide_45_var._parameters.R0 = 0.99;
+  _guide_45_var._parameters.Qc = 0.0219;
+  _guide_45_var._parameters.alpha = 0;
+  _guide_45_var._parameters.m = 0;
+  _guide_45_var._parameters.W = 0;
+  if("./OFF_files/try45.off" && strlen("./OFF_files/try45.off"))
+    stracpy(_guide_45_var._parameters.geometry, "./OFF_files/try45.off" ? "./OFF_files/try45.off" : "", 16384);
+  else 
+  _guide_45_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_45=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_45_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_44_var._rotation_absolute, tr1);
+    rot_mul(_guide_45_var._rotation_absolute, tr1, _guide_45_var._rotation_relative);
+    _guide_45_var._rotation_is_identity =  rot_test_identity(_guide_45_var._rotation_relative);
+    _guide_45_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_44_var._position_absolute, _guide_45_var._position_absolute);
+    _guide_45_var._position_relative = rot_apply(_guide_45_var._rotation_absolute, tc1);
+  } /* guide_45=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_45", _guide_45_var._position_absolute, _guide_45_var._rotation_absolute);
+  instrument->_position_absolute[45] = _guide_45_var._position_absolute;
+  instrument->_position_relative[45] = _guide_45_var._position_relative;
+    _guide_45_var._position_relative_is_zero =  coords_test_zero(_guide_45_var._position_relative);
+  instrument->counter_N[45]  = instrument->counter_P[45] = instrument->counter_P2[45] = 0;
+  instrument->counter_AbsorbProp[45]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0044_guide_45", _guide_45_var._position_absolute, _guide_45_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0044_guide_45", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0044_guide_45", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0044_guide_45", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0044_guide_45", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0044_guide_45", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0044_guide_45", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0044_guide_45", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0044_guide_45", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0044_guide_45", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0044_guide_45", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0044_guide_45", "geometry", 0, "./OFF_files/try45.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_45_setpos */
+
+/* component guide_46=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_46_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_46_setpos] component guide_46=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_46_var._name, "guide_46", 16384);
+  stracpy(_guide_46_var._type, "Guide_anyshape_r", 16384);
+  _guide_46_var._index=46;
+  int current_setpos_index = 46;
+  _guide_46_var._parameters.xwidth = 0;
+  _guide_46_var._parameters.yheight = 0;
+  _guide_46_var._parameters.zdepth = 0;
+  _guide_46_var._parameters.center = 0;
+  _guide_46_var._parameters.transmit = 0;
+  _guide_46_var._parameters.R0 = 0.99;
+  _guide_46_var._parameters.Qc = 0.0219;
+  _guide_46_var._parameters.alpha = 0;
+  _guide_46_var._parameters.m = 0;
+  _guide_46_var._parameters.W = 0;
+  if("./OFF_files/try46.off" && strlen("./OFF_files/try46.off"))
+    stracpy(_guide_46_var._parameters.geometry, "./OFF_files/try46.off" ? "./OFF_files/try46.off" : "", 16384);
+  else 
+  _guide_46_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_46=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_46_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_45_var._rotation_absolute, tr1);
+    rot_mul(_guide_46_var._rotation_absolute, tr1, _guide_46_var._rotation_relative);
+    _guide_46_var._rotation_is_identity =  rot_test_identity(_guide_46_var._rotation_relative);
+    _guide_46_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_45_var._position_absolute, _guide_46_var._position_absolute);
+    _guide_46_var._position_relative = rot_apply(_guide_46_var._rotation_absolute, tc1);
+  } /* guide_46=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_46", _guide_46_var._position_absolute, _guide_46_var._rotation_absolute);
+  instrument->_position_absolute[46] = _guide_46_var._position_absolute;
+  instrument->_position_relative[46] = _guide_46_var._position_relative;
+    _guide_46_var._position_relative_is_zero =  coords_test_zero(_guide_46_var._position_relative);
+  instrument->counter_N[46]  = instrument->counter_P[46] = instrument->counter_P2[46] = 0;
+  instrument->counter_AbsorbProp[46]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0045_guide_46", _guide_46_var._position_absolute, _guide_46_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0045_guide_46", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0045_guide_46", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0045_guide_46", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0045_guide_46", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0045_guide_46", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0045_guide_46", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0045_guide_46", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0045_guide_46", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0045_guide_46", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0045_guide_46", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0045_guide_46", "geometry", 0, "./OFF_files/try46.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_46_setpos */
+
+/* component guide_47=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_47_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_47_setpos] component guide_47=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_47_var._name, "guide_47", 16384);
+  stracpy(_guide_47_var._type, "Guide_anyshape_r", 16384);
+  _guide_47_var._index=47;
+  int current_setpos_index = 47;
+  _guide_47_var._parameters.xwidth = 0;
+  _guide_47_var._parameters.yheight = 0;
+  _guide_47_var._parameters.zdepth = 0;
+  _guide_47_var._parameters.center = 0;
+  _guide_47_var._parameters.transmit = 0;
+  _guide_47_var._parameters.R0 = 0.99;
+  _guide_47_var._parameters.Qc = 0.0219;
+  _guide_47_var._parameters.alpha = 0;
+  _guide_47_var._parameters.m = 0;
+  _guide_47_var._parameters.W = 0;
+  if("./OFF_files/try47.off" && strlen("./OFF_files/try47.off"))
+    stracpy(_guide_47_var._parameters.geometry, "./OFF_files/try47.off" ? "./OFF_files/try47.off" : "", 16384);
+  else 
+  _guide_47_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_47=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_47_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_46_var._rotation_absolute, tr1);
+    rot_mul(_guide_47_var._rotation_absolute, tr1, _guide_47_var._rotation_relative);
+    _guide_47_var._rotation_is_identity =  rot_test_identity(_guide_47_var._rotation_relative);
+    _guide_47_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_46_var._position_absolute, _guide_47_var._position_absolute);
+    _guide_47_var._position_relative = rot_apply(_guide_47_var._rotation_absolute, tc1);
+  } /* guide_47=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_47", _guide_47_var._position_absolute, _guide_47_var._rotation_absolute);
+  instrument->_position_absolute[47] = _guide_47_var._position_absolute;
+  instrument->_position_relative[47] = _guide_47_var._position_relative;
+    _guide_47_var._position_relative_is_zero =  coords_test_zero(_guide_47_var._position_relative);
+  instrument->counter_N[47]  = instrument->counter_P[47] = instrument->counter_P2[47] = 0;
+  instrument->counter_AbsorbProp[47]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0046_guide_47", _guide_47_var._position_absolute, _guide_47_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0046_guide_47", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0046_guide_47", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0046_guide_47", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0046_guide_47", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0046_guide_47", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0046_guide_47", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0046_guide_47", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0046_guide_47", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0046_guide_47", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0046_guide_47", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0046_guide_47", "geometry", 0, "./OFF_files/try47.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_47_setpos */
+
+/* component BW_Chopper_1=MultiDiskChopper() SETTING, POSITION/ROTATION */
+int _BW_Chopper_1_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_BW_Chopper_1_setpos] component BW_Chopper_1=MultiDiskChopper() SETTING [MultiDiskChopper:0]");
+  stracpy(_BW_Chopper_1_var._name, "BW_Chopper_1", 16384);
+  stracpy(_BW_Chopper_1_var._type, "MultiDiskChopper", 16384);
+  _BW_Chopper_1_var._index=48;
+  int current_setpos_index = 48;
+  if("0 180" && strlen("0 180"))
+    stracpy(_BW_Chopper_1_var._parameters.slit_center, "0 180" ? "0 180" : "", 16384);
+  else 
+  _BW_Chopper_1_var._parameters.slit_center[0]='\0';
+  if("10 20" && strlen("10 20"))
+    stracpy(_BW_Chopper_1_var._parameters.slit_width, "10 20" ? "10 20" : "", 16384);
+  else 
+  _BW_Chopper_1_var._parameters.slit_width[0]='\0';
+  _BW_Chopper_1_var._parameters.nslits = 2;
+  _BW_Chopper_1_var._parameters.delta_y = -0.3;
+  _BW_Chopper_1_var._parameters.nu = 0;
+  _BW_Chopper_1_var._parameters.nrev = 0;
+  _BW_Chopper_1_var._parameters.ratio = 1;
+  _BW_Chopper_1_var._parameters.jitter = 0;
+  _BW_Chopper_1_var._parameters.delay = 0;
+  _BW_Chopper_1_var._parameters.isfirst = 0;
+  _BW_Chopper_1_var._parameters.phase = 0;
+  _BW_Chopper_1_var._parameters.radius = 0.375;
+  _BW_Chopper_1_var._parameters.equal = 0;
+  _BW_Chopper_1_var._parameters.abs_out = 0;
+  _BW_Chopper_1_var._parameters.verbose = 0;
+
+
+  /* component BW_Chopper_1=MultiDiskChopper() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_BW_Chopper_1_var._rotation_absolute,
+      (0)*DEG2RAD, (0.12454202414165)*DEG2RAD, (0)*DEG2RAD);
+    rot_transpose(_guide_47_var._rotation_absolute, tr1);
+    rot_mul(_BW_Chopper_1_var._rotation_absolute, tr1, _BW_Chopper_1_var._rotation_relative);
+    _BW_Chopper_1_var._rotation_is_identity =  rot_test_identity(_BW_Chopper_1_var._rotation_relative);
+    _BW_Chopper_1_var._position_absolute = coords_set(
+      0.011348994153930106, 0.0, 32.0);
+    tc1 = coords_sub(_guide_47_var._position_absolute, _BW_Chopper_1_var._position_absolute);
+    _BW_Chopper_1_var._position_relative = rot_apply(_BW_Chopper_1_var._rotation_absolute, tc1);
+  } /* BW_Chopper_1=MultiDiskChopper() AT ROTATED */
+  DEBUG_COMPONENT("BW_Chopper_1", _BW_Chopper_1_var._position_absolute, _BW_Chopper_1_var._rotation_absolute);
+  instrument->_position_absolute[48] = _BW_Chopper_1_var._position_absolute;
+  instrument->_position_relative[48] = _BW_Chopper_1_var._position_relative;
+    _BW_Chopper_1_var._position_relative_is_zero =  coords_test_zero(_BW_Chopper_1_var._position_relative);
+  instrument->counter_N[48]  = instrument->counter_P[48] = instrument->counter_P2[48] = 0;
+  instrument->counter_AbsorbProp[48]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0047_BW_Chopper_1", _BW_Chopper_1_var._position_absolute, _BW_Chopper_1_var._rotation_absolute, "MultiDiskChopper");
+        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "slit_center", "0 180", "0 180", "char*");
+        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "slit_width", "10 20", "10 20", "char*");
+        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "nslits", "2", "2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "delta_y", "-0.3", "-0.3","MCNUM");
+        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "nu", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "nrev", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "ratio", "1", "1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "jitter", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "delay", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "isfirst", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "phase", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "radius", "0.375", "0.375","MCNUM");
+        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "equal", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "abs_out", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "verbose", "0", "0","MCNUM");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _BW_Chopper_1_setpos */
+
 _class_ESS_butterfly *class_ESS_butterfly_init(_class_ESS_butterfly *_comp
 ) {
   #define sector (_comp->_parameters.sector)
@@ -17356,21 +22338,460 @@ _class_Guide_anyshape_r *class_Guide_anyshape_r_init(_class_Guide_anyshape_r *_c
   return(_comp);
 } /* class_Guide_anyshape_r_init */
 
+_class_Pol_bender *class_Pol_bender_init(_class_Pol_bender *_comp
+) {
+  #define xwidth (_comp->_parameters.xwidth)
+  #define yheight (_comp->_parameters.yheight)
+  #define length (_comp->_parameters.length)
+  #define radius (_comp->_parameters.radius)
+  #define G (_comp->_parameters.G)
+  #define nslit (_comp->_parameters.nslit)
+  #define d (_comp->_parameters.d)
+  #define debug (_comp->_parameters.debug)
+  #define endFlat (_comp->_parameters.endFlat)
+  #define rTopUpPar (_comp->_parameters.rTopUpPar)
+  #define rTopDownPar (_comp->_parameters.rTopDownPar)
+  #define rBotUpPar (_comp->_parameters.rBotUpPar)
+  #define rBotDownPar (_comp->_parameters.rBotDownPar)
+  #define rLeftUpPar (_comp->_parameters.rLeftUpPar)
+  #define rLeftDownPar (_comp->_parameters.rLeftDownPar)
+  #define rRightUpPar (_comp->_parameters.rRightUpPar)
+  #define rRightDownPar (_comp->_parameters.rRightDownPar)
+  #define rTopUpData (_comp->_parameters.rTopUpData)
+  #define rTopDownData (_comp->_parameters.rTopDownData)
+  #define rBotUpData (_comp->_parameters.rBotUpData)
+  #define rBotDownData (_comp->_parameters.rBotDownData)
+  #define rLeftUpData (_comp->_parameters.rLeftUpData)
+  #define rLeftDownData (_comp->_parameters.rLeftDownData)
+  #define rRightUpData (_comp->_parameters.rRightUpData)
+  #define rRightDownData (_comp->_parameters.rRightDownData)
+  #define drawOption (_comp->_parameters.drawOption)
+  #define localG (_comp->_parameters.localG)
+  #define normTopBot (_comp->_parameters.normTopBot)
+  #define normIn (_comp->_parameters.normIn)
+  #define normOut (_comp->_parameters.normOut)
+  #define pointTop (_comp->_parameters.pointTop)
+  #define pointBot (_comp->_parameters.pointBot)
+  #define pointIn (_comp->_parameters.pointIn)
+  #define pointOut (_comp->_parameters.pointOut)
+  #define rTopUpTable (_comp->_parameters.rTopUpTable)
+  #define rTopDownTable (_comp->_parameters.rTopDownTable)
+  #define rBotUpTable (_comp->_parameters.rBotUpTable)
+  #define rBotDownTable (_comp->_parameters.rBotDownTable)
+  #define rLeftUpTable (_comp->_parameters.rLeftUpTable)
+  #define rLeftDownTable (_comp->_parameters.rLeftDownTable)
+  #define rRightUpTable (_comp->_parameters.rRightUpTable)
+  #define rRightDownTable (_comp->_parameters.rRightDownTable)
+  #define useTables (_comp->_parameters.useTables)
+  SIG_MESSAGE("[_bender_init] component bender=Pol_bender() INITIALISE [Pol_bender:0]");
+
+  double angle;
+
+  if (strlen (rTopUpData) && strcmp (rTopUpData, "NULL")) {
+    useTables = 1;
+    /*if rUpTopData is set assume we'll be usning tabled data for all reflectivities*/
+    if (Table_Read (&rTopUpTable, rTopUpData, 1) <= 0) {
+      fprintf (stderr, "Pol_bender: %s: can not read file %s\n", NAME_CURRENT_COMP, rTopUpData);
+      exit (1);
+    }
+    if (Table_Read (&rTopDownTable, rTopDownData, 1) <= 0) {
+      fprintf (stderr, "Pol_bender: %s: can not read file %s\n", NAME_CURRENT_COMP, rTopDownData);
+      exit (1);
+    }
+    if (Table_Read (&rBotUpTable, rBotUpData, 1) <= 0) {
+      fprintf (stderr, "Pol_bender: %s: can not read file %s\n", NAME_CURRENT_COMP, rBotUpData);
+      exit (1);
+    }
+    if (Table_Read (&rBotDownTable, rBotDownData, 1) <= 0) {
+      fprintf (stderr, "Pol_bender: %s: can not read file %s\n", NAME_CURRENT_COMP, rBotDownData);
+      exit (1);
+    }
+    if (Table_Read (&rLeftUpTable, rLeftUpData, 1) <= 0) {
+      fprintf (stderr, "Pol_bender: %s: can not read file %s\n", NAME_CURRENT_COMP, rLeftUpData);
+      exit (1);
+    }
+    if (Table_Read (&rLeftDownTable, rLeftDownData, 1) <= 0) {
+      fprintf (stderr, "Pol_bender: %s: can not read file %s\n", NAME_CURRENT_COMP, rLeftDownData);
+      exit (1);
+    }
+    if (Table_Read (&rRightUpTable, rRightUpData, 1) <= 0) {
+      fprintf (stderr, "Pol_bender: %s: can not read file %s\n", NAME_CURRENT_COMP, rRightUpData);
+      exit (1);
+    }
+    if (Table_Read (&rRightDownTable, rRightDownData, 1) <= 0) {
+      fprintf (stderr, "Pol_bender: %s: can not read file %s\n", NAME_CURRENT_COMP, rRightDownData);
+      exit (1);
+    }
+  }
+  if ((xwidth <= 0) || (yheight <= 0) || (length <= 0) || (radius == 0)) {
+    fprintf (stderr,
+             "Pol_bender: %s: NULL or negative length scale!\n"
+             "ERROR      (xwidth,yheight,length, radius). Exiting\n",
+             NAME_CURRENT_COMP);
+    exit (1);
+  }
+
+  if (drawOption < 1 || drawOption > 3) {
+    fprintf (stderr, "Pol_bender: %s: drawOption %ld not supported. Exiting.\n", NAME_CURRENT_COMP, drawOption);
+    exit (1);
+  }
+
+  if (mcgravitation) {
+
+    localG = rot_apply (ROT_A_CURRENT_COMP, coords_set (0, -GRAVITY, 0));
+    fprintf (stdout, "Pol_bender %s: Gravity is on!\n", NAME_CURRENT_COMP);
+    if (localG.x != 0 || localG.z != 0)
+      fprintf (stderr,
+               "WARNING: Pol_Bender: %s: "
+               "This component only gives correct resulta with gravitation,\n"
+               "when gravity is strictly along the y-axis!\n",
+               NAME_CURRENT_COMP);
+
+  } else
+    localG = coords_set (0, 0, 0);
+
+  // To be able to handle the situation properly where a component of
+  // the gravity is along the z-axis we also define entrance (in) and
+  // exit (out) planes
+
+  angle = length / radius;
+  normIn = coords_set (0, 0, 1);
+  if (endFlat)
+    normOut = coords_set (0, 0, 1);
+  else
+    normOut = coords_set (sin (angle), 0, cos (angle));
+  pointIn = coords_set (0, 0, 0);
+  pointOut = coords_set (radius - radius * cos (angle), 0, radius* sin (angle));
+
+  // Top and bot plane (+y dir) can be spanned by (1, 0, 0) & (0, 0, 1)
+  // and the top point (0, yheight/2, 0) and bot point (0, -yheight/2, 0)
+  // A normal vector is (0, 1, 0)
+  normTopBot = coords_set (0, 1, 0);
+  pointTop = coords_set (0, yheight / 2, 0);
+  pointBot = coords_set (0, -yheight / 2, 0);
+  #undef xwidth
+  #undef yheight
+  #undef length
+  #undef radius
+  #undef G
+  #undef nslit
+  #undef d
+  #undef debug
+  #undef endFlat
+  #undef rTopUpPar
+  #undef rTopDownPar
+  #undef rBotUpPar
+  #undef rBotDownPar
+  #undef rLeftUpPar
+  #undef rLeftDownPar
+  #undef rRightUpPar
+  #undef rRightDownPar
+  #undef rTopUpData
+  #undef rTopDownData
+  #undef rBotUpData
+  #undef rBotDownData
+  #undef rLeftUpData
+  #undef rLeftDownData
+  #undef rRightUpData
+  #undef rRightDownData
+  #undef drawOption
+  #undef localG
+  #undef normTopBot
+  #undef normIn
+  #undef normOut
+  #undef pointTop
+  #undef pointBot
+  #undef pointIn
+  #undef pointOut
+  #undef rTopUpTable
+  #undef rTopDownTable
+  #undef rBotUpTable
+  #undef rBotDownTable
+  #undef rLeftUpTable
+  #undef rLeftDownTable
+  #undef rRightUpTable
+  #undef rRightDownTable
+  #undef useTables
+  return(_comp);
+} /* class_Pol_bender_init */
+
+_class_Slit *class_Slit_init(_class_Slit *_comp
+) {
+  #define xmin (_comp->_parameters.xmin)
+  #define xmax (_comp->_parameters.xmax)
+  #define ymin (_comp->_parameters.ymin)
+  #define ymax (_comp->_parameters.ymax)
+  #define radius (_comp->_parameters.radius)
+  #define xwidth (_comp->_parameters.xwidth)
+  #define yheight (_comp->_parameters.yheight)
+  #define isradial (_comp->_parameters.isradial)
+  SIG_MESSAGE("[_slit_init] component slit=Slit() INITIALISE [Slit:0]");
+
+  if (is_unset (radius)) {
+    isradial = 0;
+    if (all_set (3, xwidth, xmin, xmax)) {
+      slit_error_if (xwidth != xmax - xmin, "specifying xwidth, xmin and xmax requires consistent parameters", NAME_CURRENT_COMP);
+    } else {
+      slit_error_if (is_unset (xwidth) && any_unset (2, xmin, xmax), "specify either xwidth or xmin & xmax", NAME_CURRENT_COMP);
+    }
+    if (all_set (3, yheight, ymin, ymax)) {
+      slit_error_if (yheight != ymax - ymin, "specifying yheight, ymin and ymax requires consistent parameters", NAME_CURRENT_COMP);
+    } else {
+      slit_error_if (is_unset (yheight) && any_unset (2, ymin, ymax), "specify either yheight or ymin & ymax", NAME_CURRENT_COMP);
+    }
+    if (is_unset (xmin)) { // xmax also unset but xwidth *is* set
+      xmax = xwidth / 2;
+      xmin = -xmax;
+    }
+    if (is_unset (ymin)) { // ymax also unset but yheight *is* set
+      ymax = yheight / 2;
+      ymin = -ymax;
+    }
+    slit_warning_if (xmin == xmax || ymin == ymax, "Running with CLOSED rectangular slit - is this intentional?", NAME_CURRENT_COMP);
+  } else {
+    isradial = 1;
+    slit_error_if (any_set (6, xwidth, xmin, xmax, yheight, ymin, ymax), "specify radius OR width and height parameters", NAME_CURRENT_COMP);
+    slit_warning_if (radius == 0., "Running with CLOSED radial slit - is this intentional?", NAME_CURRENT_COMP);
+  }
+  #undef xmin
+  #undef xmax
+  #undef ymin
+  #undef ymax
+  #undef radius
+  #undef xwidth
+  #undef yheight
+  #undef isradial
+  return(_comp);
+} /* class_Slit_init */
+
+_class_MultiDiskChopper *class_MultiDiskChopper_init(_class_MultiDiskChopper *_comp
+) {
+  #define slit_center (_comp->_parameters.slit_center)
+  #define slit_width (_comp->_parameters.slit_width)
+  #define nslits (_comp->_parameters.nslits)
+  #define delta_y (_comp->_parameters.delta_y)
+  #define nu (_comp->_parameters.nu)
+  #define nrev (_comp->_parameters.nrev)
+  #define ratio (_comp->_parameters.ratio)
+  #define jitter (_comp->_parameters.jitter)
+  #define delay (_comp->_parameters.delay)
+  #define isfirst (_comp->_parameters.isfirst)
+  #define phase (_comp->_parameters.phase)
+  #define radius (_comp->_parameters.radius)
+  #define equal (_comp->_parameters.equal)
+  #define abs_out (_comp->_parameters.abs_out)
+  #define verbose (_comp->_parameters.verbose)
+  #define T (_comp->_parameters.T)
+  #define To (_comp->_parameters.To)
+  #define omega (_comp->_parameters.omega)
+  #define dslit_center (_comp->_parameters.dslit_center)
+  #define dhslit_width (_comp->_parameters.dhslit_width)
+  #define t0 (_comp->_parameters.t0)
+  #define t1 (_comp->_parameters.t1)
+  SIG_MESSAGE("[_BW_Chopper_1_init] component BW_Chopper_1=MultiDiskChopper() INITIALISE [MultiDiskChopper:0]");
+
+  char* pch;
+  int i;
+  double sense;
+
+  phase = remainder (phase, 360.0) * DEG2RAD;
+  omega = 2.0 * PI * nu; /* rad/s */
+  sense = (omega < 0) ? -1 : 1;
+
+  if (isfirst && (nrev - floor (nrev) != 0)) {
+    MPI_MASTER (fprintf (stderr, "MultiDiskChopper: %s: wrong First chopper revolution number, must be integer (nrev=%g)\n", NAME_CURRENT_COMP, nrev);)
+    exit (-1);
+  }
+
+  if (!omega) {
+    MPI_MASTER (fprintf (stderr, "MultiDiskChopper: %s WARNING: chopper frequency is 0!\n", NAME_CURRENT_COMP);)
+    omega = 1e-15; /* We should actually use machine epsilon here... */
+  }
+
+  if (nslits <= 0) {
+    MPI_MASTER (fprintf (stderr, "MultiDiskChopper: %s: nslits must be > 0\n", NAME_CURRENT_COMP); exit (-1);)
+  }
+
+  // Read slits in array
+  dslit_center = malloc (nslits * sizeof (*dslit_center));
+  pch = strtok (slit_center, ";_, ");
+  for (i = 0; i < nslits; i++) {
+    if (pch == NULL) {
+      MPI_MASTER (fprintf (stderr, "MultiDiskChopper: %s: Cannot parse slit_center: Not enough values?\n", NAME_CURRENT_COMP);)
+      exit (-1);
+    }
+    dslit_center[i] = atof (pch);
+    pch = strtok (NULL, ";_, ");
+
+    if ((dslit_center[i] < 0)) {
+      while (dslit_center[i] < 0) {
+        dslit_center[i] += 360.0;
+      }
+
+      MPI_MASTER (fprintf (stderr, "MultiDiskChopper: %s: WARNING: Slit center No. %d moved to %f\n", NAME_CURRENT_COMP, i + 1, dslit_center[i]);)
+    }
+
+    if ((dslit_center[i] >= 360.0)) {
+      while (dslit_center[i] >= 360.0) {
+        dslit_center[i] -= 360.0;
+      }
+
+      MPI_MASTER (fprintf (stderr, "MultiDiskChopper: %s: WARNING: Slit center No. %d moved to %f\n", NAME_CURRENT_COMP, i + 1, dslit_center[i]);)
+    }
+
+    dslit_center[i] *= DEG2RAD;
+  }
+
+  // dhslit_width: HALF slit width
+  dhslit_width = malloc (nslits * sizeof (*dhslit_width));
+  pch = strtok (slit_width, ";_, ");
+  for (i = 0; i < nslits; i++) {
+    if (pch == NULL) {
+      MPI_MASTER (fprintf (stderr, "MultiDiskChopper: %s: Cannot parse slit_width: Not enough values?\n", NAME_CURRENT_COMP);)
+      exit (-1);
+    }
+    dhslit_width[i] = 0.5 * atof (pch);
+    pch = strtok (NULL, ";_, ");
+    if (dhslit_width[i] <= 0) {
+      MPI_MASTER (fprintf (stderr, "MultiDiskChopper: %s: Slit no %d has nonpositive width! \n", NAME_CURRENT_COMP, i + 1);)
+      exit (-1);
+    }
+    dhslit_width[i] *= DEG2RAD;
+  }
+
+  /* Calculate delay from phase and vice versa */
+  if (phase) {
+    if (delay) {
+      MPI_MASTER (fprintf (stderr, "MultiDiskChopper: %s WARNING: delay AND phase specified. Adding them up.\n", NAME_CURRENT_COMP);)
+    }
+    phase -= delay * omega;
+    delay = -phase / omega;
+  } else {
+    phase = delay * omega;
+  }
+
+  /* Time for 1 revolution */
+  T = 2.0 * PI / fabs (omega);
+
+  // calculate arrays of times t0 and t1 which allow for easy randomization in TRACE
+
+  /* To: How long can neutrons pass the Chopper at a single point during one revolution through any slit */
+
+  // generate times t1: duration of slit openings (or their cumulative sum if !equal)
+  // dhslit_width is already in rad
+  t1 = malloc (nslits * sizeof (*t1));
+  t1[0] = 2.0 * dhslit_width[0] / fabs (omega);
+  To = t1[0]; // To: Cumulated opening time in a single point during one revolution through any slit
+
+  for (i = 1; i < nslits; i++) {
+    t1[i] = (equal ? 0 : t1[i - 1]) + (2.0 * dhslit_width[i] / fabs (omega));
+    To += (2.0 * dhslit_width[i] / fabs (omega));
+  }
+
+  // generate times t0 = time when slit i starts opening (at top of the disk) (minus t1[i-1] if !equal)
+  t0 = malloc (nslits * sizeof (*t0));
+  t0[0] = (sense * remainder (dslit_center[0] - phase, 2 * PI) - dhslit_width[0]) / fabs (omega);
+
+  for (i = 1; i < nslits; i++) {
+    t0[i] = (sense * remainder (dslit_center[i] - phase, 2 * PI) - dhslit_width[i]) / fabs (omega) - (equal ? 0 : t1[i - 1]);
+  }
+
+  MPI_MASTER (if (verbose) {
+    printf ("MultiDiskChopper: %s: \n", NAME_CURRENT_COMP);
+    printf ("       --- frequency=%g [Hz] %g [rpm], delay=%g [s], phase=%g [deg]\n", nu, nu * 60, delay, phase * RAD2DEG);
+    printf ("       --- vertical axis offset=%g [m] To=%g [s], T=%g [s]\n", delta_y, To, T);
+
+    if (isfirst && equal)
+      printf ("       --- first chopper distributing events equally on all slits\n");
+
+    if (isfirst && !equal)
+      printf ("       --- first chopper distributing events proportional to slit size\n");
+
+    if (isfirst)
+      printf ("       --- adding +-%g disk revolutions at ratio %g\n", nrev, ratio);
+
+    printf ("       --- Slit center [deg]:");
+    for (i = 0; i < nslits; i++)
+      printf ("  %6.2f", dslit_center[i] * RAD2DEG);
+    printf ("\n");
+    printf ("       --- Slit width  [deg]:");
+    for (i = 0; i < nslits; i++)
+      printf ("  %6.2f", 2.0 * dhslit_width[i] * RAD2DEG);
+    printf ("\n");
+
+    // dump internal arrays for debugging
+    if (verbose == 2) {
+      printf ("       --- Internal arrays:\n");
+      printf ("       --- i   t0          t1         dslit_center dhslit_width\n");
+      for (i = 0; i < nslits; i++) {
+        printf ("       --- %02d %+.4e %+.4e %+.4e %+.4e\n", i, t0[i], t1[i], dslit_center[i], dhslit_width[i]);
+      }
+    }
+  })
+  #undef slit_center
+  #undef slit_width
+  #undef nslits
+  #undef delta_y
+  #undef nu
+  #undef nrev
+  #undef ratio
+  #undef jitter
+  #undef delay
+  #undef isfirst
+  #undef phase
+  #undef radius
+  #undef equal
+  #undef abs_out
+  #undef verbose
+  #undef T
+  #undef To
+  #undef omega
+  #undef dslit_center
+  #undef dhslit_width
+  #undef t0
+  #undef t1
+  return(_comp);
+} /* class_MultiDiskChopper_init */
 
 
-int init(void) { /* called by mccode_main for TREX:INITIALISE */
+
+int init(void) { /* called by mccode_main for TRex:INITIALISE */
   DEBUG_INSTR();
   // Initialise rng
   srandom(_hash(mcseed-1));
 
   /* code_main/parseoptions/readparams sets instrument parameters value */
-  stracpy(instrument->_name, "TREX", 256);
+  stracpy(instrument->_name, "TRex", 256);
 
-  /* Instrument 'TREX' INITIALISE */
-  SIG_MESSAGE("[TREX] INITIALISE [(null):-1]");
+  /* Instrument 'TRex' INITIALISE */
+  SIG_MESSAGE("[TRex] INITIALISE [(null):-1]");
+  #define L0 (instrument->_parameters.L0)
+  #define d_Li (instrument->_parameters.d_Li)
+  #define mod_type (instrument->_parameters.mod_type)
+  #define bender (instrument->_parameters.bender)
+  #define b_rot (instrument->_parameters.b_rot)
 {
-// Start of initialize for generated TREX
+// Start of initialize for generated TRex
+
+// Source type
+switch (mod_type)
+	{
+	case 0: {frac = 0.0; break;} // Thermal moderator
+	case 1: {frac = 0.5; break;} // Bispectral moderator
+	case 2: {frac = 1.0; break;} // Cold moderator
+	}
+// Source parameters
+lamb_1 = L0-d_Li*1.1;
+lamb_2 = L0+d_Li*1.1;
+
+printf("lamb_1: %g \n", lamb_1);
+printf("lamb_2: %g \n", lamb_2);
 }
+  #undef L0
+  #undef d_Li
+  #undef mod_type
+  #undef bender
+  #undef b_rot
   _source_setpos(); /* type ESS_butterfly */
   _source_monitor_xy_setpos(); /* type Monitor_nD */
   _source_monitor_div_setpos(); /* type Monitor_nD */
@@ -17382,6 +22803,43 @@ int init(void) { /* called by mccode_main for TREX:INITIALISE */
   _guide_5_setpos(); /* type Guide_anyshape_r */
   _guide_7_setpos(); /* type Guide_anyshape_r */
   _guide_8_setpos(); /* type Guide_anyshape_r */
+  _guide_10_setpos(); /* type Guide_anyshape_r */
+  _bender_setpos(); /* type Pol_bender */
+  _guide_11_setpos(); /* type Guide_anyshape_r */
+  _slit_setpos(); /* type Slit */
+  _insert_monitor_xy_setpos(); /* type Monitor_nD */
+  _insert_monitor_div_setpos(); /* type Monitor_nD */
+  _insert_monitor_lam_setpos(); /* type Monitor_nD */
+  _inset_monitor_ToF_setpos(); /* type Monitor_nD */
+  _guide_13_setpos(); /* type Guide_anyshape_r */
+  _guide_14_setpos(); /* type Guide_anyshape_r */
+  _guide_15_setpos(); /* type Guide_anyshape_r */
+  _guide_16_setpos(); /* type Guide_anyshape_r */
+  _guide_18_setpos(); /* type Guide_anyshape_r */
+  _guide_19_setpos(); /* type Guide_anyshape_r */
+  _guide_20_setpos(); /* type Guide_anyshape_r */
+  _guide_22_setpos(); /* type Guide_anyshape_r */
+  _guide_23_setpos(); /* type Guide_anyshape_r */
+  _guide_24_setpos(); /* type Guide_anyshape_r */
+  _guide_25_setpos(); /* type Guide_anyshape_r */
+  _guide_27_setpos(); /* type Guide_anyshape_r */
+  _guide_28_setpos(); /* type Guide_anyshape_r */
+  _guide_29_setpos(); /* type Guide_anyshape_r */
+  _guide_30_setpos(); /* type Guide_anyshape_r */
+  _guide_32_setpos(); /* type Guide_anyshape_r */
+  _guide_33_setpos(); /* type Guide_anyshape_r */
+  _guide_34_setpos(); /* type Guide_anyshape_r */
+  _guide_36_setpos(); /* type Guide_anyshape_r */
+  _guide_37_setpos(); /* type Guide_anyshape_r */
+  _guide_39_setpos(); /* type Guide_anyshape_r */
+  _guide_40_setpos(); /* type Guide_anyshape_r */
+  _guide_41_setpos(); /* type Guide_anyshape_r */
+  _guide_42_setpos(); /* type Guide_anyshape_r */
+  _guide_44_setpos(); /* type Guide_anyshape_r */
+  _guide_45_setpos(); /* type Guide_anyshape_r */
+  _guide_46_setpos(); /* type Guide_anyshape_r */
+  _guide_47_setpos(); /* type Guide_anyshape_r */
+  _BW_Chopper_1_setpos(); /* type MultiDiskChopper */
 
   /* call iteratively all components INITIALISE */
   class_ESS_butterfly_init(&_source_var);
@@ -17406,6 +22864,80 @@ int init(void) { /* called by mccode_main for TREX:INITIALISE */
 
   class_Guide_anyshape_r_init(&_guide_8_var);
 
+  class_Guide_anyshape_r_init(&_guide_10_var);
+
+  class_Pol_bender_init(&_bender_var);
+
+  class_Guide_anyshape_r_init(&_guide_11_var);
+
+  class_Slit_init(&_slit_var);
+
+  class_Monitor_nD_init(&_insert_monitor_xy_var);
+
+  class_Monitor_nD_init(&_insert_monitor_div_var);
+
+  class_Monitor_nD_init(&_insert_monitor_lam_var);
+
+  class_Monitor_nD_init(&_inset_monitor_ToF_var);
+
+  class_Guide_anyshape_r_init(&_guide_13_var);
+
+  class_Guide_anyshape_r_init(&_guide_14_var);
+
+  class_Guide_anyshape_r_init(&_guide_15_var);
+
+  class_Guide_anyshape_r_init(&_guide_16_var);
+
+  class_Guide_anyshape_r_init(&_guide_18_var);
+
+  class_Guide_anyshape_r_init(&_guide_19_var);
+
+  class_Guide_anyshape_r_init(&_guide_20_var);
+
+  class_Guide_anyshape_r_init(&_guide_22_var);
+
+  class_Guide_anyshape_r_init(&_guide_23_var);
+
+  class_Guide_anyshape_r_init(&_guide_24_var);
+
+  class_Guide_anyshape_r_init(&_guide_25_var);
+
+  class_Guide_anyshape_r_init(&_guide_27_var);
+
+  class_Guide_anyshape_r_init(&_guide_28_var);
+
+  class_Guide_anyshape_r_init(&_guide_29_var);
+
+  class_Guide_anyshape_r_init(&_guide_30_var);
+
+  class_Guide_anyshape_r_init(&_guide_32_var);
+
+  class_Guide_anyshape_r_init(&_guide_33_var);
+
+  class_Guide_anyshape_r_init(&_guide_34_var);
+
+  class_Guide_anyshape_r_init(&_guide_36_var);
+
+  class_Guide_anyshape_r_init(&_guide_37_var);
+
+  class_Guide_anyshape_r_init(&_guide_39_var);
+
+  class_Guide_anyshape_r_init(&_guide_40_var);
+
+  class_Guide_anyshape_r_init(&_guide_41_var);
+
+  class_Guide_anyshape_r_init(&_guide_42_var);
+
+  class_Guide_anyshape_r_init(&_guide_44_var);
+
+  class_Guide_anyshape_r_init(&_guide_45_var);
+
+  class_Guide_anyshape_r_init(&_guide_46_var);
+
+  class_Guide_anyshape_r_init(&_guide_47_var);
+
+  class_MultiDiskChopper_init(&_BW_Chopper_1_var);
+
   if (mcdotrace) display();
   DEBUG_INSTR_END();
 
@@ -17422,6 +22954,43 @@ int init(void) { /* called by mccode_main for TREX:INITIALISE */
 #pragma acc update device(_guide_5_var)
 #pragma acc update device(_guide_7_var)
 #pragma acc update device(_guide_8_var)
+#pragma acc update device(_guide_10_var)
+#pragma acc update device(_bender_var)
+#pragma acc update device(_guide_11_var)
+#pragma acc update device(_slit_var)
+#pragma acc update device(_insert_monitor_xy_var)
+#pragma acc update device(_insert_monitor_div_var)
+#pragma acc update device(_insert_monitor_lam_var)
+#pragma acc update device(_inset_monitor_ToF_var)
+#pragma acc update device(_guide_13_var)
+#pragma acc update device(_guide_14_var)
+#pragma acc update device(_guide_15_var)
+#pragma acc update device(_guide_16_var)
+#pragma acc update device(_guide_18_var)
+#pragma acc update device(_guide_19_var)
+#pragma acc update device(_guide_20_var)
+#pragma acc update device(_guide_22_var)
+#pragma acc update device(_guide_23_var)
+#pragma acc update device(_guide_24_var)
+#pragma acc update device(_guide_25_var)
+#pragma acc update device(_guide_27_var)
+#pragma acc update device(_guide_28_var)
+#pragma acc update device(_guide_29_var)
+#pragma acc update device(_guide_30_var)
+#pragma acc update device(_guide_32_var)
+#pragma acc update device(_guide_33_var)
+#pragma acc update device(_guide_34_var)
+#pragma acc update device(_guide_36_var)
+#pragma acc update device(_guide_37_var)
+#pragma acc update device(_guide_39_var)
+#pragma acc update device(_guide_40_var)
+#pragma acc update device(_guide_41_var)
+#pragma acc update device(_guide_42_var)
+#pragma acc update device(_guide_44_var)
+#pragma acc update device(_guide_45_var)
+#pragma acc update device(_guide_46_var)
+#pragma acc update device(_guide_47_var)
+#pragma acc update device(_BW_Chopper_1_var)
 #pragma acc update device(_instrument_var)
 #endif
 
@@ -18187,13 +23756,535 @@ void class_Guide_anyshape_r_trace(_class_Guide_anyshape_r *_comp
   return;
 } /* class_Guide_anyshape_r_trace */
 
+#pragma acc routine
+void class_Pol_bender_trace(_class_Pol_bender *_comp
+  , _class_particle *_particle) {
+  ABSORBED=SCATTERED=RESTORE=0;
+  #define xwidth (_comp->_parameters.xwidth)
+  #define yheight (_comp->_parameters.yheight)
+  #define length (_comp->_parameters.length)
+  #define radius (_comp->_parameters.radius)
+  #define G (_comp->_parameters.G)
+  #define nslit (_comp->_parameters.nslit)
+  #define d (_comp->_parameters.d)
+  #define debug (_comp->_parameters.debug)
+  #define endFlat (_comp->_parameters.endFlat)
+  #define rTopUpPar (_comp->_parameters.rTopUpPar)
+  #define rTopDownPar (_comp->_parameters.rTopDownPar)
+  #define rBotUpPar (_comp->_parameters.rBotUpPar)
+  #define rBotDownPar (_comp->_parameters.rBotDownPar)
+  #define rLeftUpPar (_comp->_parameters.rLeftUpPar)
+  #define rLeftDownPar (_comp->_parameters.rLeftDownPar)
+  #define rRightUpPar (_comp->_parameters.rRightUpPar)
+  #define rRightDownPar (_comp->_parameters.rRightDownPar)
+  #define rTopUpData (_comp->_parameters.rTopUpData)
+  #define rTopDownData (_comp->_parameters.rTopDownData)
+  #define rBotUpData (_comp->_parameters.rBotUpData)
+  #define rBotDownData (_comp->_parameters.rBotDownData)
+  #define rLeftUpData (_comp->_parameters.rLeftUpData)
+  #define rLeftDownData (_comp->_parameters.rLeftDownData)
+  #define rRightUpData (_comp->_parameters.rRightUpData)
+  #define rRightDownData (_comp->_parameters.rRightDownData)
+  #define drawOption (_comp->_parameters.drawOption)
+  #define localG (_comp->_parameters.localG)
+  #define normTopBot (_comp->_parameters.normTopBot)
+  #define normIn (_comp->_parameters.normIn)
+  #define normOut (_comp->_parameters.normOut)
+  #define pointTop (_comp->_parameters.pointTop)
+  #define pointBot (_comp->_parameters.pointBot)
+  #define pointIn (_comp->_parameters.pointIn)
+  #define pointOut (_comp->_parameters.pointOut)
+  #define rTopUpTable (_comp->_parameters.rTopUpTable)
+  #define rTopDownTable (_comp->_parameters.rTopDownTable)
+  #define rBotUpTable (_comp->_parameters.rBotUpTable)
+  #define rBotDownTable (_comp->_parameters.rBotDownTable)
+  #define rLeftUpTable (_comp->_parameters.rLeftUpTable)
+  #define rLeftDownTable (_comp->_parameters.rLeftDownTable)
+  #define rRightUpTable (_comp->_parameters.rRightUpTable)
+  #define rRightDownTable (_comp->_parameters.rRightDownTable)
+  #define useTables (_comp->_parameters.useTables)
+  SIG_MESSAGE("[_bender_trace] component bender=Pol_bender() TRACE [Pol_bender:0]");
+
+  const double whalf = 0.5 * xwidth;                   /* half width of guide */
+  const double hhalf = 0.5 * yheight;                  /* half height of guide */
+  const double z_off = radius * sin (length / radius); /* z-comp of guide length */
+  const double dThreshold = 1e-10;                     /* distance threshold */
+  const double tThreshold = dThreshold / sqrt (vx * vx + vy * vy + vz * vz);
+  double angle_z_vout; /* angle between z-axis and v_out */
+
+  // Variables used in the case of multiple slits
+  const double slitWidth = xwidth / nslit; // slitwidth
+  const double spacerhalf = 0.5 * d;       /* half width of spacers */
+  int slitHit;                             // decide which slit is hit
+  double posInSlit;                        // position in slit
+
+  double t11, t12, t21, t22, theta, alpha, endtime, phi;
+  int i_bounce;
+  int nerr = 0;
+
+  // Pol variables
+  double FN, FM, Rup, Rdown, weight;
+
+  double Rleft;  /* radius of curvature of left mirror */
+  double Rright; /* radius of curvature of right mirror */
+  double absR = fabs (radius);
+  double sign = 1;
+  if (radius < 0)
+    sign = -1;
+
+  /* Propagate neutron to guide entrance. */
+  PROP_Z0;
+  if (!inside_rectangle (x, y, xwidth, yheight))
+    ABSORB;
+
+  if (nslit > 1) {
+    // check if neutron is absorbed on a spacer
+    posInSlit = fmod (x + whalf, slitWidth);
+    if (posInSlit <= spacerhalf || posInSlit >= slitWidth - spacerhalf)
+      ABSORB;
+
+    // check which slat is hit
+    slitHit = (int)((x + whalf) / slitWidth);
+
+    // Modify R1 and R2 according to which slat was hit
+    Rleft = absR + sign * whalf - sign * (slitHit + 1) * slitWidth + sign * spacerhalf;
+    Rright = absR + sign * whalf - sign * slitHit * slitWidth - sign * spacerhalf;
+
+    if (debug > 0)
+      printf ("\nslitHit: %d/%f, Rleft: %f, Rright: %f\n", slitHit, (x + whalf) / slitWidth, Rleft, Rright);
+  } else { // only 1 slit
+
+    Rleft = absR - sign * whalf;
+    Rright = absR + sign * whalf;
+  }
+
+  for (;;) {
+
+    double tLeft, tRight, tTop, tBot, tIn, tOut, tMirror;
+    double tUp, tSide, time, endtime;
+    double R, Q;
+    Coords vVec, xVec;
+    int isPolarising;
+    double vel_xz;
+
+    isPolarising = 0;
+
+    xVec = coords_set (x, y, z);
+    vVec = coords_set (vx, vy, vz);
+
+    solve_2nd_order (&tTop, NULL, 0.5 * coords_sp (normTopBot, localG), coords_sp (normTopBot, vVec), coords_sp (normTopBot, coords_sub (xVec, pointTop)));
+
+    solve_2nd_order (&tBot, NULL, 0.5 * coords_sp (normTopBot, localG), coords_sp (normTopBot, vVec), coords_sp (normTopBot, coords_sub (xVec, pointBot)));
+
+    solve_2nd_order (&tIn, NULL, 0.5 * coords_sp (normIn, localG), coords_sp (normIn, vVec), coords_sp (normIn, coords_sub (xVec, pointIn)));
+
+    solve_2nd_order (&tOut, NULL, 0.5 * coords_sp (normOut, localG), coords_sp (normOut, vVec), coords_sp (normOut, coords_sub (xVec, pointOut)));
+
+    /* Find itersection points with inside and outside guide walls */
+    if (!cylinder_intersect (&t11, &t12, x - radius, y, z, vx, vy, vz, Rleft, 2 * yheight)) {
+      /*neutron did not hit the cylinder*/
+      t11 = t12 = 0;
+    }
+    if (!cylinder_intersect (&t21, &t22, x - radius, y, z, vx, vy, vz, Rright, 2 * yheight)) {
+      /*neutron did not hit the cylinder*/
+      t21 = t22 = 0;
+    }
+
+    /* Choose appropriate reflection time */
+    tLeft = (t11 < tThreshold) ? t12 : t11;
+    tRight = (t21 < tThreshold) ? t22 : t21;
+
+    /* Choose appropriate reflection time */
+    if (tTop > tThreshold && (tTop < tBot || tBot <= tThreshold))
+      tUp = tTop;
+    else
+      tUp = tBot;
+
+    if (tLeft > tThreshold && (tLeft < tRight || tRight <= tThreshold))
+      tSide = tLeft;
+    else
+      tSide = tRight;
+
+    if (tUp > tThreshold && (tUp < tSide || tSide <= tThreshold))
+      time = tUp;
+    else
+      time = tSide;
+
+    if (time <= tThreshold) {
+      nerr++;
+      if (nerr < 10) {
+        fprintf (stdout,
+                 "tTop: %e, tBot:%e, tRight: %e, tLeft: %e\n"
+                 "tUp: %e, tSide: %e, time: %e\n",
+                 tTop, tBot, tRight, tLeft, tUp, tSide, time);
+      } else {
+        fprintf (stdout, "Found 10 propagation error for this neutron, terminating!\n");
+        break;
+      }
+    }
+
+    /* Has neutron left the guide? */
+    if (tOut > tThreshold && (tOut < tIn || tIn <= tThreshold))
+      endtime = tOut;
+    else
+      endtime = tIn;
+
+    if (time > endtime)
+      break;
+
+    PROP_DT (time);
+    SCATTER;
+
+    /* Find reflection surface */
+    if (time == tSide) { /* Left or right side */
+
+      if (time == tLeft)
+        R = sign * Rleft;
+      else
+        R = sign * Rright;
+
+      phi = atan (vx / vz);       /* angle of neutron trajectory */
+      alpha = asin (z / R);       /* angle of guide wall */
+      theta = fabs (phi - alpha); /* angle of reflection */
+      angle_z_vout = 2.0 * alpha - phi;
+
+      vel_xz = sqrt (vx * vx + vz * vz); /* in plane velocity */
+      vz = vel_xz * cos (angle_z_vout);
+      vx = vel_xz * sin (angle_z_vout);
+
+    } else { /* Top or Bottom wall */
+      theta = fabs (atan (vy / vz));
+      vy = -vy;
+    }
+
+    /* Now compute reflectivity. */
+    Q = 2.0 * sin (theta) * sqrt (vx * vx + vy * vy + vz * vz) * V2K;
+
+    // calculate reflection probability
+    if (time == tTop) {
+      if (useTables) {
+        Rup = Table_Value (rTopUpTable, Q, 1);
+        Rdown = Table_Value (rTopDownTable, Q, 1);
+      } else {
+        StdReflecFunc (Q, rTopUpPar, &Rup);
+        StdReflecFunc (Q, rTopDownPar, &Rdown);
+      }
+      if (debug > 0)
+        fprintf (stdout, "\tTop hit:\n");
+    } else if (time == tBot) {
+      if (useTables) {
+        Rup = Table_Value (rBotUpTable, Q, 1);
+        Rdown = Table_Value (rBotDownTable, Q, 1);
+      } else {
+        StdReflecFunc (Q, rBotUpPar, &Rup);
+        StdReflecFunc (Q, rBotDownPar, &Rdown);
+      }
+      if (debug > 0)
+        fprintf (stdout, "\tBot hit:\n");
+    } else if (time == tRight) {
+      if (useTables) {
+        Rup = Table_Value (rRightUpTable, Q, 1);
+        Rdown = Table_Value (rRightDownTable, Q, 1);
+      } else {
+        StdReflecFunc (Q, rRightUpPar, &Rup);
+        StdReflecFunc (Q, rRightDownPar, &Rdown);
+      }
+      if (debug > 0)
+        fprintf (stdout, "\tRight hit:\n");
+    } else if (time == tLeft) {
+      if (useTables) {
+        Rup = Table_Value (rLeftUpTable, Q, 1);
+        Rdown = Table_Value (rLeftDownTable, Q, 1);
+      } else {
+        StdReflecFunc (Q, rLeftUpPar, &Rup);
+        StdReflecFunc (Q, rLeftDownPar, &Rdown);
+      }
+      if (debug > 0)
+        fprintf (stdout, "\tLeft hit:\n");
+    }
+    if (Rup != Rdown) {
+      isPolarising = 1;
+      GetMonoPolFNFM (Rup, Rdown, &FN, &FM);
+      GetMonoPolRefProb (FN, FM, sy, &weight);
+      /* Output of PW discussions with Hal Lee 2024/03/08
+         We have now done our QM "measurement", thus
+         forcing the spin to assume up/down: */
+      sx = 0;
+      sz = 0;
+    } else
+      weight = Rup;
+
+    if (debug > 0)
+      printf ("\tlambda: %.2f AA, Q: %.4f, Rup: %.4f, Rdown: %.4f,"
+              " weight: %.4f\n",
+              2 * PI / (sqrt (vx * vx + vy * vy + vz * vz) * V2K), Q, Rup, Rdown, weight);
+
+    // check that refWeight is meaningfull
+    if (weight <= 0)
+      ABSORB;
+    if (weight > 1)
+      weight = 1;
+
+    if (isPolarising) {
+      SetMonoPolRefOut (FN, FM, weight, &sx, &sy, &sz);
+      if (sx * sx + sy * sy + sz * sz > 1.000001)
+        fprintf (stderr, "Pol_bender: %s: Warning: polarisation |s| = %g > 1\n", NAME_CURRENT_COMP,
+                 sx * sx + sy * sy + sz * sz); // check that polarisation is meaningfull
+    }
+
+    p *= weight;
+
+    if (p == 0) {
+      ABSORB;
+      break;
+    }
+  }
+#ifndef NOABSORB_INF_NAN
+  /* Check for nan or inf particle parms */ 
+  if(isnan(p + t + vx + vy + vz + x + y + z)) ABSORB;
+  if(isinf(fabs(p) + fabs(t) + fabs(vx) + fabs(vy) + fabs(vz) + fabs(x) + fabs(y) + fabs(z))) ABSORB;
+#else
+  if(isnan(p)  ||  isinf(p)) printf("NAN or INF found in p,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(t)  ||  isinf(t)) printf("NAN or INF found in t,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(vx) || isinf(vx)) printf("NAN or INF found in vx, %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(vy) || isinf(vy)) printf("NAN or INF found in vy, %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(vz) || isinf(vz)) printf("NAN or INF found in vz, %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(x)  ||  isinf(x)) printf("NAN or INF found in x,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(y)  ||  isinf(y)) printf("NAN or INF found in y,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(z)  ||  isinf(z)) printf("NAN or INF found in z,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
+#endif
+  #undef xwidth
+  #undef yheight
+  #undef length
+  #undef radius
+  #undef G
+  #undef nslit
+  #undef d
+  #undef debug
+  #undef endFlat
+  #undef rTopUpPar
+  #undef rTopDownPar
+  #undef rBotUpPar
+  #undef rBotDownPar
+  #undef rLeftUpPar
+  #undef rLeftDownPar
+  #undef rRightUpPar
+  #undef rRightDownPar
+  #undef rTopUpData
+  #undef rTopDownData
+  #undef rBotUpData
+  #undef rBotDownData
+  #undef rLeftUpData
+  #undef rLeftDownData
+  #undef rRightUpData
+  #undef rRightDownData
+  #undef drawOption
+  #undef localG
+  #undef normTopBot
+  #undef normIn
+  #undef normOut
+  #undef pointTop
+  #undef pointBot
+  #undef pointIn
+  #undef pointOut
+  #undef rTopUpTable
+  #undef rTopDownTable
+  #undef rBotUpTable
+  #undef rBotDownTable
+  #undef rLeftUpTable
+  #undef rLeftDownTable
+  #undef rRightUpTable
+  #undef rRightDownTable
+  #undef useTables
+  return;
+} /* class_Pol_bender_trace */
+
+#pragma acc routine
+void class_Slit_trace(_class_Slit *_comp
+  , _class_particle *_particle) {
+  ABSORBED=SCATTERED=RESTORE=0;
+  #define xmin (_comp->_parameters.xmin)
+  #define xmax (_comp->_parameters.xmax)
+  #define ymin (_comp->_parameters.ymin)
+  #define ymax (_comp->_parameters.ymax)
+  #define radius (_comp->_parameters.radius)
+  #define xwidth (_comp->_parameters.xwidth)
+  #define yheight (_comp->_parameters.yheight)
+  #define isradial (_comp->_parameters.isradial)
+  SIG_MESSAGE("[_slit_trace] component slit=Slit() TRACE [Slit:0]");
+
+  PROP_Z0;
+  if (!isradial ? (x < xmin || x > xmax || y < ymin || y > ymax) : (x * x + y * y > radius * radius))
+    ABSORB;
+  else
+    SCATTER;
+#ifndef NOABSORB_INF_NAN
+  /* Check for nan or inf particle parms */ 
+  if(isnan(p + t + vx + vy + vz + x + y + z)) ABSORB;
+  if(isinf(fabs(p) + fabs(t) + fabs(vx) + fabs(vy) + fabs(vz) + fabs(x) + fabs(y) + fabs(z))) ABSORB;
+#else
+  if(isnan(p)  ||  isinf(p)) printf("NAN or INF found in p,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(t)  ||  isinf(t)) printf("NAN or INF found in t,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(vx) || isinf(vx)) printf("NAN or INF found in vx, %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(vy) || isinf(vy)) printf("NAN or INF found in vy, %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(vz) || isinf(vz)) printf("NAN or INF found in vz, %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(x)  ||  isinf(x)) printf("NAN or INF found in x,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(y)  ||  isinf(y)) printf("NAN or INF found in y,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(z)  ||  isinf(z)) printf("NAN or INF found in z,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
+#endif
+  #undef xmin
+  #undef xmax
+  #undef ymin
+  #undef ymax
+  #undef radius
+  #undef xwidth
+  #undef yheight
+  #undef isradial
+  return;
+} /* class_Slit_trace */
+
+#pragma acc routine
+void class_MultiDiskChopper_trace(_class_MultiDiskChopper *_comp
+  , _class_particle *_particle) {
+  ABSORBED=SCATTERED=RESTORE=0;
+  #define slit_center (_comp->_parameters.slit_center)
+  #define slit_width (_comp->_parameters.slit_width)
+  #define nslits (_comp->_parameters.nslits)
+  #define delta_y (_comp->_parameters.delta_y)
+  #define nu (_comp->_parameters.nu)
+  #define nrev (_comp->_parameters.nrev)
+  #define ratio (_comp->_parameters.ratio)
+  #define jitter (_comp->_parameters.jitter)
+  #define delay (_comp->_parameters.delay)
+  #define isfirst (_comp->_parameters.isfirst)
+  #define phase (_comp->_parameters.phase)
+  #define radius (_comp->_parameters.radius)
+  #define equal (_comp->_parameters.equal)
+  #define abs_out (_comp->_parameters.abs_out)
+  #define verbose (_comp->_parameters.verbose)
+  #define T (_comp->_parameters.T)
+  #define To (_comp->_parameters.To)
+  #define omega (_comp->_parameters.omega)
+  #define dslit_center (_comp->_parameters.dslit_center)
+  #define dhslit_width (_comp->_parameters.dhslit_width)
+  #define t0 (_comp->_parameters.t0)
+  #define t1 (_comp->_parameters.t1)
+  SIG_MESSAGE("[_BW_Chopper_1_trace] component BW_Chopper_1=MultiDiskChopper() TRACE [MultiDiskChopper:0]");
+
+  double phi;
+  double xprime, yprime;
+  double toff;
+  int irev, islit;
+
+  // Propagate into the chopper disk plane
+  PROP_Z0;
+
+  if (delta_y > 0) {
+    // 'anormal' case, chopper above guide
+    // mirror coordinate system
+    xprime = -x;
+    yprime = -y + delta_y;
+  } else {
+    // 'normal' case, chopper below guide
+    xprime = x;
+    yprime = y - delta_y;
+  }
+
+  // Is neutron transmitted/absorbed outside the disk diameter ?
+  if ((SQR (xprime) + SQR (yprime)) > SQR (radius))
+    if (abs_out) {
+      ABSORB;
+    } else {
+      SCATTER;
+    }
+  else {
+    if (isfirst) {
+      irev = (nrev > 0 ? ratio * (floor ((2 * nrev + 1) * rand01 ()) - nrev) : 0);
+
+      if (equal) {
+        // Distribute neutrons equally over slits
+        t = rand01 () * nslits;
+        islit = (t == nslits) ? nslits - 1 : floor (t);
+        t = (t - islit) * t1[islit];
+
+        p *= t1[islit] / T * nslits;
+      } else {
+        // Distribute neutrons proportional to slit size
+        t = rand01 () * To;
+        islit = 0;
+        while (t1[islit] < t)
+          islit++;
+
+        /* weight correction: chopper slits transmission opening time per full revolution time */
+        p *= To / T;
+      }
+
+      // offset time stamp according to slit phase, neutron position and jitter
+      t += t0[islit] - atan2 (xprime, yprime) / omega + irev * T + (jitter ? jitter * randnorm () : 0);
+
+    } else {
+
+      // where does the neutron hit the disk ?
+      phi = atan2 (xprime, yprime) + omega * (t - delay - (jitter ? jitter * randnorm () : 0));
+
+      // does the neutron hit one of the slits ?
+      islit = 0;
+      while (islit < nslits && !SCATTERED) {
+        if (fabs (remainder (phi - dslit_center[islit], 2 * PI)) < dhslit_width[islit])
+          SCATTER;
+
+        islit++;
+      }
+      if (!SCATTERED)
+        ABSORB;
+    }
+  }
+#ifndef NOABSORB_INF_NAN
+  /* Check for nan or inf particle parms */ 
+  if(isnan(p + t + vx + vy + vz + x + y + z)) ABSORB;
+  if(isinf(fabs(p) + fabs(t) + fabs(vx) + fabs(vy) + fabs(vz) + fabs(x) + fabs(y) + fabs(z))) ABSORB;
+#else
+  if(isnan(p)  ||  isinf(p)) printf("NAN or INF found in p,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(t)  ||  isinf(t)) printf("NAN or INF found in t,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(vx) || isinf(vx)) printf("NAN or INF found in vx, %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(vy) || isinf(vy)) printf("NAN or INF found in vy, %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(vz) || isinf(vz)) printf("NAN or INF found in vz, %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(x)  ||  isinf(x)) printf("NAN or INF found in x,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(y)  ||  isinf(y)) printf("NAN or INF found in y,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(z)  ||  isinf(z)) printf("NAN or INF found in z,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
+#endif
+  #undef slit_center
+  #undef slit_width
+  #undef nslits
+  #undef delta_y
+  #undef nu
+  #undef nrev
+  #undef ratio
+  #undef jitter
+  #undef delay
+  #undef isfirst
+  #undef phase
+  #undef radius
+  #undef equal
+  #undef abs_out
+  #undef verbose
+  #undef T
+  #undef To
+  #undef omega
+  #undef dslit_center
+  #undef dhslit_width
+  #undef t0
+  #undef t1
+  return;
+} /* class_MultiDiskChopper_trace */
+
 /* *****************************************************************************
-* instrument 'TREX' TRACE
+* instrument 'TRex' TRACE
 ***************************************************************************** */
 
 #ifndef FUNNEL
 #pragma acc routine
-int raytrace(_class_particle* _particle) { /* single event propagation, called by mccode_main for TREX:TRACE */
+int raytrace(_class_particle* _particle) { /* single event propagation, called by mccode_main for TRex:TRACE */
 
   /* init variables and counters for TRACE */
   #undef ABSORB0
@@ -18438,7 +24529,786 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       _particle->_index++;
       if (!ABSORBED) { DEBUG_STATE(); }
     } /* end component guide_8 [11] */
-    if (_particle->_index > 11)
+    /* begin component guide_10=Guide_anyshape_r() [12] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_10_var._rotation_is_identity) {
+        if(!_guide_10_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_10_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_10_var._position_relative, _guide_10_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 12) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_10_var._name);
+      DEBUG_STATE();
+      if ((( _instrument_var._parameters.bender == 0 ))) // conditional WHEN execution
+      class_Guide_anyshape_r_trace(&_guide_10_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_10 [12] */
+    /* begin component bender=Pol_bender() [13] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_bender_var._rotation_is_identity) {
+        if(!_bender_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _bender_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_bender_var._position_relative, _bender_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 13) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_bender_var._name);
+      DEBUG_STATE();
+      if ((( _instrument_var._parameters.bender == 1 ))) // conditional WHEN execution
+      class_Pol_bender_trace(&_bender_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component bender [13] */
+    /* begin component guide_11=Guide_anyshape_r() [14] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_11_var._rotation_is_identity) {
+        if(!_guide_11_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_11_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_11_var._position_relative, _guide_11_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 14) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_11_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_11_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_11 [14] */
+    /* begin component slit=Slit() [15] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_slit_var._rotation_is_identity) {
+        if(!_slit_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _slit_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_slit_var._position_relative, _slit_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 15) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_slit_var._name);
+      DEBUG_STATE();
+      class_Slit_trace(&_slit_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component slit [15] */
+    /* begin component insert_monitor_xy=Monitor_nD() [16] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_insert_monitor_xy_var._rotation_is_identity) {
+        if(!_insert_monitor_xy_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _insert_monitor_xy_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_insert_monitor_xy_var._position_relative, _insert_monitor_xy_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 16) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_insert_monitor_xy_var._name);
+      DEBUG_STATE();
+      class_Monitor_nD_trace(&_insert_monitor_xy_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component insert_monitor_xy [16] */
+    /* begin component insert_monitor_div=Monitor_nD() [17] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_insert_monitor_div_var._rotation_is_identity) {
+        if(!_insert_monitor_div_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _insert_monitor_div_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_insert_monitor_div_var._position_relative, _insert_monitor_div_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 17) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_insert_monitor_div_var._name);
+      DEBUG_STATE();
+      class_Monitor_nD_trace(&_insert_monitor_div_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component insert_monitor_div [17] */
+    /* begin component insert_monitor_lam=Monitor_nD() [18] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_insert_monitor_lam_var._rotation_is_identity) {
+        if(!_insert_monitor_lam_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _insert_monitor_lam_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_insert_monitor_lam_var._position_relative, _insert_monitor_lam_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 18) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_insert_monitor_lam_var._name);
+      DEBUG_STATE();
+      class_Monitor_nD_trace(&_insert_monitor_lam_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component insert_monitor_lam [18] */
+    /* begin component inset_monitor_ToF=Monitor_nD() [19] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_inset_monitor_ToF_var._rotation_is_identity) {
+        if(!_inset_monitor_ToF_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _inset_monitor_ToF_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_inset_monitor_ToF_var._position_relative, _inset_monitor_ToF_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 19) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_inset_monitor_ToF_var._name);
+      DEBUG_STATE();
+      class_Monitor_nD_trace(&_inset_monitor_ToF_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component inset_monitor_ToF [19] */
+    /* begin component guide_13=Guide_anyshape_r() [20] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_13_var._rotation_is_identity) {
+        if(!_guide_13_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_13_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_13_var._position_relative, _guide_13_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 20) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_13_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_13_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_13 [20] */
+    /* begin component guide_14=Guide_anyshape_r() [21] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_14_var._rotation_is_identity) {
+        if(!_guide_14_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_14_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_14_var._position_relative, _guide_14_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 21) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_14_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_14_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_14 [21] */
+    /* begin component guide_15=Guide_anyshape_r() [22] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_15_var._rotation_is_identity) {
+        if(!_guide_15_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_15_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_15_var._position_relative, _guide_15_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 22) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_15_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_15_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_15 [22] */
+    /* begin component guide_16=Guide_anyshape_r() [23] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_16_var._rotation_is_identity) {
+        if(!_guide_16_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_16_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_16_var._position_relative, _guide_16_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 23) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_16_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_16_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_16 [23] */
+    /* begin component guide_18=Guide_anyshape_r() [24] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_18_var._rotation_is_identity) {
+        if(!_guide_18_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_18_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_18_var._position_relative, _guide_18_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 24) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_18_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_18_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_18 [24] */
+    /* begin component guide_19=Guide_anyshape_r() [25] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_19_var._rotation_is_identity) {
+        if(!_guide_19_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_19_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_19_var._position_relative, _guide_19_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 25) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_19_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_19_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_19 [25] */
+    /* begin component guide_20=Guide_anyshape_r() [26] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_20_var._rotation_is_identity) {
+        if(!_guide_20_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_20_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_20_var._position_relative, _guide_20_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 26) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_20_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_20_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_20 [26] */
+    /* begin component guide_22=Guide_anyshape_r() [27] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_22_var._rotation_is_identity) {
+        if(!_guide_22_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_22_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_22_var._position_relative, _guide_22_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 27) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_22_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_22_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_22 [27] */
+    /* begin component guide_23=Guide_anyshape_r() [28] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_23_var._rotation_is_identity) {
+        if(!_guide_23_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_23_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_23_var._position_relative, _guide_23_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 28) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_23_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_23_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_23 [28] */
+    /* begin component guide_24=Guide_anyshape_r() [29] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_24_var._rotation_is_identity) {
+        if(!_guide_24_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_24_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_24_var._position_relative, _guide_24_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 29) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_24_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_24_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_24 [29] */
+    /* begin component guide_25=Guide_anyshape_r() [30] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_25_var._rotation_is_identity) {
+        if(!_guide_25_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_25_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_25_var._position_relative, _guide_25_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 30) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_25_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_25_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_25 [30] */
+    /* begin component guide_27=Guide_anyshape_r() [31] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_27_var._rotation_is_identity) {
+        if(!_guide_27_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_27_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_27_var._position_relative, _guide_27_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 31) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_27_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_27_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_27 [31] */
+    /* begin component guide_28=Guide_anyshape_r() [32] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_28_var._rotation_is_identity) {
+        if(!_guide_28_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_28_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_28_var._position_relative, _guide_28_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 32) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_28_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_28_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_28 [32] */
+    /* begin component guide_29=Guide_anyshape_r() [33] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_29_var._rotation_is_identity) {
+        if(!_guide_29_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_29_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_29_var._position_relative, _guide_29_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 33) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_29_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_29_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_29 [33] */
+    /* begin component guide_30=Guide_anyshape_r() [34] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_30_var._rotation_is_identity) {
+        if(!_guide_30_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_30_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_30_var._position_relative, _guide_30_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 34) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_30_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_30_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_30 [34] */
+    /* begin component guide_32=Guide_anyshape_r() [35] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_32_var._rotation_is_identity) {
+        if(!_guide_32_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_32_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_32_var._position_relative, _guide_32_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 35) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_32_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_32_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_32 [35] */
+    /* begin component guide_33=Guide_anyshape_r() [36] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_33_var._rotation_is_identity) {
+        if(!_guide_33_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_33_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_33_var._position_relative, _guide_33_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 36) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_33_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_33_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_33 [36] */
+    /* begin component guide_34=Guide_anyshape_r() [37] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_34_var._rotation_is_identity) {
+        if(!_guide_34_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_34_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_34_var._position_relative, _guide_34_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 37) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_34_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_34_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_34 [37] */
+    /* begin component guide_36=Guide_anyshape_r() [38] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_36_var._rotation_is_identity) {
+        if(!_guide_36_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_36_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_36_var._position_relative, _guide_36_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 38) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_36_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_36_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_36 [38] */
+    /* begin component guide_37=Guide_anyshape_r() [39] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_37_var._rotation_is_identity) {
+        if(!_guide_37_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_37_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_37_var._position_relative, _guide_37_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 39) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_37_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_37_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_37 [39] */
+    /* begin component guide_39=Guide_anyshape_r() [40] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_39_var._rotation_is_identity) {
+        if(!_guide_39_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_39_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_39_var._position_relative, _guide_39_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 40) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_39_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_39_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_39 [40] */
+    /* begin component guide_40=Guide_anyshape_r() [41] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_40_var._rotation_is_identity) {
+        if(!_guide_40_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_40_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_40_var._position_relative, _guide_40_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 41) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_40_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_40_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_40 [41] */
+    /* begin component guide_41=Guide_anyshape_r() [42] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_41_var._rotation_is_identity) {
+        if(!_guide_41_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_41_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_41_var._position_relative, _guide_41_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 42) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_41_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_41_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_41 [42] */
+    /* begin component guide_42=Guide_anyshape_r() [43] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_42_var._rotation_is_identity) {
+        if(!_guide_42_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_42_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_42_var._position_relative, _guide_42_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 43) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_42_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_42_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_42 [43] */
+    /* begin component guide_44=Guide_anyshape_r() [44] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_44_var._rotation_is_identity) {
+        if(!_guide_44_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_44_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_44_var._position_relative, _guide_44_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 44) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_44_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_44_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_44 [44] */
+    /* begin component guide_45=Guide_anyshape_r() [45] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_45_var._rotation_is_identity) {
+        if(!_guide_45_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_45_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_45_var._position_relative, _guide_45_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 45) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_45_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_45_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_45 [45] */
+    /* begin component guide_46=Guide_anyshape_r() [46] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_46_var._rotation_is_identity) {
+        if(!_guide_46_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_46_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_46_var._position_relative, _guide_46_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 46) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_46_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_46_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_46 [46] */
+    /* begin component guide_47=Guide_anyshape_r() [47] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_47_var._rotation_is_identity) {
+        if(!_guide_47_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_47_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_47_var._position_relative, _guide_47_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 47) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_47_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_47_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_47 [47] */
+    /* begin component BW_Chopper_1=MultiDiskChopper() [48] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_BW_Chopper_1_var._rotation_is_identity) {
+        if(!_BW_Chopper_1_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _BW_Chopper_1_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_BW_Chopper_1_var._position_relative, _BW_Chopper_1_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 48) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_BW_Chopper_1_var._name);
+      DEBUG_STATE();
+      class_MultiDiskChopper_trace(&_BW_Chopper_1_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component BW_Chopper_1 [48] */
+    if (_particle->_index > 48)
       ABSORBED++; /* absorbed when passed all components */
   } /* while !ABSORBED */
 
@@ -18767,6 +25637,563 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         _particle->_index++;
       }
 
+      // guide_10
+    if (!ABSORBED && _particle->_index == 12) {
+#ifndef MULTICORE
+        if (_guide_10_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_10_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_10_var._position_relative, _guide_10_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        if ((( _instrument_var._parameters.bender == 0 ))) // conditional WHEN
+        class_Guide_anyshape_r_trace(&_guide_10_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // bender
+    if (!ABSORBED && _particle->_index == 13) {
+#ifndef MULTICORE
+        if (_bender_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _bender_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_bender_var._position_relative, _bender_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        if ((( _instrument_var._parameters.bender == 1 ))) // conditional WHEN
+        class_Pol_bender_trace(&_bender_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_11
+    if (!ABSORBED && _particle->_index == 14) {
+#ifndef MULTICORE
+        if (_guide_11_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_11_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_11_var._position_relative, _guide_11_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_11_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // slit
+    if (!ABSORBED && _particle->_index == 15) {
+#ifndef MULTICORE
+        if (_slit_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _slit_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_slit_var._position_relative, _slit_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Slit_trace(&_slit_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // insert_monitor_xy
+    if (!ABSORBED && _particle->_index == 16) {
+#ifndef MULTICORE
+        if (_insert_monitor_xy_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _insert_monitor_xy_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_insert_monitor_xy_var._position_relative, _insert_monitor_xy_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Monitor_nD_trace(&_insert_monitor_xy_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // insert_monitor_div
+    if (!ABSORBED && _particle->_index == 17) {
+#ifndef MULTICORE
+        if (_insert_monitor_div_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _insert_monitor_div_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_insert_monitor_div_var._position_relative, _insert_monitor_div_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Monitor_nD_trace(&_insert_monitor_div_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // insert_monitor_lam
+    if (!ABSORBED && _particle->_index == 18) {
+#ifndef MULTICORE
+        if (_insert_monitor_lam_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _insert_monitor_lam_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_insert_monitor_lam_var._position_relative, _insert_monitor_lam_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Monitor_nD_trace(&_insert_monitor_lam_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // inset_monitor_ToF
+    if (!ABSORBED && _particle->_index == 19) {
+#ifndef MULTICORE
+        if (_inset_monitor_ToF_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _inset_monitor_ToF_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_inset_monitor_ToF_var._position_relative, _inset_monitor_ToF_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Monitor_nD_trace(&_inset_monitor_ToF_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_13
+    if (!ABSORBED && _particle->_index == 20) {
+#ifndef MULTICORE
+        if (_guide_13_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_13_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_13_var._position_relative, _guide_13_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_13_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_14
+    if (!ABSORBED && _particle->_index == 21) {
+#ifndef MULTICORE
+        if (_guide_14_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_14_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_14_var._position_relative, _guide_14_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_14_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_15
+    if (!ABSORBED && _particle->_index == 22) {
+#ifndef MULTICORE
+        if (_guide_15_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_15_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_15_var._position_relative, _guide_15_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_15_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_16
+    if (!ABSORBED && _particle->_index == 23) {
+#ifndef MULTICORE
+        if (_guide_16_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_16_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_16_var._position_relative, _guide_16_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_16_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_18
+    if (!ABSORBED && _particle->_index == 24) {
+#ifndef MULTICORE
+        if (_guide_18_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_18_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_18_var._position_relative, _guide_18_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_18_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_19
+    if (!ABSORBED && _particle->_index == 25) {
+#ifndef MULTICORE
+        if (_guide_19_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_19_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_19_var._position_relative, _guide_19_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_19_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_20
+    if (!ABSORBED && _particle->_index == 26) {
+#ifndef MULTICORE
+        if (_guide_20_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_20_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_20_var._position_relative, _guide_20_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_20_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_22
+    if (!ABSORBED && _particle->_index == 27) {
+#ifndef MULTICORE
+        if (_guide_22_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_22_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_22_var._position_relative, _guide_22_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_22_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_23
+    if (!ABSORBED && _particle->_index == 28) {
+#ifndef MULTICORE
+        if (_guide_23_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_23_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_23_var._position_relative, _guide_23_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_23_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_24
+    if (!ABSORBED && _particle->_index == 29) {
+#ifndef MULTICORE
+        if (_guide_24_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_24_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_24_var._position_relative, _guide_24_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_24_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_25
+    if (!ABSORBED && _particle->_index == 30) {
+#ifndef MULTICORE
+        if (_guide_25_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_25_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_25_var._position_relative, _guide_25_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_25_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_27
+    if (!ABSORBED && _particle->_index == 31) {
+#ifndef MULTICORE
+        if (_guide_27_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_27_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_27_var._position_relative, _guide_27_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_27_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_28
+    if (!ABSORBED && _particle->_index == 32) {
+#ifndef MULTICORE
+        if (_guide_28_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_28_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_28_var._position_relative, _guide_28_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_28_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_29
+    if (!ABSORBED && _particle->_index == 33) {
+#ifndef MULTICORE
+        if (_guide_29_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_29_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_29_var._position_relative, _guide_29_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_29_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_30
+    if (!ABSORBED && _particle->_index == 34) {
+#ifndef MULTICORE
+        if (_guide_30_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_30_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_30_var._position_relative, _guide_30_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_30_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_32
+    if (!ABSORBED && _particle->_index == 35) {
+#ifndef MULTICORE
+        if (_guide_32_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_32_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_32_var._position_relative, _guide_32_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_32_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_33
+    if (!ABSORBED && _particle->_index == 36) {
+#ifndef MULTICORE
+        if (_guide_33_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_33_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_33_var._position_relative, _guide_33_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_33_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_34
+    if (!ABSORBED && _particle->_index == 37) {
+#ifndef MULTICORE
+        if (_guide_34_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_34_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_34_var._position_relative, _guide_34_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_34_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_36
+    if (!ABSORBED && _particle->_index == 38) {
+#ifndef MULTICORE
+        if (_guide_36_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_36_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_36_var._position_relative, _guide_36_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_36_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_37
+    if (!ABSORBED && _particle->_index == 39) {
+#ifndef MULTICORE
+        if (_guide_37_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_37_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_37_var._position_relative, _guide_37_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_37_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_39
+    if (!ABSORBED && _particle->_index == 40) {
+#ifndef MULTICORE
+        if (_guide_39_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_39_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_39_var._position_relative, _guide_39_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_39_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_40
+    if (!ABSORBED && _particle->_index == 41) {
+#ifndef MULTICORE
+        if (_guide_40_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_40_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_40_var._position_relative, _guide_40_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_40_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_41
+    if (!ABSORBED && _particle->_index == 42) {
+#ifndef MULTICORE
+        if (_guide_41_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_41_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_41_var._position_relative, _guide_41_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_41_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_42
+    if (!ABSORBED && _particle->_index == 43) {
+#ifndef MULTICORE
+        if (_guide_42_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_42_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_42_var._position_relative, _guide_42_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_42_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_44
+    if (!ABSORBED && _particle->_index == 44) {
+#ifndef MULTICORE
+        if (_guide_44_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_44_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_44_var._position_relative, _guide_44_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_44_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_45
+    if (!ABSORBED && _particle->_index == 45) {
+#ifndef MULTICORE
+        if (_guide_45_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_45_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_45_var._position_relative, _guide_45_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_45_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_46
+    if (!ABSORBED && _particle->_index == 46) {
+#ifndef MULTICORE
+        if (_guide_46_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_46_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_46_var._position_relative, _guide_46_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_46_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_47
+    if (!ABSORBED && _particle->_index == 47) {
+#ifndef MULTICORE
+        if (_guide_47_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_47_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_47_var._position_relative, _guide_47_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_47_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // BW_Chopper_1
+    if (!ABSORBED && _particle->_index == 48) {
+#ifndef MULTICORE
+        if (_BW_Chopper_1_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _BW_Chopper_1_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_BW_Chopper_1_var._position_relative, _BW_Chopper_1_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_MultiDiskChopper_trace(&_BW_Chopper_1_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
     }
 
     // jump to next viable seed
@@ -18817,7 +26244,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
 #undef ABSORB
 #undef ABSORB0
 /* *****************************************************************************
-* instrument 'TREX' and components SAVE
+* instrument 'TRex' and components SAVE
 ***************************************************************************** */
 
 _class_Monitor_nD *class_Monitor_nD_save(_class_Monitor_nD *_comp
@@ -18919,7 +26346,7 @@ _class_Monitor_nD *class_Monitor_nD_save(_class_Monitor_nD *_comp
 
 
 
-int save(FILE *handle) { /* called by mccode_main for TREX:SAVE */
+int save(FILE *handle) { /* called by mccode_main for TRex:SAVE */
   if (!handle) siminfo_init(NULL);
 
   /* call iteratively all components SAVE */
@@ -18937,13 +26364,54 @@ int save(FILE *handle) { /* called by mccode_main for TREX:SAVE */
 
 
 
+
+
+
+
+  class_Monitor_nD_save(&_insert_monitor_xy_var);
+
+  class_Monitor_nD_save(&_insert_monitor_div_var);
+
+  class_Monitor_nD_save(&_insert_monitor_lam_var);
+
+  class_Monitor_nD_save(&_inset_monitor_ToF_var);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   if (!handle) siminfo_close(); 
 
   return(0);
 } /* save */
 
 /* *****************************************************************************
-* instrument 'TREX' and components FINALLY
+* instrument 'TRex' and components FINALLY
 ***************************************************************************** */
 
 _class_Monitor_nD *class_Monitor_nD_finally(_class_Monitor_nD *_comp
@@ -19041,9 +26509,72 @@ _class_Monitor_nD *class_Monitor_nD_finally(_class_Monitor_nD *_comp
   return(_comp);
 } /* class_Monitor_nD_finally */
 
+_class_MultiDiskChopper *class_MultiDiskChopper_finally(_class_MultiDiskChopper *_comp
+) {
+  #define slit_center (_comp->_parameters.slit_center)
+  #define slit_width (_comp->_parameters.slit_width)
+  #define nslits (_comp->_parameters.nslits)
+  #define delta_y (_comp->_parameters.delta_y)
+  #define nu (_comp->_parameters.nu)
+  #define nrev (_comp->_parameters.nrev)
+  #define ratio (_comp->_parameters.ratio)
+  #define jitter (_comp->_parameters.jitter)
+  #define delay (_comp->_parameters.delay)
+  #define isfirst (_comp->_parameters.isfirst)
+  #define phase (_comp->_parameters.phase)
+  #define radius (_comp->_parameters.radius)
+  #define equal (_comp->_parameters.equal)
+  #define abs_out (_comp->_parameters.abs_out)
+  #define verbose (_comp->_parameters.verbose)
+  #define T (_comp->_parameters.T)
+  #define To (_comp->_parameters.To)
+  #define omega (_comp->_parameters.omega)
+  #define dslit_center (_comp->_parameters.dslit_center)
+  #define dhslit_width (_comp->_parameters.dhslit_width)
+  #define t0 (_comp->_parameters.t0)
+  #define t1 (_comp->_parameters.t1)
+  SIG_MESSAGE("[_BW_Chopper_1_finally] component BW_Chopper_1=MultiDiskChopper() FINALLY [MultiDiskChopper:0]");
+
+  // clean up
+  if (dslit_center)
+    free (dslit_center);
+
+  if (dhslit_width)
+    free (dhslit_width);
+
+  if (t0)
+    free (t0);
+
+  if (t1)
+    free (t1);
+  #undef slit_center
+  #undef slit_width
+  #undef nslits
+  #undef delta_y
+  #undef nu
+  #undef nrev
+  #undef ratio
+  #undef jitter
+  #undef delay
+  #undef isfirst
+  #undef phase
+  #undef radius
+  #undef equal
+  #undef abs_out
+  #undef verbose
+  #undef T
+  #undef To
+  #undef omega
+  #undef dslit_center
+  #undef dhslit_width
+  #undef t0
+  #undef t1
+  return(_comp);
+} /* class_MultiDiskChopper_finally */
 
 
-int finally(void) { /* called by mccode_main for TREX:FINALLY */
+
+int finally(void) { /* called by mccode_main for TRex:FINALLY */
 #pragma acc update host(_source_var)
 #pragma acc update host(_source_monitor_xy_var)
 #pragma acc update host(_source_monitor_div_var)
@@ -19055,16 +26586,63 @@ int finally(void) { /* called by mccode_main for TREX:FINALLY */
 #pragma acc update host(_guide_5_var)
 #pragma acc update host(_guide_7_var)
 #pragma acc update host(_guide_8_var)
+#pragma acc update host(_guide_10_var)
+#pragma acc update host(_bender_var)
+#pragma acc update host(_guide_11_var)
+#pragma acc update host(_slit_var)
+#pragma acc update host(_insert_monitor_xy_var)
+#pragma acc update host(_insert_monitor_div_var)
+#pragma acc update host(_insert_monitor_lam_var)
+#pragma acc update host(_inset_monitor_ToF_var)
+#pragma acc update host(_guide_13_var)
+#pragma acc update host(_guide_14_var)
+#pragma acc update host(_guide_15_var)
+#pragma acc update host(_guide_16_var)
+#pragma acc update host(_guide_18_var)
+#pragma acc update host(_guide_19_var)
+#pragma acc update host(_guide_20_var)
+#pragma acc update host(_guide_22_var)
+#pragma acc update host(_guide_23_var)
+#pragma acc update host(_guide_24_var)
+#pragma acc update host(_guide_25_var)
+#pragma acc update host(_guide_27_var)
+#pragma acc update host(_guide_28_var)
+#pragma acc update host(_guide_29_var)
+#pragma acc update host(_guide_30_var)
+#pragma acc update host(_guide_32_var)
+#pragma acc update host(_guide_33_var)
+#pragma acc update host(_guide_34_var)
+#pragma acc update host(_guide_36_var)
+#pragma acc update host(_guide_37_var)
+#pragma acc update host(_guide_39_var)
+#pragma acc update host(_guide_40_var)
+#pragma acc update host(_guide_41_var)
+#pragma acc update host(_guide_42_var)
+#pragma acc update host(_guide_44_var)
+#pragma acc update host(_guide_45_var)
+#pragma acc update host(_guide_46_var)
+#pragma acc update host(_guide_47_var)
+#pragma acc update host(_BW_Chopper_1_var)
 #pragma acc update host(_instrument_var)
 
   siminfo_init(NULL);
   save(siminfo_file); /* save data when simulation ends */
 
-  /* Instrument 'TREX' FINALLY */
-  SIG_MESSAGE("[TREX] FINALLY [(null):-1]");
+  /* Instrument 'TRex' FINALLY */
+  SIG_MESSAGE("[TRex] FINALLY [(null):-1]");
+  #define L0 (instrument->_parameters.L0)
+  #define d_Li (instrument->_parameters.d_Li)
+  #define mod_type (instrument->_parameters.mod_type)
+  #define bender (instrument->_parameters.bender)
+  #define b_rot (instrument->_parameters.b_rot)
 {
-// Start of finally for generated TREX
+// Start of finally for generated TRex
 }
+  #undef L0
+  #undef d_Li
+  #undef mod_type
+  #undef bender
+  #undef b_rot
   /* call iteratively all components FINALLY */
 
   class_Monitor_nD_finally(&_source_monitor_xy_var);
@@ -19080,13 +26658,55 @@ int finally(void) { /* called by mccode_main for TREX:FINALLY */
 
 
 
+
+
+
+
+  class_Monitor_nD_finally(&_insert_monitor_xy_var);
+
+  class_Monitor_nD_finally(&_insert_monitor_div_var);
+
+  class_Monitor_nD_finally(&_insert_monitor_lam_var);
+
+  class_Monitor_nD_finally(&_inset_monitor_ToF_var);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  class_MultiDiskChopper_finally(&_BW_Chopper_1_var);
+
   siminfo_close(); 
 
   return(0);
 } /* finally */
 
 /* *****************************************************************************
-* instrument 'TREX' and components DISPLAY
+* instrument 'TRex' and components DISPLAY
 ***************************************************************************** */
 
   #define magnify     mcdis_magnify
@@ -19401,6 +27021,282 @@ _class_Guide_anyshape_r *class_Guide_anyshape_r_display(_class_Guide_anyshape_r 
   return(_comp);
 } /* class_Guide_anyshape_r_display */
 
+_class_Pol_bender *class_Pol_bender_display(_class_Pol_bender *_comp
+) {
+  #define xwidth (_comp->_parameters.xwidth)
+  #define yheight (_comp->_parameters.yheight)
+  #define length (_comp->_parameters.length)
+  #define radius (_comp->_parameters.radius)
+  #define G (_comp->_parameters.G)
+  #define nslit (_comp->_parameters.nslit)
+  #define d (_comp->_parameters.d)
+  #define debug (_comp->_parameters.debug)
+  #define endFlat (_comp->_parameters.endFlat)
+  #define rTopUpPar (_comp->_parameters.rTopUpPar)
+  #define rTopDownPar (_comp->_parameters.rTopDownPar)
+  #define rBotUpPar (_comp->_parameters.rBotUpPar)
+  #define rBotDownPar (_comp->_parameters.rBotDownPar)
+  #define rLeftUpPar (_comp->_parameters.rLeftUpPar)
+  #define rLeftDownPar (_comp->_parameters.rLeftDownPar)
+  #define rRightUpPar (_comp->_parameters.rRightUpPar)
+  #define rRightDownPar (_comp->_parameters.rRightDownPar)
+  #define rTopUpData (_comp->_parameters.rTopUpData)
+  #define rTopDownData (_comp->_parameters.rTopDownData)
+  #define rBotUpData (_comp->_parameters.rBotUpData)
+  #define rBotDownData (_comp->_parameters.rBotDownData)
+  #define rLeftUpData (_comp->_parameters.rLeftUpData)
+  #define rLeftDownData (_comp->_parameters.rLeftDownData)
+  #define rRightUpData (_comp->_parameters.rRightUpData)
+  #define rRightDownData (_comp->_parameters.rRightDownData)
+  #define drawOption (_comp->_parameters.drawOption)
+  #define localG (_comp->_parameters.localG)
+  #define normTopBot (_comp->_parameters.normTopBot)
+  #define normIn (_comp->_parameters.normIn)
+  #define normOut (_comp->_parameters.normOut)
+  #define pointTop (_comp->_parameters.pointTop)
+  #define pointBot (_comp->_parameters.pointBot)
+  #define pointIn (_comp->_parameters.pointIn)
+  #define pointOut (_comp->_parameters.pointOut)
+  #define rTopUpTable (_comp->_parameters.rTopUpTable)
+  #define rTopDownTable (_comp->_parameters.rTopDownTable)
+  #define rBotUpTable (_comp->_parameters.rBotUpTable)
+  #define rBotDownTable (_comp->_parameters.rBotDownTable)
+  #define rLeftUpTable (_comp->_parameters.rLeftUpTable)
+  #define rLeftDownTable (_comp->_parameters.rLeftDownTable)
+  #define rRightUpTable (_comp->_parameters.rRightUpTable)
+  #define rRightDownTable (_comp->_parameters.rRightDownTable)
+  #define useTables (_comp->_parameters.useTables)
+  SIG_MESSAGE("[_bender_display] component bender=Pol_bender() DISPLAY [Pol_bender:0]");
+
+  printf("MCDISPLAY: component %s\n", _comp->_name);
+  double x1, x2, z1, z2;
+  x1 = x2 = z1 = z2 = 0;
+  const int n = 90;
+  double* xplot = malloc (n * sizeof (double));
+  double* zplot = malloc (n * sizeof (double));
+  int ns = 0;
+  int j = 1;
+  const double lengthOfGuide = sin (length / radius) * radius;
+  const double slitWidth = xwidth / nslit;
+  double R = 0; /* radius of arc */
+  int nSlitsMax = nslit;
+  int nMax = n;
+
+  if (lengthOfGuide <= 0)
+    exit (fprintf (stdout, "Pol_bender: %s: Negative guide length ! lengthOfGuide=%g\n", NAME_CURRENT_COMP, lengthOfGuide));
+
+  if (drawOption == 2) {
+
+    if (nSlitsMax > 20)
+      nSlitsMax = 20;
+    nMax = 40;
+  } else if (drawOption == 3) {
+
+    if (nSlitsMax > 5)
+      nSlitsMax = 5;
+    nMax = 10;
+  }
+
+  // draw opening
+  rectangle ("xy", 0, 0, 0, xwidth, yheight);
+
+  for (ns = 0; ns < nSlitsMax + 1; ns++) {
+
+    // to make sure the sides are drawn properly
+    if (ns == nSlitsMax && nSlitsMax < nslit)
+      ns = nslit;
+
+    // calculate x for this R
+    R = radius - 0.5 * xwidth + ns * slitWidth;
+
+    for (j = 0; j < nMax; j++) {
+
+      if (endFlat) {
+
+        if (ns == 0) // only calculate once
+          zplot[j] = j * lengthOfGuide / (double)(nMax - 1);
+      } else
+        zplot[j] = R * sin (length / radius * (double)j / (double)(nMax - 1));
+
+      if (radius > 0)
+        xplot[j] = radius - sqrt (R * R - zplot[j] * zplot[j]);
+      else
+        xplot[j] = radius + sqrt (R * R - zplot[j] * zplot[j]);
+    }
+
+    // To be able to draw end we store some of the point values
+    if (ns == 0) { // first wall
+
+      x1 = xplot[nMax - 1];
+      z1 = zplot[nMax - 1];
+    } else if (ns == nslit) { // last wall
+
+      x2 = xplot[nMax - 1];
+      z2 = zplot[nMax - 1];
+    }
+
+    for (j = 0; j < nMax - 1; j++) {
+      line (xplot[j], 0.5 * yheight, zplot[j], xplot[j + 1], 0.5 * yheight, zplot[j + 1]);
+      line (xplot[j], -0.5 * yheight, zplot[j], xplot[j + 1], -0.5 * yheight, zplot[j + 1]);
+    }
+  }
+
+  // draw end gap
+  line (x1, 0.5 * yheight, z1, x2, 0.5 * yheight, z2);
+  line (x1, 0.5 * yheight, z1, x1, -0.5 * yheight, z1);
+  line (x2, -0.5 * yheight, z2, x2, 0.5 * yheight, z2);
+  line (x1, -0.5 * yheight, z1, x2, -0.5 * yheight, z2);
+  free (xplot);
+  free (zplot);
+  #undef xwidth
+  #undef yheight
+  #undef length
+  #undef radius
+  #undef G
+  #undef nslit
+  #undef d
+  #undef debug
+  #undef endFlat
+  #undef rTopUpPar
+  #undef rTopDownPar
+  #undef rBotUpPar
+  #undef rBotDownPar
+  #undef rLeftUpPar
+  #undef rLeftDownPar
+  #undef rRightUpPar
+  #undef rRightDownPar
+  #undef rTopUpData
+  #undef rTopDownData
+  #undef rBotUpData
+  #undef rBotDownData
+  #undef rLeftUpData
+  #undef rLeftDownData
+  #undef rRightUpData
+  #undef rRightDownData
+  #undef drawOption
+  #undef localG
+  #undef normTopBot
+  #undef normIn
+  #undef normOut
+  #undef pointTop
+  #undef pointBot
+  #undef pointIn
+  #undef pointOut
+  #undef rTopUpTable
+  #undef rTopDownTable
+  #undef rBotUpTable
+  #undef rBotDownTable
+  #undef rLeftUpTable
+  #undef rLeftDownTable
+  #undef rRightUpTable
+  #undef rRightDownTable
+  #undef useTables
+  return(_comp);
+} /* class_Pol_bender_display */
+
+_class_Slit *class_Slit_display(_class_Slit *_comp
+) {
+  #define xmin (_comp->_parameters.xmin)
+  #define xmax (_comp->_parameters.xmax)
+  #define ymin (_comp->_parameters.ymin)
+  #define ymax (_comp->_parameters.ymax)
+  #define radius (_comp->_parameters.radius)
+  #define xwidth (_comp->_parameters.xwidth)
+  #define yheight (_comp->_parameters.yheight)
+  #define isradial (_comp->_parameters.isradial)
+  SIG_MESSAGE("[_slit_display] component slit=Slit() DISPLAY [Slit:0]");
+
+  printf("MCDISPLAY: component %s\n", _comp->_name);
+
+  if (is_unset (radius)) {
+    double xw, yh;
+    xw = (xmax - xmin) / 2.0;
+    yh = (ymax - ymin) / 2.0;
+    multiline (3, xmin - xw, (double)ymax, 0.0, (double)xmin, (double)ymax, 0.0, (double)xmin, ymax + yh, 0.0);
+    multiline (3, xmax + xw, (double)ymax, 0.0, (double)xmax, (double)ymax, 0.0, (double)xmax, ymax + yh, 0.0);
+    multiline (3, xmin - xw, (double)ymin, 0.0, (double)xmin, (double)ymin, 0.0, (double)xmin, ymin - yh, 0.0);
+    multiline (3, xmax + xw, (double)ymin, 0.0, (double)xmax, (double)ymin, 0.0, (double)xmax, ymin - yh, 0.0);
+  } else {
+    circle ("xy", 0, 0, 0, radius);
+  }
+  #undef xmin
+  #undef xmax
+  #undef ymin
+  #undef ymax
+  #undef radius
+  #undef xwidth
+  #undef yheight
+  #undef isradial
+  return(_comp);
+} /* class_Slit_display */
+
+_class_MultiDiskChopper *class_MultiDiskChopper_display(_class_MultiDiskChopper *_comp
+) {
+  #define slit_center (_comp->_parameters.slit_center)
+  #define slit_width (_comp->_parameters.slit_width)
+  #define nslits (_comp->_parameters.nslits)
+  #define delta_y (_comp->_parameters.delta_y)
+  #define nu (_comp->_parameters.nu)
+  #define nrev (_comp->_parameters.nrev)
+  #define ratio (_comp->_parameters.ratio)
+  #define jitter (_comp->_parameters.jitter)
+  #define delay (_comp->_parameters.delay)
+  #define isfirst (_comp->_parameters.isfirst)
+  #define phase (_comp->_parameters.phase)
+  #define radius (_comp->_parameters.radius)
+  #define equal (_comp->_parameters.equal)
+  #define abs_out (_comp->_parameters.abs_out)
+  #define verbose (_comp->_parameters.verbose)
+  #define T (_comp->_parameters.T)
+  #define To (_comp->_parameters.To)
+  #define omega (_comp->_parameters.omega)
+  #define dslit_center (_comp->_parameters.dslit_center)
+  #define dhslit_width (_comp->_parameters.dhslit_width)
+  #define t0 (_comp->_parameters.t0)
+  #define t1 (_comp->_parameters.t1)
+  SIG_MESSAGE("[_BW_Chopper_1_display] component BW_Chopper_1=MultiDiskChopper() DISPLAY [MultiDiskChopper:0]");
+
+  printf("MCDISPLAY: component %s\n", _comp->_name);
+  int j;
+
+  // the disk
+  circle ("xy", 0, delta_y, 0, radius);
+
+  /* Drawing the slit(s) */
+  for (j = 0; j < nslits; j++) {
+    /* Angular start/end of slit */
+    double tmin = dslit_center[j] - dhslit_width[j] + phase;
+    double tmax = tmin + 2.0 * dhslit_width[j];
+    /* Draw lines for each slit. */
+
+    line (radius * sin (tmin), radius * cos (tmin) + delta_y, 0, 0, delta_y, 0);
+    line (radius * sin (tmax), radius * cos (tmax) + delta_y, 0, 0, delta_y, 0);
+  }
+  #undef slit_center
+  #undef slit_width
+  #undef nslits
+  #undef delta_y
+  #undef nu
+  #undef nrev
+  #undef ratio
+  #undef jitter
+  #undef delay
+  #undef isfirst
+  #undef phase
+  #undef radius
+  #undef equal
+  #undef abs_out
+  #undef verbose
+  #undef T
+  #undef To
+  #undef omega
+  #undef dslit_center
+  #undef dhslit_width
+  #undef t0
+  #undef t1
+  return(_comp);
+} /* class_MultiDiskChopper_display */
+
 
   #undef magnify
   #undef line
@@ -19412,7 +27308,7 @@ _class_Guide_anyshape_r *class_Guide_anyshape_r_display(_class_Guide_anyshape_r 
   #undef cylinder
   #undef sphere
 
-int display(void) { /* called by mccode_main for TREX:DISPLAY */
+int display(void) { /* called by mccode_main for TRex:DISPLAY */
   printf("MCDISPLAY: start\n");
 
   /* call iteratively all components DISPLAY */
@@ -19438,6 +27334,80 @@ int display(void) { /* called by mccode_main for TREX:DISPLAY */
 
   class_Guide_anyshape_r_display(&_guide_8_var);
 
+  class_Guide_anyshape_r_display(&_guide_10_var);
+
+  class_Pol_bender_display(&_bender_var);
+
+  class_Guide_anyshape_r_display(&_guide_11_var);
+
+  class_Slit_display(&_slit_var);
+
+  class_Monitor_nD_display(&_insert_monitor_xy_var);
+
+  class_Monitor_nD_display(&_insert_monitor_div_var);
+
+  class_Monitor_nD_display(&_insert_monitor_lam_var);
+
+  class_Monitor_nD_display(&_inset_monitor_ToF_var);
+
+  class_Guide_anyshape_r_display(&_guide_13_var);
+
+  class_Guide_anyshape_r_display(&_guide_14_var);
+
+  class_Guide_anyshape_r_display(&_guide_15_var);
+
+  class_Guide_anyshape_r_display(&_guide_16_var);
+
+  class_Guide_anyshape_r_display(&_guide_18_var);
+
+  class_Guide_anyshape_r_display(&_guide_19_var);
+
+  class_Guide_anyshape_r_display(&_guide_20_var);
+
+  class_Guide_anyshape_r_display(&_guide_22_var);
+
+  class_Guide_anyshape_r_display(&_guide_23_var);
+
+  class_Guide_anyshape_r_display(&_guide_24_var);
+
+  class_Guide_anyshape_r_display(&_guide_25_var);
+
+  class_Guide_anyshape_r_display(&_guide_27_var);
+
+  class_Guide_anyshape_r_display(&_guide_28_var);
+
+  class_Guide_anyshape_r_display(&_guide_29_var);
+
+  class_Guide_anyshape_r_display(&_guide_30_var);
+
+  class_Guide_anyshape_r_display(&_guide_32_var);
+
+  class_Guide_anyshape_r_display(&_guide_33_var);
+
+  class_Guide_anyshape_r_display(&_guide_34_var);
+
+  class_Guide_anyshape_r_display(&_guide_36_var);
+
+  class_Guide_anyshape_r_display(&_guide_37_var);
+
+  class_Guide_anyshape_r_display(&_guide_39_var);
+
+  class_Guide_anyshape_r_display(&_guide_40_var);
+
+  class_Guide_anyshape_r_display(&_guide_41_var);
+
+  class_Guide_anyshape_r_display(&_guide_42_var);
+
+  class_Guide_anyshape_r_display(&_guide_44_var);
+
+  class_Guide_anyshape_r_display(&_guide_45_var);
+
+  class_Guide_anyshape_r_display(&_guide_46_var);
+
+  class_Guide_anyshape_r_display(&_guide_47_var);
+
+  class_MultiDiskChopper_display(&_BW_Chopper_1_var);
+
   printf("MCDISPLAY: end\n");
 
   return(0);
@@ -19460,6 +27430,43 @@ void* _getvar_parameters(char* compname)
   if (!strcmp(compname, "guide_5")) return (void *) &(_guide_5_var._parameters);
   if (!strcmp(compname, "guide_7")) return (void *) &(_guide_7_var._parameters);
   if (!strcmp(compname, "guide_8")) return (void *) &(_guide_8_var._parameters);
+  if (!strcmp(compname, "guide_10")) return (void *) &(_guide_10_var._parameters);
+  if (!strcmp(compname, "bender")) return (void *) &(_bender_var._parameters);
+  if (!strcmp(compname, "guide_11")) return (void *) &(_guide_11_var._parameters);
+  if (!strcmp(compname, "slit")) return (void *) &(_slit_var._parameters);
+  if (!strcmp(compname, "insert_monitor_xy")) return (void *) &(_insert_monitor_xy_var._parameters);
+  if (!strcmp(compname, "insert_monitor_div")) return (void *) &(_insert_monitor_div_var._parameters);
+  if (!strcmp(compname, "insert_monitor_lam")) return (void *) &(_insert_monitor_lam_var._parameters);
+  if (!strcmp(compname, "inset_monitor_ToF")) return (void *) &(_inset_monitor_ToF_var._parameters);
+  if (!strcmp(compname, "guide_13")) return (void *) &(_guide_13_var._parameters);
+  if (!strcmp(compname, "guide_14")) return (void *) &(_guide_14_var._parameters);
+  if (!strcmp(compname, "guide_15")) return (void *) &(_guide_15_var._parameters);
+  if (!strcmp(compname, "guide_16")) return (void *) &(_guide_16_var._parameters);
+  if (!strcmp(compname, "guide_18")) return (void *) &(_guide_18_var._parameters);
+  if (!strcmp(compname, "guide_19")) return (void *) &(_guide_19_var._parameters);
+  if (!strcmp(compname, "guide_20")) return (void *) &(_guide_20_var._parameters);
+  if (!strcmp(compname, "guide_22")) return (void *) &(_guide_22_var._parameters);
+  if (!strcmp(compname, "guide_23")) return (void *) &(_guide_23_var._parameters);
+  if (!strcmp(compname, "guide_24")) return (void *) &(_guide_24_var._parameters);
+  if (!strcmp(compname, "guide_25")) return (void *) &(_guide_25_var._parameters);
+  if (!strcmp(compname, "guide_27")) return (void *) &(_guide_27_var._parameters);
+  if (!strcmp(compname, "guide_28")) return (void *) &(_guide_28_var._parameters);
+  if (!strcmp(compname, "guide_29")) return (void *) &(_guide_29_var._parameters);
+  if (!strcmp(compname, "guide_30")) return (void *) &(_guide_30_var._parameters);
+  if (!strcmp(compname, "guide_32")) return (void *) &(_guide_32_var._parameters);
+  if (!strcmp(compname, "guide_33")) return (void *) &(_guide_33_var._parameters);
+  if (!strcmp(compname, "guide_34")) return (void *) &(_guide_34_var._parameters);
+  if (!strcmp(compname, "guide_36")) return (void *) &(_guide_36_var._parameters);
+  if (!strcmp(compname, "guide_37")) return (void *) &(_guide_37_var._parameters);
+  if (!strcmp(compname, "guide_39")) return (void *) &(_guide_39_var._parameters);
+  if (!strcmp(compname, "guide_40")) return (void *) &(_guide_40_var._parameters);
+  if (!strcmp(compname, "guide_41")) return (void *) &(_guide_41_var._parameters);
+  if (!strcmp(compname, "guide_42")) return (void *) &(_guide_42_var._parameters);
+  if (!strcmp(compname, "guide_44")) return (void *) &(_guide_44_var._parameters);
+  if (!strcmp(compname, "guide_45")) return (void *) &(_guide_45_var._parameters);
+  if (!strcmp(compname, "guide_46")) return (void *) &(_guide_46_var._parameters);
+  if (!strcmp(compname, "guide_47")) return (void *) &(_guide_47_var._parameters);
+  if (!strcmp(compname, "BW_Chopper_1")) return (void *) &(_BW_Chopper_1_var._parameters);
   return 0;
 }
 
@@ -19484,6 +27491,43 @@ int _getcomp_index(char* compname)
   if (!strcmp(compname, "guide_5")) return 9;
   if (!strcmp(compname, "guide_7")) return 10;
   if (!strcmp(compname, "guide_8")) return 11;
+  if (!strcmp(compname, "guide_10")) return 12;
+  if (!strcmp(compname, "bender")) return 13;
+  if (!strcmp(compname, "guide_11")) return 14;
+  if (!strcmp(compname, "slit")) return 15;
+  if (!strcmp(compname, "insert_monitor_xy")) return 16;
+  if (!strcmp(compname, "insert_monitor_div")) return 17;
+  if (!strcmp(compname, "insert_monitor_lam")) return 18;
+  if (!strcmp(compname, "inset_monitor_ToF")) return 19;
+  if (!strcmp(compname, "guide_13")) return 20;
+  if (!strcmp(compname, "guide_14")) return 21;
+  if (!strcmp(compname, "guide_15")) return 22;
+  if (!strcmp(compname, "guide_16")) return 23;
+  if (!strcmp(compname, "guide_18")) return 24;
+  if (!strcmp(compname, "guide_19")) return 25;
+  if (!strcmp(compname, "guide_20")) return 26;
+  if (!strcmp(compname, "guide_22")) return 27;
+  if (!strcmp(compname, "guide_23")) return 28;
+  if (!strcmp(compname, "guide_24")) return 29;
+  if (!strcmp(compname, "guide_25")) return 30;
+  if (!strcmp(compname, "guide_27")) return 31;
+  if (!strcmp(compname, "guide_28")) return 32;
+  if (!strcmp(compname, "guide_29")) return 33;
+  if (!strcmp(compname, "guide_30")) return 34;
+  if (!strcmp(compname, "guide_32")) return 35;
+  if (!strcmp(compname, "guide_33")) return 36;
+  if (!strcmp(compname, "guide_34")) return 37;
+  if (!strcmp(compname, "guide_36")) return 38;
+  if (!strcmp(compname, "guide_37")) return 39;
+  if (!strcmp(compname, "guide_39")) return 40;
+  if (!strcmp(compname, "guide_40")) return 41;
+  if (!strcmp(compname, "guide_41")) return 42;
+  if (!strcmp(compname, "guide_42")) return 43;
+  if (!strcmp(compname, "guide_44")) return 44;
+  if (!strcmp(compname, "guide_45")) return 45;
+  if (!strcmp(compname, "guide_46")) return 46;
+  if (!strcmp(compname, "guide_47")) return 47;
+  if (!strcmp(compname, "BW_Chopper_1")) return 48;
   return -1;
 }
 
@@ -19879,4 +27923,4 @@ int mccode_main(int argc, char *argv[])
 } /* mccode_main */
 /* End of file "mccode_main.c". */
 
-/* end of generated C code ./TREX.c */
+/* end of generated C code ./TRex.c */

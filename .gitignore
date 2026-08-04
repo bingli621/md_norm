@@ -25,3 +25,5 @@ OFF_files
 __pycache__/
 *.py[cod]
 *.pyo
+*.c
+

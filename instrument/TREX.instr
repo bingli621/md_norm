@@ -11,11 +11,11 @@
 * European Spallation Source Data Management and 
 * Software Centre
 * 
-* Instrument: TREX
+* Instrument: TRex
 * 
 * %Identification
 * Written by: Bing Li
-* Date: 17:36:21 on August 03, 2026
+* Date: 17:40:10 on August 04, 2026
 * Origin: DMSC
 * %INSTRUMENT_SITE: Generated_instruments
 * 
@@ -26,34 +26,62 @@
 * 
 * 
 * %Parameters
+* L0: [unit] wavelength in [Å] used to calculate the minimum and maximum wavelength for the source component by adding and subtracting a set wavelength
+* d_Li: [unit] wavelength band in [Å] to be simulated
+* mod_type: [unit] this variable determines which moderator type is used {0: Thermal moderator, 1: Bispectral moderator, 2: Cold moderator}
+* bender: [unit] bender out = 0, bender in = 1
+* b_rot: [unit] rotation of the cold neutron bender
 * 
 * %Link 
 * 
 * %End 
 ********************************************************************************/
 
-DEFINE INSTRUMENT TREX (
+DEFINE INSTRUMENT TRex (
+L0 = 2.4, // wavelength in [Å] used to calculate the minimum and maximum wavelength for the source component by adding and subtracting a set wavelength
+d_Li = 0.845, // wavelength band in [Å] to be simulated
+int mod_type = 1, // this variable determines which moderator type is used {0: Thermal moderator, 1: Bispectral moderator, 2: Cold moderator}
+int bender = 0, // bender out = 0, bender in = 1
+b_rot = -0.5 // rotation of the cold neutron bender
 )
 
 DECLARE 
 %{
+double frac; // Used in the Source component. Defines the statistical fraction of eventsemitted from the cold part of the moderator, the value is determined later in the file depending on the moderator type that was chosen
+double lamb_1; // Wavelength min in [AA]
+double lamb_2; // Wavelength max in [AA]
 %}
 
 INITIALIZE 
 %{
-// Start of initialize for generated TREX
+// Start of initialize for generated TRex
+
+// Source type
+switch (mod_type)
+	{
+	case 0: {frac = 0.0; break;} // Thermal moderator
+	case 1: {frac = 0.5; break;} // Bispectral moderator
+	case 2: {frac = 1.0; break;} // Cold moderator
+	}
+// Source parameters
+lamb_1 = L0-d_Li*1.1;
+lamb_2 = L0+d_Li*1.1;
+
+printf("lamb_1: %g \n", lamb_1);
+printf("lamb_2: %g \n", lamb_2);
 %}
 
 TRACE 
 COMPONENT source = ESS_butterfly(
  sector = "W", beamline = 7,
- yheight = 0.03, cold_frac = 0.5,
+ yheight = 0.03, cold_frac = frac,
  dist = 2, focus_xw = 0.095,
- focus_yh = 0.035, Lmin = 1.4705,
- Lmax = 3.3295, n_pulses = 1,
+ focus_yh = 0.035, Lmin = lamb_1,
+ Lmax = lamb_2, n_pulses = 1,
  acc_power = 2)
 AT (0, 0, 0) ABSOLUTE
 
+// Note: -0.002 because guide is asymmetric here (47mm-43mm)/2
 COMPONENT source_monitor_xy = Monitor_nD(
  xwidth = 0.1, yheight = 0.04,
  restore_neutron = 1, options = "x limits [-0.06:0.06] bins = 100, y limits [-0.03:0.03] bins = 100",
@@ -72,6 +100,7 @@ COMPONENT source_monitor_lam = Monitor_nD(
  filename = "source_monitor_lam.dat")
 AT (-0.002, 0, 1.8955) ABSOLUTE
 
+// NBOA section
 COMPONENT guide_0 = Guide_anyshape_r(
  geometry = "./OFF_files/try0.off")
 AT (0, 0, 0) ABSOLUTE
@@ -100,9 +129,177 @@ COMPONENT guide_8 = Guide_anyshape_r(
  geometry = "./OFF_files/try8.off")
 AT (0, 0, 0) ABSOLUTE
 
+// BBGOA: thermal -> guide 10 & 11; cold: bender & guide 11
+COMPONENT guide_10 = Guide_anyshape_r(
+ geometry = "./OFF_files/try10.off")
+WHEN (bender==0)
+AT (0, 0, 0) ABSOLUTE
+
+// bender: 63.84mm x 46mm x 50mm (WxHxL), 0.15mm Si channels/ NiTi m=4 curve=7.2m
+COMPONENT bender = Pol_bender(
+ xwidth = 0.06384, yheight = 0.046,
+ length = 0.05, radius = 7.2,
+ nslit = 425, d = 1e-06,
+ endFlat = 0, rTopUpPar = {0.99, 3.02, 4.0, 0.0219, 0.003},
+ rTopDownPar = {0.99, 3.02, 4.0, 0.0219, 0.003}, drawOption = 2)
+WHEN (bender==1)
+AT (-0.017, 0, 5.399) ABSOLUTE
+ROTATED (0.00192, b_rot, 0) ABSOLUTE
+
+COMPONENT guide_11 = Guide_anyshape_r(
+ geometry = "./OFF_files/try11.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT slit = Slit(
+ xwidth = 0.06, yheight = 0.046)
+AT (-0.017, 0, 5.915) ABSOLUTE
+
+COMPONENT insert_monitor_xy = Monitor_nD(
+ xwidth = 0.06, yheight = 0.046,
+ restore_neutron = 1, options = "x limits [-0.04:0.04] bins = 100, y limits [-0.033:0.033] bins = 100",
+ filename = "insert_monitor_xy.dat")
+AT (-0.017, 0.0, 5.9151) ABSOLUTE
+
+COMPONENT insert_monitor_div = Monitor_nD(
+ xwidth = 0.06, yheight = 0.046,
+ restore_neutron = 1, options = "hdiv limits [-2.0:2.0] bins = 201, vdiv limits [-1.0:1.0] bins = 201",
+ filename = "insert_monitor_div.dat")
+AT (-0.017, 0, 5.9152) ABSOLUTE
+
+COMPONENT insert_monitor_lam = Monitor_nD(
+ xwidth = 0.06, yheight = 0.046,
+ restore_neutron = 1, options = "lambda limits [0.5:7.0] bins = 130",
+ filename = "insert_monitor_lam.dat")
+AT (-0.017, 0, 5.9153) ABSOLUTE
+
+COMPONENT inset_monitor_ToF = Monitor_nD(
+ xwidth = 0.07, yheight = 0.07,
+ restore_neutron = 1, options = "t limits [0.0:0.020] bins = 20000",
+ filename = "inset_monitor_ToF.dat")
+AT (-0.017, 0, 5.9154) ABSOLUTE
+
+// In-bunker section plus a little bit
+COMPONENT guide_13 = Guide_anyshape_r(
+ geometry = "./OFF_files/try13.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_14 = Guide_anyshape_r(
+ geometry = "./OFF_files/try14.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_15 = Guide_anyshape_r(
+ geometry = "./OFF_files/try15.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_16 = Guide_anyshape_r(
+ geometry = "./OFF_files/try16.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_18 = Guide_anyshape_r(
+ geometry = "./OFF_files/try18.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_19 = Guide_anyshape_r(
+ geometry = "./OFF_files/try19.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_20 = Guide_anyshape_r(
+ geometry = "./OFF_files/try20.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_22 = Guide_anyshape_r(
+ geometry = "./OFF_files/try22.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_23 = Guide_anyshape_r(
+ geometry = "./OFF_files/try23.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_24 = Guide_anyshape_r(
+ geometry = "./OFF_files/try24.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_25 = Guide_anyshape_r(
+ geometry = "./OFF_files/try25.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_27 = Guide_anyshape_r(
+ geometry = "./OFF_files/try27.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_28 = Guide_anyshape_r(
+ geometry = "./OFF_files/try28.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_29 = Guide_anyshape_r(
+ geometry = "./OFF_files/try29.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_30 = Guide_anyshape_r(
+ geometry = "./OFF_files/try30.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_32 = Guide_anyshape_r(
+ geometry = "./OFF_files/try32.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_33 = Guide_anyshape_r(
+ geometry = "./OFF_files/try33.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_34 = Guide_anyshape_r(
+ geometry = "./OFF_files/try34.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_36 = Guide_anyshape_r(
+ geometry = "./OFF_files/try36.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_37 = Guide_anyshape_r(
+ geometry = "./OFF_files/try37.off")
+AT (0, 0, 0) ABSOLUTE
+
+// Bunker wall insert starts here
+COMPONENT guide_39 = Guide_anyshape_r(
+ geometry = "./OFF_files/try39.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_40 = Guide_anyshape_r(
+ geometry = "./OFF_files/try40.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_41 = Guide_anyshape_r(
+ geometry = "./OFF_files/try41.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_42 = Guide_anyshape_r(
+ geometry = "./OFF_files/try42.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_44 = Guide_anyshape_r(
+ geometry = "./OFF_files/try44.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_45 = Guide_anyshape_r(
+ geometry = "./OFF_files/try45.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_46 = Guide_anyshape_r(
+ geometry = "./OFF_files/try46.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_47 = Guide_anyshape_r(
+ geometry = "./OFF_files/try47.off")
+AT (0, 0, 0) ABSOLUTE
+
+// Bandwidth chopper 1 
+COMPONENT BW_Chopper_1 = MultiDiskChopper()
+AT (0.011348994153930106, 0.0, 32.0) ABSOLUTE
+ROTATED (0, 0.12454202414165, 0) ABSOLUTE
+
 FINALLY 
 %{
-// Start of finally for generated TREX
+// Start of finally for generated TRex
 %}
 
 END

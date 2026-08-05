@@ -15,7 +15,7 @@
 * 
 * %Identification
 * Written by: Bing Li
-* Date: 15:13:07 on August 05, 2026
+* Date: 18:49:37 on August 05, 2026
 * Origin: DMSC
 * %INSTRUMENT_SITE: Generated_instruments
 * 
@@ -335,14 +335,7 @@ COMPONENT guide_47 = Guide_anyshape_r(
  geometry = "./OFF_files/try47.off")
 AT (0, 0, 0) ABSOLUTE
 
-// 
-/* --------------------------------------------------------------------------- */
-/* Al WINDOWS: OoBG entry — 0.6mm Al at 41.978m and 41.998m                   */
-/* (ToO: Window 41977.26-41977.86, Window 41997.85-41998.45)                  */
-/* "Start of OoBG Tranche 1 (42m)"; guide ~60mm x 85mm                        */
-/* 0.6mm windows are thinner than IBG ones (lower background outside bunker)  */
-/* --------------------------------------------------------------------------- */
-
+// Bandwidth chopper 1 
 COMPONENT BW_Chopper_1 = MultiDiskChopper(
  slit_center = theta_pos_BW1, slit_width = theta_width_BW1,
  nslits = nslits_BW1, delta_y = delta_y_BW1,
@@ -350,6 +343,25 @@ COMPONENT BW_Chopper_1 = MultiDiskChopper(
  radius = radius_BW1)
 AT (0.011348994153930106, 0.0, 32.0) ABSOLUTE
 ROTATED (0, 0.12454202414165, 0) ABSOLUTE
+
+COMPONENT B1_monitor_xy = Monitor_nD(
+ xwidth = 0.07, yheight = 0.09,
+ restore_neutron = 1, options = "x limits [-0.035:0.035] bins = 100, y limits [-0.045:0.045] bins = 100",
+ filename = "BW1_monitor_xy.dat")
+AT (0.011348994153930106, 0, 32.1) ABSOLUTE
+ROTATED (0, 0.12454202414165, 0) ABSOLUTE
+
+COMPONENT B1_monitor_lam = Monitor_nD(
+ xwidth = 0.07, yheight = 0.09,
+ restore_neutron = 1, options = "lambda limits [0.5:10.0] bins = 130",
+ filename = "BW1_monitor_lam.dat")
+AT (0, 0, 1e-06) RELATIVE PREVIOUS
+
+COMPONENT BW1_monitor_ToF = Monitor_nD(
+ xwidth = 0.07, yheight = 0.09,
+ restore_neutron = 1, options = "t limits [0.0:0.050] bins = 20000",
+ filename = "BW1_monitor_ToF.dat")
+AT (0, 0, 1e-06) RELATIVE PREVIOUS
 
 FINALLY 
 %{

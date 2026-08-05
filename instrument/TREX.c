@@ -2,7 +2,7 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: TRex.instr (TRex)
- * Date:       Wed Aug  5 15:13:08 2026
+ * Date:       Wed Aug  5 18:49:38 2026
  * File:       ./TRex.c
  * CFLAGS=  -DUSE_OFF 
  */
@@ -7010,12 +7010,12 @@ typedef struct _struct_instrument_parameters _class_instrument_parameters;
 struct _instrument_struct {
   char   _name[256]; /* the name of this instrument e.g. 'TRex' */
 /* Counters per component instance */
-  double counter_AbsorbProp[50]; /* absorbed events in PROP routines */
-  double counter_N[50], counter_P[50], counter_P2[50]; /* event counters after each component instance */
-  _class_particle _trajectory[50]; /* current trajectory for STORE/RESTORE */
+  double counter_AbsorbProp[53]; /* absorbed events in PROP routines */
+  double counter_N[53], counter_P[53], counter_P2[53]; /* event counters after each component instance */
+  _class_particle _trajectory[53]; /* current trajectory for STORE/RESTORE */
 /* Components position table (absolute and relative coords) */
-  Coords _position_relative[50]; /* positions of all components */
-  Coords _position_absolute[50];
+  Coords _position_relative[53]; /* positions of all components */
+  Coords _position_absolute[53];
   _class_instrument_parameters _parameters; /* instrument parameters */
 } _instrument_var;
 struct _instrument_struct *instrument = & _instrument_var;
@@ -17114,7 +17114,16 @@ typedef struct _struct_MultiDiskChopper _class_MultiDiskChopper;
 _class_MultiDiskChopper _BW_Chopper_1_var;
 #pragma acc declare create ( _BW_Chopper_1_var )
 
-int mcNUMCOMP = 48;
+_class_Monitor_nD _B1_monitor_xy_var;
+#pragma acc declare create ( _B1_monitor_xy_var )
+
+_class_Monitor_nD _B1_monitor_lam_var;
+#pragma acc declare create ( _B1_monitor_lam_var )
+
+_class_Monitor_nD _BW1_monitor_ToF_var;
+#pragma acc declare create ( _BW1_monitor_ToF_var )
+
+int mcNUMCOMP = 51;
 
 /* User declarations from instrument definition. Can define functions. */
 double frac; // Used in the Source component. Defines the statistical fraction of eventsemitted from the cold part of the moderator, the value is determined later in the file depending on the moderator type that was chosen
@@ -21585,6 +21594,596 @@ int _BW_Chopper_1_setpos(void)
   return(0);
 } /* _BW_Chopper_1_setpos */
 
+/* component B1_monitor_xy=Monitor_nD() SETTING, POSITION/ROTATION */
+int _B1_monitor_xy_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_B1_monitor_xy_setpos] component B1_monitor_xy=Monitor_nD() SETTING [Monitor_nD:0]");
+  stracpy(_B1_monitor_xy_var._name, "B1_monitor_xy", 16384);
+  stracpy(_B1_monitor_xy_var._type, "Monitor_nD", 16384);
+  _B1_monitor_xy_var._index=49;
+  int current_setpos_index = 49;
+  if("" && strlen(""))
+    stracpy(_B1_monitor_xy_var._parameters.user0, "" ? "" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.user0[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B1_monitor_xy_var._parameters.user1, "" ? "" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.user1[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B1_monitor_xy_var._parameters.user2, "" ? "" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.user2[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B1_monitor_xy_var._parameters.user3, "" ? "" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.user3[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B1_monitor_xy_var._parameters.user4, "" ? "" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.user4[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B1_monitor_xy_var._parameters.user5, "" ? "" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.user5[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B1_monitor_xy_var._parameters.user6, "" ? "" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.user6[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B1_monitor_xy_var._parameters.user7, "" ? "" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.user7[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B1_monitor_xy_var._parameters.user8, "" ? "" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.user8[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B1_monitor_xy_var._parameters.user9, "" ? "" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.user9[0]='\0';
+  _B1_monitor_xy_var._parameters.xwidth = 0.07;
+  _B1_monitor_xy_var._parameters.yheight = 0.09;
+  _B1_monitor_xy_var._parameters.zdepth = 0;
+  _B1_monitor_xy_var._parameters.xmin = 0;
+  _B1_monitor_xy_var._parameters.xmax = 0;
+  _B1_monitor_xy_var._parameters.ymin = 0;
+  _B1_monitor_xy_var._parameters.ymax = 0;
+  _B1_monitor_xy_var._parameters.zmin = 0;
+  _B1_monitor_xy_var._parameters.zmax = 0;
+  _B1_monitor_xy_var._parameters.bins = 0;
+  _B1_monitor_xy_var._parameters.min = -1e40;
+  _B1_monitor_xy_var._parameters.max = 1e40;
+  _B1_monitor_xy_var._parameters.restore_neutron = 1;
+  _B1_monitor_xy_var._parameters.radius = 0;
+  if("x limits [-0.035:0.035] bins = 100, y limits [-0.045:0.045] bins = 100" && strlen("x limits [-0.035:0.035] bins = 100, y limits [-0.045:0.045] bins = 100"))
+    stracpy(_B1_monitor_xy_var._parameters.options, "x limits [-0.035:0.035] bins = 100, y limits [-0.045:0.045] bins = 100" ? "x limits [-0.035:0.035] bins = 100, y limits [-0.045:0.045] bins = 100" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.options[0]='\0';
+  if("BW1_monitor_xy.dat" && strlen("BW1_monitor_xy.dat"))
+    stracpy(_B1_monitor_xy_var._parameters.filename, "BW1_monitor_xy.dat" ? "BW1_monitor_xy.dat" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.filename[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B1_monitor_xy_var._parameters.geometry, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.geometry[0]='\0';
+  _B1_monitor_xy_var._parameters.nowritefile = 0;
+  _B1_monitor_xy_var._parameters.nexus_bins = 0;
+  if("NULL" && strlen("NULL"))
+    stracpy(_B1_monitor_xy_var._parameters.username0, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.username0[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B1_monitor_xy_var._parameters.username1, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.username1[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B1_monitor_xy_var._parameters.username2, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.username2[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B1_monitor_xy_var._parameters.username3, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.username3[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B1_monitor_xy_var._parameters.username4, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.username4[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B1_monitor_xy_var._parameters.username5, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.username5[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B1_monitor_xy_var._parameters.username6, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.username6[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B1_monitor_xy_var._parameters.username7, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.username7[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B1_monitor_xy_var._parameters.username8, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.username8[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B1_monitor_xy_var._parameters.username9, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B1_monitor_xy_var._parameters.username9[0]='\0';
+
+
+  /* component B1_monitor_xy=Monitor_nD() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_B1_monitor_xy_var._rotation_absolute,
+      (0)*DEG2RAD, (0.12454202414165)*DEG2RAD, (0)*DEG2RAD);
+    rot_transpose(_BW_Chopper_1_var._rotation_absolute, tr1);
+    rot_mul(_B1_monitor_xy_var._rotation_absolute, tr1, _B1_monitor_xy_var._rotation_relative);
+    _B1_monitor_xy_var._rotation_is_identity =  rot_test_identity(_B1_monitor_xy_var._rotation_relative);
+    _B1_monitor_xy_var._position_absolute = coords_set(
+      0.011348994153930106, 0, 32.1);
+    tc1 = coords_sub(_BW_Chopper_1_var._position_absolute, _B1_monitor_xy_var._position_absolute);
+    _B1_monitor_xy_var._position_relative = rot_apply(_B1_monitor_xy_var._rotation_absolute, tc1);
+  } /* B1_monitor_xy=Monitor_nD() AT ROTATED */
+  DEBUG_COMPONENT("B1_monitor_xy", _B1_monitor_xy_var._position_absolute, _B1_monitor_xy_var._rotation_absolute);
+  instrument->_position_absolute[49] = _B1_monitor_xy_var._position_absolute;
+  instrument->_position_relative[49] = _B1_monitor_xy_var._position_relative;
+    _B1_monitor_xy_var._position_relative_is_zero =  coords_test_zero(_B1_monitor_xy_var._position_relative);
+  instrument->counter_N[49]  = instrument->counter_P[49] = instrument->counter_P2[49] = 0;
+  instrument->counter_AbsorbProp[49]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0048_B1_monitor_xy", _B1_monitor_xy_var._position_absolute, _B1_monitor_xy_var._rotation_absolute, "Monitor_nD");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "user0", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "user1", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "user2", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "user3", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "user4", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "user5", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "user6", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "user7", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "user8", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "user9", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "xwidth", "0", "0.07","MCNUM");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "yheight", "0", "0.09","MCNUM");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "xmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "xmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "ymin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "ymax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "zmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "zmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "min", "-1e40", "-1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "max", "1e40", "1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "restore_neutron", "0", "1","int");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "radius", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "options", "NULL", "x limits [-0.035:0.035] bins = 100, y limits [-0.045:0.045] bins = 100", "char*");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "filename", "NULL", "BW1_monitor_xy.dat", "char*");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "geometry", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "nowritefile", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "nexus_bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "username0", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "username1", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "username2", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "username3", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "username4", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "username5", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "username6", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "username7", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "username8", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0048_B1_monitor_xy", "username9", "NULL", "NULL", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _B1_monitor_xy_setpos */
+
+/* component B1_monitor_lam=Monitor_nD() SETTING, POSITION/ROTATION */
+int _B1_monitor_lam_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_B1_monitor_lam_setpos] component B1_monitor_lam=Monitor_nD() SETTING [Monitor_nD:0]");
+  stracpy(_B1_monitor_lam_var._name, "B1_monitor_lam", 16384);
+  stracpy(_B1_monitor_lam_var._type, "Monitor_nD", 16384);
+  _B1_monitor_lam_var._index=50;
+  int current_setpos_index = 50;
+  if("" && strlen(""))
+    stracpy(_B1_monitor_lam_var._parameters.user0, "" ? "" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.user0[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B1_monitor_lam_var._parameters.user1, "" ? "" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.user1[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B1_monitor_lam_var._parameters.user2, "" ? "" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.user2[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B1_monitor_lam_var._parameters.user3, "" ? "" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.user3[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B1_monitor_lam_var._parameters.user4, "" ? "" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.user4[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B1_monitor_lam_var._parameters.user5, "" ? "" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.user5[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B1_monitor_lam_var._parameters.user6, "" ? "" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.user6[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B1_monitor_lam_var._parameters.user7, "" ? "" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.user7[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B1_monitor_lam_var._parameters.user8, "" ? "" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.user8[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B1_monitor_lam_var._parameters.user9, "" ? "" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.user9[0]='\0';
+  _B1_monitor_lam_var._parameters.xwidth = 0.07;
+  _B1_monitor_lam_var._parameters.yheight = 0.09;
+  _B1_monitor_lam_var._parameters.zdepth = 0;
+  _B1_monitor_lam_var._parameters.xmin = 0;
+  _B1_monitor_lam_var._parameters.xmax = 0;
+  _B1_monitor_lam_var._parameters.ymin = 0;
+  _B1_monitor_lam_var._parameters.ymax = 0;
+  _B1_monitor_lam_var._parameters.zmin = 0;
+  _B1_monitor_lam_var._parameters.zmax = 0;
+  _B1_monitor_lam_var._parameters.bins = 0;
+  _B1_monitor_lam_var._parameters.min = -1e40;
+  _B1_monitor_lam_var._parameters.max = 1e40;
+  _B1_monitor_lam_var._parameters.restore_neutron = 1;
+  _B1_monitor_lam_var._parameters.radius = 0;
+  if("lambda limits [0.5:10.0] bins = 130" && strlen("lambda limits [0.5:10.0] bins = 130"))
+    stracpy(_B1_monitor_lam_var._parameters.options, "lambda limits [0.5:10.0] bins = 130" ? "lambda limits [0.5:10.0] bins = 130" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.options[0]='\0';
+  if("BW1_monitor_lam.dat" && strlen("BW1_monitor_lam.dat"))
+    stracpy(_B1_monitor_lam_var._parameters.filename, "BW1_monitor_lam.dat" ? "BW1_monitor_lam.dat" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.filename[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B1_monitor_lam_var._parameters.geometry, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.geometry[0]='\0';
+  _B1_monitor_lam_var._parameters.nowritefile = 0;
+  _B1_monitor_lam_var._parameters.nexus_bins = 0;
+  if("NULL" && strlen("NULL"))
+    stracpy(_B1_monitor_lam_var._parameters.username0, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.username0[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B1_monitor_lam_var._parameters.username1, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.username1[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B1_monitor_lam_var._parameters.username2, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.username2[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B1_monitor_lam_var._parameters.username3, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.username3[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B1_monitor_lam_var._parameters.username4, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.username4[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B1_monitor_lam_var._parameters.username5, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.username5[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B1_monitor_lam_var._parameters.username6, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.username6[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B1_monitor_lam_var._parameters.username7, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.username7[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B1_monitor_lam_var._parameters.username8, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.username8[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B1_monitor_lam_var._parameters.username9, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B1_monitor_lam_var._parameters.username9[0]='\0';
+
+
+  /* component B1_monitor_lam=Monitor_nD() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(tr1,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_mul(tr1, _B1_monitor_xy_var._rotation_absolute, _B1_monitor_lam_var._rotation_absolute);
+    rot_transpose(_B1_monitor_xy_var._rotation_absolute, tr1);
+    rot_mul(_B1_monitor_lam_var._rotation_absolute, tr1, _B1_monitor_lam_var._rotation_relative);
+    _B1_monitor_lam_var._rotation_is_identity =  rot_test_identity(_B1_monitor_lam_var._rotation_relative);
+    tc1 = coords_set(
+      0, 0, 1e-06);
+    rot_transpose(_B1_monitor_xy_var._rotation_absolute, tr1);
+    tc2 = rot_apply(tr1, tc1);
+    _B1_monitor_lam_var._position_absolute = coords_add(_B1_monitor_xy_var._position_absolute, tc2);
+    tc1 = coords_sub(_B1_monitor_xy_var._position_absolute, _B1_monitor_lam_var._position_absolute);
+    _B1_monitor_lam_var._position_relative = rot_apply(_B1_monitor_lam_var._rotation_absolute, tc1);
+  } /* B1_monitor_lam=Monitor_nD() AT ROTATED */
+  DEBUG_COMPONENT("B1_monitor_lam", _B1_monitor_lam_var._position_absolute, _B1_monitor_lam_var._rotation_absolute);
+  instrument->_position_absolute[50] = _B1_monitor_lam_var._position_absolute;
+  instrument->_position_relative[50] = _B1_monitor_lam_var._position_relative;
+    _B1_monitor_lam_var._position_relative_is_zero =  coords_test_zero(_B1_monitor_lam_var._position_relative);
+  instrument->counter_N[50]  = instrument->counter_P[50] = instrument->counter_P2[50] = 0;
+  instrument->counter_AbsorbProp[50]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0049_B1_monitor_lam", _B1_monitor_lam_var._position_absolute, _B1_monitor_lam_var._rotation_absolute, "Monitor_nD");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "user0", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "user1", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "user2", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "user3", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "user4", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "user5", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "user6", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "user7", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "user8", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "user9", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "xwidth", "0", "0.07","MCNUM");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "yheight", "0", "0.09","MCNUM");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "xmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "xmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "ymin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "ymax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "zmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "zmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "min", "-1e40", "-1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "max", "1e40", "1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "restore_neutron", "0", "1","int");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "radius", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "options", "NULL", "lambda limits [0.5:10.0] bins = 130", "char*");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "filename", "NULL", "BW1_monitor_lam.dat", "char*");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "geometry", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "nowritefile", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "nexus_bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "username0", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "username1", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "username2", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "username3", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "username4", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "username5", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "username6", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "username7", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "username8", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0049_B1_monitor_lam", "username9", "NULL", "NULL", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _B1_monitor_lam_setpos */
+
+/* component BW1_monitor_ToF=Monitor_nD() SETTING, POSITION/ROTATION */
+int _BW1_monitor_ToF_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_BW1_monitor_ToF_setpos] component BW1_monitor_ToF=Monitor_nD() SETTING [Monitor_nD:0]");
+  stracpy(_BW1_monitor_ToF_var._name, "BW1_monitor_ToF", 16384);
+  stracpy(_BW1_monitor_ToF_var._type, "Monitor_nD", 16384);
+  _BW1_monitor_ToF_var._index=51;
+  int current_setpos_index = 51;
+  if("" && strlen(""))
+    stracpy(_BW1_monitor_ToF_var._parameters.user0, "" ? "" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.user0[0]='\0';
+  if("" && strlen(""))
+    stracpy(_BW1_monitor_ToF_var._parameters.user1, "" ? "" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.user1[0]='\0';
+  if("" && strlen(""))
+    stracpy(_BW1_monitor_ToF_var._parameters.user2, "" ? "" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.user2[0]='\0';
+  if("" && strlen(""))
+    stracpy(_BW1_monitor_ToF_var._parameters.user3, "" ? "" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.user3[0]='\0';
+  if("" && strlen(""))
+    stracpy(_BW1_monitor_ToF_var._parameters.user4, "" ? "" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.user4[0]='\0';
+  if("" && strlen(""))
+    stracpy(_BW1_monitor_ToF_var._parameters.user5, "" ? "" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.user5[0]='\0';
+  if("" && strlen(""))
+    stracpy(_BW1_monitor_ToF_var._parameters.user6, "" ? "" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.user6[0]='\0';
+  if("" && strlen(""))
+    stracpy(_BW1_monitor_ToF_var._parameters.user7, "" ? "" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.user7[0]='\0';
+  if("" && strlen(""))
+    stracpy(_BW1_monitor_ToF_var._parameters.user8, "" ? "" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.user8[0]='\0';
+  if("" && strlen(""))
+    stracpy(_BW1_monitor_ToF_var._parameters.user9, "" ? "" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.user9[0]='\0';
+  _BW1_monitor_ToF_var._parameters.xwidth = 0.07;
+  _BW1_monitor_ToF_var._parameters.yheight = 0.09;
+  _BW1_monitor_ToF_var._parameters.zdepth = 0;
+  _BW1_monitor_ToF_var._parameters.xmin = 0;
+  _BW1_monitor_ToF_var._parameters.xmax = 0;
+  _BW1_monitor_ToF_var._parameters.ymin = 0;
+  _BW1_monitor_ToF_var._parameters.ymax = 0;
+  _BW1_monitor_ToF_var._parameters.zmin = 0;
+  _BW1_monitor_ToF_var._parameters.zmax = 0;
+  _BW1_monitor_ToF_var._parameters.bins = 0;
+  _BW1_monitor_ToF_var._parameters.min = -1e40;
+  _BW1_monitor_ToF_var._parameters.max = 1e40;
+  _BW1_monitor_ToF_var._parameters.restore_neutron = 1;
+  _BW1_monitor_ToF_var._parameters.radius = 0;
+  if("t limits [0.0:0.050] bins = 20000" && strlen("t limits [0.0:0.050] bins = 20000"))
+    stracpy(_BW1_monitor_ToF_var._parameters.options, "t limits [0.0:0.050] bins = 20000" ? "t limits [0.0:0.050] bins = 20000" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.options[0]='\0';
+  if("BW1_monitor_ToF.dat" && strlen("BW1_monitor_ToF.dat"))
+    stracpy(_BW1_monitor_ToF_var._parameters.filename, "BW1_monitor_ToF.dat" ? "BW1_monitor_ToF.dat" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.filename[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_BW1_monitor_ToF_var._parameters.geometry, "NULL" ? "NULL" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.geometry[0]='\0';
+  _BW1_monitor_ToF_var._parameters.nowritefile = 0;
+  _BW1_monitor_ToF_var._parameters.nexus_bins = 0;
+  if("NULL" && strlen("NULL"))
+    stracpy(_BW1_monitor_ToF_var._parameters.username0, "NULL" ? "NULL" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.username0[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_BW1_monitor_ToF_var._parameters.username1, "NULL" ? "NULL" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.username1[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_BW1_monitor_ToF_var._parameters.username2, "NULL" ? "NULL" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.username2[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_BW1_monitor_ToF_var._parameters.username3, "NULL" ? "NULL" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.username3[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_BW1_monitor_ToF_var._parameters.username4, "NULL" ? "NULL" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.username4[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_BW1_monitor_ToF_var._parameters.username5, "NULL" ? "NULL" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.username5[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_BW1_monitor_ToF_var._parameters.username6, "NULL" ? "NULL" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.username6[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_BW1_monitor_ToF_var._parameters.username7, "NULL" ? "NULL" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.username7[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_BW1_monitor_ToF_var._parameters.username8, "NULL" ? "NULL" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.username8[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_BW1_monitor_ToF_var._parameters.username9, "NULL" ? "NULL" : "", 16384);
+  else 
+  _BW1_monitor_ToF_var._parameters.username9[0]='\0';
+
+
+  /* component BW1_monitor_ToF=Monitor_nD() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(tr1,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_mul(tr1, _B1_monitor_lam_var._rotation_absolute, _BW1_monitor_ToF_var._rotation_absolute);
+    rot_transpose(_B1_monitor_lam_var._rotation_absolute, tr1);
+    rot_mul(_BW1_monitor_ToF_var._rotation_absolute, tr1, _BW1_monitor_ToF_var._rotation_relative);
+    _BW1_monitor_ToF_var._rotation_is_identity =  rot_test_identity(_BW1_monitor_ToF_var._rotation_relative);
+    tc1 = coords_set(
+      0, 0, 1e-06);
+    rot_transpose(_B1_monitor_lam_var._rotation_absolute, tr1);
+    tc2 = rot_apply(tr1, tc1);
+    _BW1_monitor_ToF_var._position_absolute = coords_add(_B1_monitor_lam_var._position_absolute, tc2);
+    tc1 = coords_sub(_B1_monitor_lam_var._position_absolute, _BW1_monitor_ToF_var._position_absolute);
+    _BW1_monitor_ToF_var._position_relative = rot_apply(_BW1_monitor_ToF_var._rotation_absolute, tc1);
+  } /* BW1_monitor_ToF=Monitor_nD() AT ROTATED */
+  DEBUG_COMPONENT("BW1_monitor_ToF", _BW1_monitor_ToF_var._position_absolute, _BW1_monitor_ToF_var._rotation_absolute);
+  instrument->_position_absolute[51] = _BW1_monitor_ToF_var._position_absolute;
+  instrument->_position_relative[51] = _BW1_monitor_ToF_var._position_relative;
+    _BW1_monitor_ToF_var._position_relative_is_zero =  coords_test_zero(_BW1_monitor_ToF_var._position_relative);
+  instrument->counter_N[51]  = instrument->counter_P[51] = instrument->counter_P2[51] = 0;
+  instrument->counter_AbsorbProp[51]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0050_BW1_monitor_ToF", _BW1_monitor_ToF_var._position_absolute, _BW1_monitor_ToF_var._rotation_absolute, "Monitor_nD");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "user0", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "user1", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "user2", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "user3", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "user4", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "user5", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "user6", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "user7", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "user8", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "user9", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "xwidth", "0", "0.07","MCNUM");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "yheight", "0", "0.09","MCNUM");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "xmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "xmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "ymin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "ymax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "zmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "zmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "min", "-1e40", "-1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "max", "1e40", "1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "restore_neutron", "0", "1","int");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "radius", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "options", "NULL", "t limits [0.0:0.050] bins = 20000", "char*");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "filename", "NULL", "BW1_monitor_ToF.dat", "char*");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "geometry", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "nowritefile", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "nexus_bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "username0", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "username1", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "username2", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "username3", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "username4", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "username5", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "username6", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "username7", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "username8", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0050_BW1_monitor_ToF", "username9", "NULL", "NULL", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _BW1_monitor_ToF_setpos */
+
 _class_ESS_butterfly *class_ESS_butterfly_init(_class_ESS_butterfly *_comp
 ) {
   #define sector (_comp->_parameters.sector)
@@ -22883,6 +23482,9 @@ nslits_BW1 = 1;
   _guide_46_setpos(); /* type Guide_anyshape_r */
   _guide_47_setpos(); /* type Guide_anyshape_r */
   _BW_Chopper_1_setpos(); /* type MultiDiskChopper */
+  _B1_monitor_xy_setpos(); /* type Monitor_nD */
+  _B1_monitor_lam_setpos(); /* type Monitor_nD */
+  _BW1_monitor_ToF_setpos(); /* type Monitor_nD */
 
   /* call iteratively all components INITIALISE */
   class_ESS_butterfly_init(&_source_var);
@@ -22981,6 +23583,12 @@ nslits_BW1 = 1;
 
   class_MultiDiskChopper_init(&_BW_Chopper_1_var);
 
+  class_Monitor_nD_init(&_B1_monitor_xy_var);
+
+  class_Monitor_nD_init(&_B1_monitor_lam_var);
+
+  class_Monitor_nD_init(&_BW1_monitor_ToF_var);
+
   if (mcdotrace) display();
   DEBUG_INSTR_END();
 
@@ -23034,6 +23642,9 @@ nslits_BW1 = 1;
 #pragma acc update device(_guide_46_var)
 #pragma acc update device(_guide_47_var)
 #pragma acc update device(_BW_Chopper_1_var)
+#pragma acc update device(_B1_monitor_xy_var)
+#pragma acc update device(_B1_monitor_lam_var)
+#pragma acc update device(_BW1_monitor_ToF_var)
 #pragma acc update device(_instrument_var)
 #endif
 
@@ -25351,7 +25962,70 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       _particle->_index++;
       if (!ABSORBED) { DEBUG_STATE(); }
     } /* end component BW_Chopper_1 [48] */
-    if (_particle->_index > 48)
+    /* begin component B1_monitor_xy=Monitor_nD() [49] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_B1_monitor_xy_var._rotation_is_identity) {
+        if(!_B1_monitor_xy_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _B1_monitor_xy_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_B1_monitor_xy_var._position_relative, _B1_monitor_xy_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 49) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_B1_monitor_xy_var._name);
+      DEBUG_STATE();
+      class_Monitor_nD_trace(&_B1_monitor_xy_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component B1_monitor_xy [49] */
+    /* begin component B1_monitor_lam=Monitor_nD() [50] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_B1_monitor_lam_var._rotation_is_identity) {
+        if(!_B1_monitor_lam_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _B1_monitor_lam_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_B1_monitor_lam_var._position_relative, _B1_monitor_lam_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 50) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_B1_monitor_lam_var._name);
+      DEBUG_STATE();
+      class_Monitor_nD_trace(&_B1_monitor_lam_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component B1_monitor_lam [50] */
+    /* begin component BW1_monitor_ToF=Monitor_nD() [51] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_BW1_monitor_ToF_var._rotation_is_identity) {
+        if(!_BW1_monitor_ToF_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _BW1_monitor_ToF_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_BW1_monitor_ToF_var._position_relative, _BW1_monitor_ToF_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 51) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_BW1_monitor_ToF_var._name);
+      DEBUG_STATE();
+      class_Monitor_nD_trace(&_BW1_monitor_ToF_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component BW1_monitor_ToF [51] */
+    if (_particle->_index > 51)
       ABSORBED++; /* absorbed when passed all components */
   } /* while !ABSORBED */
 
@@ -26237,6 +26911,51 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         _particle->_index++;
       }
 
+      // B1_monitor_xy
+    if (!ABSORBED && _particle->_index == 49) {
+#ifndef MULTICORE
+        if (_B1_monitor_xy_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _B1_monitor_xy_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_B1_monitor_xy_var._position_relative, _B1_monitor_xy_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Monitor_nD_trace(&_B1_monitor_xy_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // B1_monitor_lam
+    if (!ABSORBED && _particle->_index == 50) {
+#ifndef MULTICORE
+        if (_B1_monitor_lam_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _B1_monitor_lam_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_B1_monitor_lam_var._position_relative, _B1_monitor_lam_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Monitor_nD_trace(&_B1_monitor_lam_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // BW1_monitor_ToF
+    if (!ABSORBED && _particle->_index == 51) {
+#ifndef MULTICORE
+        if (_BW1_monitor_ToF_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _BW1_monitor_ToF_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_BW1_monitor_ToF_var._position_relative, _BW1_monitor_ToF_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Monitor_nD_trace(&_BW1_monitor_ToF_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
     }
 
     // jump to next viable seed
@@ -26447,6 +27166,12 @@ int save(FILE *handle) { /* called by mccode_main for TRex:SAVE */
 
 
 
+
+  class_Monitor_nD_save(&_B1_monitor_xy_var);
+
+  class_Monitor_nD_save(&_B1_monitor_lam_var);
+
+  class_Monitor_nD_save(&_BW1_monitor_ToF_var);
 
   if (!handle) siminfo_close(); 
 
@@ -26666,6 +27391,9 @@ int finally(void) { /* called by mccode_main for TRex:FINALLY */
 #pragma acc update host(_guide_46_var)
 #pragma acc update host(_guide_47_var)
 #pragma acc update host(_BW_Chopper_1_var)
+#pragma acc update host(_B1_monitor_xy_var)
+#pragma acc update host(_B1_monitor_lam_var)
+#pragma acc update host(_BW1_monitor_ToF_var)
 #pragma acc update host(_instrument_var)
 
   siminfo_init(NULL);
@@ -26742,6 +27470,12 @@ int finally(void) { /* called by mccode_main for TRex:FINALLY */
 
 
   class_MultiDiskChopper_finally(&_BW_Chopper_1_var);
+
+  class_Monitor_nD_finally(&_B1_monitor_xy_var);
+
+  class_Monitor_nD_finally(&_B1_monitor_lam_var);
+
+  class_Monitor_nD_finally(&_BW1_monitor_ToF_var);
 
   siminfo_close(); 
 
@@ -27451,6 +28185,12 @@ int display(void) { /* called by mccode_main for TRex:DISPLAY */
 
   class_MultiDiskChopper_display(&_BW_Chopper_1_var);
 
+  class_Monitor_nD_display(&_B1_monitor_xy_var);
+
+  class_Monitor_nD_display(&_B1_monitor_lam_var);
+
+  class_Monitor_nD_display(&_BW1_monitor_ToF_var);
+
   printf("MCDISPLAY: end\n");
 
   return(0);
@@ -27510,6 +28250,9 @@ void* _getvar_parameters(char* compname)
   if (!strcmp(compname, "guide_46")) return (void *) &(_guide_46_var._parameters);
   if (!strcmp(compname, "guide_47")) return (void *) &(_guide_47_var._parameters);
   if (!strcmp(compname, "BW_Chopper_1")) return (void *) &(_BW_Chopper_1_var._parameters);
+  if (!strcmp(compname, "B1_monitor_xy")) return (void *) &(_B1_monitor_xy_var._parameters);
+  if (!strcmp(compname, "B1_monitor_lam")) return (void *) &(_B1_monitor_lam_var._parameters);
+  if (!strcmp(compname, "BW1_monitor_ToF")) return (void *) &(_BW1_monitor_ToF_var._parameters);
   return 0;
 }
 
@@ -27571,6 +28314,9 @@ int _getcomp_index(char* compname)
   if (!strcmp(compname, "guide_46")) return 46;
   if (!strcmp(compname, "guide_47")) return 47;
   if (!strcmp(compname, "BW_Chopper_1")) return 48;
+  if (!strcmp(compname, "B1_monitor_xy")) return 49;
+  if (!strcmp(compname, "B1_monitor_lam")) return 50;
+  if (!strcmp(compname, "BW1_monitor_ToF")) return 51;
   return -1;
 }
 

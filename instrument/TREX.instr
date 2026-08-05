@@ -15,7 +15,7 @@
 * 
 * %Identification
 * Written by: Bing Li
-* Date: 17:40:10 on August 04, 2026
+* Date: 15:13:07 on August 05, 2026
 * Origin: DMSC
 * %INSTRUMENT_SITE: Generated_instruments
 * 
@@ -50,6 +50,28 @@ DECLARE
 double frac; // Used in the Source component. Defines the statistical fraction of eventsemitted from the cold part of the moderator, the value is determined later in the file depending on the moderator type that was chosen
 double lamb_1; // Wavelength min in [AA]
 double lamb_2; // Wavelength max in [AA]
+double T_offset = 0.0017; // Time offset in [s] to shift to the center of long pulse
+double f = 14.0; // Source frequency in [Hz]
+
+
+double tof_BW1;
+
+// characteristic wavelength
+double v0;
+
+
+// BW1 Chopper
+
+double L_BW1 = 32;
+
+double f_BW1;
+double radius_BW1;
+char theta_pos_BW1[256] = "0";
+char theta_width_BW1[256] = "61.4";
+double delta_y_BW1;
+double delay_BW1; //time delay
+double nslits_BW1;
+
 %}
 
 INITIALIZE 
@@ -69,6 +91,27 @@ lamb_2 = L0+d_Li*1.1;
 
 printf("lamb_1: %g \n", lamb_1);
 printf("lamb_2: %g \n", lamb_2);
+
+// frequencies
+f_BW1 = f;
+
+
+// characteristic wavelength 
+
+v0 = 2*PI*K2V/L0;       // speed center neutron
+
+
+// time of flight and chopper phases
+tof_BW1 = T_offset + L_BW1/v0;
+
+// Chopper parameters
+
+// BW1 Chopper
+radius_BW1 = 0.35;
+delta_y_BW1 = -0.3075;
+delay_BW1 = tof_BW1; //time delay
+nslits_BW1 = 1;
+
 %}
 
 TRACE 
@@ -292,8 +335,19 @@ COMPONENT guide_47 = Guide_anyshape_r(
  geometry = "./OFF_files/try47.off")
 AT (0, 0, 0) ABSOLUTE
 
-// Bandwidth chopper 1 
-COMPONENT BW_Chopper_1 = MultiDiskChopper()
+// 
+/* --------------------------------------------------------------------------- */
+/* Al WINDOWS: OoBG entry — 0.6mm Al at 41.978m and 41.998m                   */
+/* (ToO: Window 41977.26-41977.86, Window 41997.85-41998.45)                  */
+/* "Start of OoBG Tranche 1 (42m)"; guide ~60mm x 85mm                        */
+/* 0.6mm windows are thinner than IBG ones (lower background outside bunker)  */
+/* --------------------------------------------------------------------------- */
+
+COMPONENT BW_Chopper_1 = MultiDiskChopper(
+ slit_center = theta_pos_BW1, slit_width = theta_width_BW1,
+ nslits = nslits_BW1, delta_y = delta_y_BW1,
+ nu = f_BW1, delay = delay_BW1,
+ radius = radius_BW1)
 AT (0.011348994153930106, 0.0, 32.0) ABSOLUTE
 ROTATED (0, 0.12454202414165, 0) ABSOLUTE
 

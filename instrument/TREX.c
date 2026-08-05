@@ -2,7 +2,7 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: TRex.instr (TRex)
- * Date:       Tue Aug  4 17:40:11 2026
+ * Date:       Wed Aug  5 15:13:08 2026
  * File:       ./TRex.c
  * CFLAGS=  -DUSE_OFF 
  */
@@ -18,7 +18,7 @@
 #pragma warning(disable: 4068)
 #endif
 
-#define MCCODE_STRING " 3.7.15, git"
+#define MCCODE_STRING " 3.7.17, git"
 #define FLAVOR        "mcstas"
 #define FLAVOR_UPPER  "MCSTAS"
 
@@ -237,7 +237,7 @@ void particle_uservar_init(_class_particle *p){
 * %Identification
 * Written by: KN
 * Date:    Aug 29, 1997
-* Release: mcstas 3.7.15
+* Release: mcstas 3.7.17
 * Version: $Revision$
 *
 * Runtime system header for McStas/McXtrace.
@@ -423,7 +423,7 @@ clock_t times (struct tms *__buffer) {
 
 /* the version string is replaced when building distribution with mkdist */
 #ifndef MCCODE_STRING
-#  define MCCODE_STRING " 3.7.15, git"
+#  define MCCODE_STRING " 3.7.17, git"
 #endif
 
 #ifndef MCCODE_DATE
@@ -431,11 +431,11 @@ clock_t times (struct tms *__buffer) {
 #endif
 
 #ifndef MCCODE_VERSION
-#  define MCCODE_VERSION "3.7.15"
+#  define MCCODE_VERSION "3.7.17"
 #endif
 
 #ifndef __MCCODE_VERSION__
-#define __MCCODE_VERSION__ 307015L
+#define __MCCODE_VERSION__ 307017L
 #endif
 
 #ifndef MCCODE_NAME
@@ -6982,7 +6982,7 @@ int traceenabled = 1;
 #else
 int traceenabled = 0;
 #endif
-#define MCSTAS "/Users/bingli/Documents/GitHub/mdnorm/.pixi/envs/default/share/mcstas/resources/"
+#define MCSTAS "/Users/bingli/GitHub/md_norm/.pixi/envs/default/share/mcstas/resources/"
 int   defaultmain         = 1;
 char  instrument_name[]   = "TRex";
 char  instrument_source[] = "TRex.instr";
@@ -17120,6 +17120,28 @@ int mcNUMCOMP = 48;
 double frac; // Used in the Source component. Defines the statistical fraction of eventsemitted from the cold part of the moderator, the value is determined later in the file depending on the moderator type that was chosen
 double lamb_1; // Wavelength min in [AA]
 double lamb_2; // Wavelength max in [AA]
+double T_offset = 0.0017; // Time offset in [s] to shift to the center of long pulse
+double f = 14.0; // Source frequency in [Hz]
+
+
+double tof_BW1;
+
+// characteristic wavelength
+double v0;
+
+
+// BW1 Chopper
+
+double L_BW1 = 32;
+
+double f_BW1;
+double radius_BW1;
+char theta_pos_BW1[256] = "0";
+char theta_width_BW1[256] = "61.4";
+double delta_y_BW1;
+double delay_BW1; //time delay
+double nslits_BW1;
+
 
 #undef compcurname
 #undef compcurtype
@@ -21488,24 +21510,24 @@ int _BW_Chopper_1_setpos(void)
   stracpy(_BW_Chopper_1_var._type, "MultiDiskChopper", 16384);
   _BW_Chopper_1_var._index=48;
   int current_setpos_index = 48;
-  if("0 180" && strlen("0 180"))
-    stracpy(_BW_Chopper_1_var._parameters.slit_center, "0 180" ? "0 180" : "", 16384);
+  if(theta_pos_BW1 && strlen(theta_pos_BW1))
+    stracpy(_BW_Chopper_1_var._parameters.slit_center, theta_pos_BW1 ? theta_pos_BW1 : "", 16384);
   else 
   _BW_Chopper_1_var._parameters.slit_center[0]='\0';
-  if("10 20" && strlen("10 20"))
-    stracpy(_BW_Chopper_1_var._parameters.slit_width, "10 20" ? "10 20" : "", 16384);
+  if(theta_width_BW1 && strlen(theta_width_BW1))
+    stracpy(_BW_Chopper_1_var._parameters.slit_width, theta_width_BW1 ? theta_width_BW1 : "", 16384);
   else 
   _BW_Chopper_1_var._parameters.slit_width[0]='\0';
-  _BW_Chopper_1_var._parameters.nslits = 2;
-  _BW_Chopper_1_var._parameters.delta_y = -0.3;
-  _BW_Chopper_1_var._parameters.nu = 0;
+  _BW_Chopper_1_var._parameters.nslits = nslits_BW1;
+  _BW_Chopper_1_var._parameters.delta_y = delta_y_BW1;
+  _BW_Chopper_1_var._parameters.nu = f_BW1;
   _BW_Chopper_1_var._parameters.nrev = 0;
   _BW_Chopper_1_var._parameters.ratio = 1;
   _BW_Chopper_1_var._parameters.jitter = 0;
-  _BW_Chopper_1_var._parameters.delay = 0;
+  _BW_Chopper_1_var._parameters.delay = delay_BW1;
   _BW_Chopper_1_var._parameters.isfirst = 0;
   _BW_Chopper_1_var._parameters.phase = 0;
-  _BW_Chopper_1_var._parameters.radius = 0.375;
+  _BW_Chopper_1_var._parameters.radius = radius_BW1;
   _BW_Chopper_1_var._parameters.equal = 0;
   _BW_Chopper_1_var._parameters.abs_out = 0;
   _BW_Chopper_1_var._parameters.verbose = 0;
@@ -21539,18 +21561,18 @@ int _BW_Chopper_1_setpos(void)
     if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
     MPI_MASTER(
         mccomp_placement_type_nexus(nxhandle,"0047_BW_Chopper_1", _BW_Chopper_1_var._position_absolute, _BW_Chopper_1_var._rotation_absolute, "MultiDiskChopper");
-        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "slit_center", "0 180", "0 180", "char*");
-        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "slit_width", "10 20", "10 20", "char*");
-        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "nslits", "2", "2","MCNUM");
-        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "delta_y", "-0.3", "-0.3","MCNUM");
-        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "nu", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "slit_center", "0 180", theta_pos_BW1, "char*");
+        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "slit_width", "10 20", theta_width_BW1, "char*");
+        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "nslits", "2", "nslits_BW1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "delta_y", "-0.3", "delta_y_BW1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "nu", "0", "f_BW1","MCNUM");
         mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "nrev", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "ratio", "1", "1","MCNUM");
         mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "jitter", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "delay", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "delay", "0", "delay_BW1","MCNUM");
         mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "isfirst", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "phase", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "radius", "0.375", "0.375","MCNUM");
+        mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "radius", "0.375", "radius_BW1","MCNUM");
         mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "equal", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "abs_out", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0047_BW_Chopper_1", "verbose", "0", "0","MCNUM");
@@ -22786,6 +22808,27 @@ lamb_2 = L0+d_Li*1.1;
 
 printf("lamb_1: %g \n", lamb_1);
 printf("lamb_2: %g \n", lamb_2);
+
+// frequencies
+f_BW1 = f;
+
+
+// characteristic wavelength 
+
+v0 = 2*PI*K2V/L0;       // speed center neutron
+
+
+// time of flight and chopper phases
+tof_BW1 = T_offset + L_BW1/v0;
+
+// Chopper parameters
+
+// BW1 Chopper
+radius_BW1 = 0.35;
+delta_y_BW1 = -0.3075;
+delay_BW1 = tof_BW1; //time delay
+nslits_BW1 = 1;
+
 }
   #undef L0
   #undef d_Li

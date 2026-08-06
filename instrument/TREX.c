@@ -1,8 +1,8 @@
 /* Automatically generated file. Do not edit. 
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
- * Instrument: TRex.instr (TRex)
- * Date:       Thu Aug  6 15:01:19 2026
+ * Instrument: /Users/bingli/Documents/GitHub/mdnorm/instrument/TRex.instr (TRex)
+ * Date:       Thu Aug  6 17:32:48 2026
  * File:       ./TRex.c
  * CFLAGS=  -DUSE_OFF 
  */
@@ -6985,9 +6985,9 @@ int traceenabled = 0;
 #define MCSTAS "/Users/bingli/Documents/GitHub/mdnorm/.pixi/envs/default/share/mcstas/resources/"
 int   defaultmain         = 1;
 char  instrument_name[]   = "TRex";
-char  instrument_source[] = "TRex.instr";
+char  instrument_source[] = "/Users/bingli/Documents/GitHub/mdnorm/instrument/TRex.instr";
 char *instrument_exe      = NULL; /* will be set to argv[0] in main */
-char  instrument_code[]   = "Instrument TRex source code TRex.instr is not embedded in this executable.\n  Use --source option when running mcstas.\n";
+char  instrument_code[]   = "Instrument TRex source code /Users/bingli/Documents/GitHub/mdnorm/instrument/TRex.instr is not embedded in this executable.\n  Use --source option when running mcstas.\n";
 
 int main(int argc, char *argv[]){return mccode_main(argc, argv);}
 
@@ -7001,31 +7001,41 @@ int main(int argc, char *argv[]){return mccode_main(argc, argv);}
 struct _struct_instrument_parameters {
   MCNUM L0;
   MCNUM d_Li;
+  int RRM;
+  int phase_P;
   int mod_type;
   int bender;
   MCNUM b_rot;
 };
 typedef struct _struct_instrument_parameters _class_instrument_parameters;
 
+/* instrument SPLIT and GROUP control logic */
+struct instrument_logic_struct {
+  long Group_PulseShapingChopper1; /* equals index of scattering comp when in group */
+};
+
 struct _instrument_struct {
   char   _name[256]; /* the name of this instrument e.g. 'TRex' */
 /* Counters per component instance */
-  double counter_AbsorbProp[109]; /* absorbed events in PROP routines */
-  double counter_N[109], counter_P[109], counter_P2[109]; /* event counters after each component instance */
-  _class_particle _trajectory[109]; /* current trajectory for STORE/RESTORE */
+  double counter_AbsorbProp[114]; /* absorbed events in PROP routines */
+  double counter_N[114], counter_P[114], counter_P2[114]; /* event counters after each component instance */
+  _class_particle _trajectory[114]; /* current trajectory for STORE/RESTORE */
 /* Components position table (absolute and relative coords) */
-  Coords _position_relative[109]; /* positions of all components */
-  Coords _position_absolute[109];
+  Coords _position_relative[114]; /* positions of all components */
+  Coords _position_absolute[114];
   _class_instrument_parameters _parameters; /* instrument parameters */
+  struct instrument_logic_struct logic; /* instrument logic */
 } _instrument_var;
 struct _instrument_struct *instrument = & _instrument_var;
 #pragma acc declare create ( _instrument_var )
 #pragma acc declare create ( instrument )
 
-int numipar = 5;
+int numipar = 7;
 struct mcinputtable_struct mcinputtable[] = {
   "L0", &(_instrument_var._parameters.L0), instr_type_double, "2.4", "",
   "d_Li", &(_instrument_var._parameters.d_Li), instr_type_double, "0.845", "",
+  "RRM", &(_instrument_var._parameters.RRM), instr_type_int, "18", "",
+  "phase_P", &(_instrument_var._parameters.phase_P), instr_type_int, "0", "",
   "mod_type", &(_instrument_var._parameters.mod_type), instr_type_int, "1", "",
   "bender", &(_instrument_var._parameters.bender), instr_type_int, "0", "",
   "b_rot", &(_instrument_var._parameters.b_rot), instr_type_double, "-0.5", "",
@@ -16624,11 +16634,6 @@ double GetConstantField(double mc_pol_length, double mc_pol_lambda,
     slit_print_if (condition, "Warning", message, component);
   }
 
-/* Shared user declarations for all components types 'Guide_anyshape'. */
-
-
-
-
 
 
 /* ************************************************************************** */
@@ -17128,61 +17133,25 @@ _class_Monitor_nD _B1_monitor_lam_var;
 _class_Monitor_nD _BW1_monitor_ToF_var;
 #pragma acc declare create ( _BW1_monitor_ToF_var )
 
-/* component guide_49=Guide_anyshape() [52] DECLARE */
-/* Parameter definition for component type 'Guide_anyshape' */
-struct _struct_Guide_anyshape_parameters {
-  /* Component type 'Guide_anyshape' setting parameters */
-  MCNUM xwidth;
-  MCNUM yheight;
-  MCNUM zdepth;
-  MCNUM center;
-  MCNUM transmit;
-  MCNUM R0;
-  MCNUM Qc;
-  MCNUM alpha;
-  MCNUM m;
-  MCNUM W;
-  char reflect[16384];
-  char geometry[16384];
-  /* Component type 'Guide_anyshape' private parameters */
-  off_struct  offdata;
-  t_Table  pTable;
-}; /* _struct_Guide_anyshape_parameters */
-typedef struct _struct_Guide_anyshape_parameters _class_Guide_anyshape_parameters;
-
-/* Parameters for component type 'Guide_anyshape' */
-struct _struct_Guide_anyshape {
-  char     _name[256]; /* e.g. guide_49 */
-  char     _type[256]; /* Guide_anyshape */
-  long     _index; /* e.g. 2 index in TRACE list */
-  Coords   _position_absolute;
-  Coords   _position_relative; /* wrt PREVIOUS */
-  Rotation _rotation_absolute;
-  Rotation _rotation_relative; /* wrt PREVIOUS */
-  int      _rotation_is_identity;
-  int      _position_relative_is_zero;
-  _class_Guide_anyshape_parameters _parameters;
-};
-typedef struct _struct_Guide_anyshape _class_Guide_anyshape;
-_class_Guide_anyshape _guide_49_var;
+_class_Guide_anyshape_r _guide_49_var;
 #pragma acc declare create ( _guide_49_var )
 
-_class_Guide_anyshape _guide_50_var;
+_class_Guide_anyshape_r _guide_50_var;
 #pragma acc declare create ( _guide_50_var )
 
-_class_Guide_anyshape _guide_51_var;
+_class_Guide_anyshape_r _guide_51_var;
 #pragma acc declare create ( _guide_51_var )
 
-_class_Guide_anyshape _guide_52_var;
+_class_Guide_anyshape_r _guide_52_var;
 #pragma acc declare create ( _guide_52_var )
 
-_class_Guide_anyshape _guide_53_var;
+_class_Guide_anyshape_r _guide_53_var;
 #pragma acc declare create ( _guide_53_var )
 
-_class_Guide_anyshape _guide_54_var;
+_class_Guide_anyshape_r _guide_54_var;
 #pragma acc declare create ( _guide_54_var )
 
-_class_Guide_anyshape _guide_55_var;
+_class_Guide_anyshape_r _guide_55_var;
 #pragma acc declare create ( _guide_55_var )
 
 _class_MultiDiskChopper _BW_Chopper_2_var;
@@ -17332,7 +17301,62 @@ _class_Guide_anyshape_r _guide_100_var;
 _class_Guide_anyshape_r _guide_101_var;
 #pragma acc declare create ( _guide_101_var )
 
-int mcNUMCOMP = 107;
+/* component PulseShapingChopper1_HR=DiskChopper() [108] DECLARE */
+/* Parameter definition for component type 'DiskChopper' */
+struct _struct_DiskChopper_parameters {
+  /* Component type 'DiskChopper' setting parameters */
+  MCNUM theta_0;
+  MCNUM radius;
+  MCNUM yheight;
+  MCNUM nu;
+  MCNUM nslit;
+  MCNUM jitter;
+  MCNUM delay;
+  MCNUM isfirst;
+  MCNUM n_pulse;
+  MCNUM abs_out;
+  MCNUM phase;
+  MCNUM xwidth;
+  MCNUM verbose;
+  /* Component type 'DiskChopper' private parameters */
+  double  Tg;
+  double  To;
+  double  delta_y;
+  double  height;
+  double  omega;
+}; /* _struct_DiskChopper_parameters */
+typedef struct _struct_DiskChopper_parameters _class_DiskChopper_parameters;
+
+/* Parameters for component type 'DiskChopper' */
+struct _struct_DiskChopper {
+  char     _name[256]; /* e.g. PulseShapingChopper1_HR */
+  char     _type[256]; /* DiskChopper */
+  long     _index; /* e.g. 2 index in TRACE list */
+  Coords   _position_absolute;
+  Coords   _position_relative; /* wrt PREVIOUS */
+  Rotation _rotation_absolute;
+  Rotation _rotation_relative; /* wrt PREVIOUS */
+  int      _rotation_is_identity;
+  int      _position_relative_is_zero;
+  _class_DiskChopper_parameters _parameters;
+};
+typedef struct _struct_DiskChopper _class_DiskChopper;
+_class_DiskChopper _PulseShapingChopper1_HR_var;
+#pragma acc declare create ( _PulseShapingChopper1_HR_var )
+
+_class_DiskChopper _PulseShapingChopper1_HF_var;
+#pragma acc declare create ( _PulseShapingChopper1_HF_var )
+
+_class_MultiDiskChopper _PulseShapingChopper2_var;
+#pragma acc declare create ( _PulseShapingChopper2_var )
+
+_class_Monitor_nD _P_monitor_ToF_var;
+#pragma acc declare create ( _P_monitor_ToF_var )
+
+_class_Monitor_nD _P_monitor_lam_var;
+#pragma acc declare create ( _P_monitor_lam_var )
+
+int mcNUMCOMP = 112;
 
 /* User declarations from instrument definition. Can define functions. */
 double frac; // Used in the Source component. Defines the statistical fraction of eventsemitted from the cold part of the moderator, the value is determined later in the file depending on the moderator type that was chosen
@@ -17344,7 +17368,7 @@ double rTopUpPar[5] = {0.99,0.0219,3.02,4.0,0.003};
 double rTopDownPar[5] = {0.99,0.0219,3.02,4.0,0.003};
 
 
-double tof_BW1, tof_BW2;
+double tof_BW1, tof_BW2, tof_P1, tof_P2;
 
 // characteristic wavelength
 double v0;
@@ -17354,6 +17378,8 @@ double v0;
 // distances
 double L_BW1 = 32;
 double L_BW2 = 40;
+double L_P1 = 107.95;
+double L_P2 = 108.05;
 
 // BW1 Chopper
 double f_BW1;
@@ -17365,7 +17391,7 @@ double delay_BW1; //time delay
 double nslits_BW1;
 
 
- // BW2 Chopper
+// BW2 Chopper
 double f_BW2;
 double radius_BW2;
 char theta_pos_BW2[256] = "0";
@@ -17373,6 +17399,27 @@ char theta_width_BW2[256] = "63.3";
 double delta_y_BW2;
 double delay_BW2; //time delay
 double nslits_BW2;
+
+// P1 Chopper
+double f_P1;
+double radius_P1;
+char theta_pos_P1[256] = "0 -55 -180 -235";
+char theta_width_P1[256] = "2 35 2 35";
+double delta_y_P1;
+double delay_P1; //time delay
+double nslits_P1;
+double phase_P1;// angular delay
+
+
+// P2 Chopper
+double f_P2;
+double radius_P2;
+char theta_pos_P2[256] = "0 -55 -180 -235";
+char theta_width_P2[256] = "2 35 2 35";
+double delta_y_P2;
+double delay_P2; //time delay
+double nslits_P2;
+double phase_P2;// angular delay
 
 
 
@@ -17817,13 +17864,17 @@ int _source_monitor_div_setpos(void)
     tc2 = coords_set(0,0,0);
     Rotation tr1;
     rot_set_rotation(tr1,0,0,0);
-    rot_set_rotation(_source_monitor_div_var._rotation_absolute,
+    rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_mul(tr1, _source_monitor_xy_var._rotation_absolute, _source_monitor_div_var._rotation_absolute);
     rot_transpose(_source_monitor_xy_var._rotation_absolute, tr1);
     rot_mul(_source_monitor_div_var._rotation_absolute, tr1, _source_monitor_div_var._rotation_relative);
     _source_monitor_div_var._rotation_is_identity =  rot_test_identity(_source_monitor_div_var._rotation_relative);
-    _source_monitor_div_var._position_absolute = coords_set(
-      -0.002, 0, 1.8954);
+    tc1 = coords_set(
+      0, 0, 0.0001);
+    rot_transpose(_source_monitor_xy_var._rotation_absolute, tr1);
+    tc2 = rot_apply(tr1, tc1);
+    _source_monitor_div_var._position_absolute = coords_add(_source_monitor_xy_var._position_absolute, tc2);
     tc1 = coords_sub(_source_monitor_xy_var._position_absolute, _source_monitor_div_var._position_absolute);
     _source_monitor_div_var._position_relative = rot_apply(_source_monitor_div_var._rotation_absolute, tc1);
   } /* source_monitor_div=Monitor_nD() AT ROTATED */
@@ -18011,13 +18062,17 @@ int _source_monitor_lam_setpos(void)
     tc2 = coords_set(0,0,0);
     Rotation tr1;
     rot_set_rotation(tr1,0,0,0);
-    rot_set_rotation(_source_monitor_lam_var._rotation_absolute,
+    rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_mul(tr1, _source_monitor_div_var._rotation_absolute, _source_monitor_lam_var._rotation_absolute);
     rot_transpose(_source_monitor_div_var._rotation_absolute, tr1);
     rot_mul(_source_monitor_lam_var._rotation_absolute, tr1, _source_monitor_lam_var._rotation_relative);
     _source_monitor_lam_var._rotation_is_identity =  rot_test_identity(_source_monitor_lam_var._rotation_relative);
-    _source_monitor_lam_var._position_absolute = coords_set(
-      -0.002, 0, 1.8955);
+    tc1 = coords_set(
+      0, 0, 0.0001);
+    rot_transpose(_source_monitor_div_var._rotation_absolute, tr1);
+    tc2 = rot_apply(tr1, tc1);
+    _source_monitor_lam_var._position_absolute = coords_add(_source_monitor_div_var._position_absolute, tc2);
     tc1 = coords_sub(_source_monitor_div_var._position_absolute, _source_monitor_lam_var._position_absolute);
     _source_monitor_lam_var._position_relative = rot_apply(_source_monitor_lam_var._rotation_absolute, tc1);
   } /* source_monitor_lam=Monitor_nD() AT ROTATED */
@@ -19061,13 +19116,17 @@ int _insert_monitor_xy_setpos(void)
     tc2 = coords_set(0,0,0);
     Rotation tr1;
     rot_set_rotation(tr1,0,0,0);
-    rot_set_rotation(_insert_monitor_xy_var._rotation_absolute,
+    rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_mul(tr1, _slit_var._rotation_absolute, _insert_monitor_xy_var._rotation_absolute);
     rot_transpose(_slit_var._rotation_absolute, tr1);
     rot_mul(_insert_monitor_xy_var._rotation_absolute, tr1, _insert_monitor_xy_var._rotation_relative);
     _insert_monitor_xy_var._rotation_is_identity =  rot_test_identity(_insert_monitor_xy_var._rotation_relative);
-    _insert_monitor_xy_var._position_absolute = coords_set(
-      -0.017, 0.0, 5.9151);
+    tc1 = coords_set(
+      0, 0, 0.0001);
+    rot_transpose(_slit_var._rotation_absolute, tr1);
+    tc2 = rot_apply(tr1, tc1);
+    _insert_monitor_xy_var._position_absolute = coords_add(_slit_var._position_absolute, tc2);
     tc1 = coords_sub(_slit_var._position_absolute, _insert_monitor_xy_var._position_absolute);
     _insert_monitor_xy_var._position_relative = rot_apply(_insert_monitor_xy_var._rotation_absolute, tc1);
   } /* insert_monitor_xy=Monitor_nD() AT ROTATED */
@@ -19255,13 +19314,17 @@ int _insert_monitor_div_setpos(void)
     tc2 = coords_set(0,0,0);
     Rotation tr1;
     rot_set_rotation(tr1,0,0,0);
-    rot_set_rotation(_insert_monitor_div_var._rotation_absolute,
+    rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_mul(tr1, _insert_monitor_xy_var._rotation_absolute, _insert_monitor_div_var._rotation_absolute);
     rot_transpose(_insert_monitor_xy_var._rotation_absolute, tr1);
     rot_mul(_insert_monitor_div_var._rotation_absolute, tr1, _insert_monitor_div_var._rotation_relative);
     _insert_monitor_div_var._rotation_is_identity =  rot_test_identity(_insert_monitor_div_var._rotation_relative);
-    _insert_monitor_div_var._position_absolute = coords_set(
-      -0.017, 0, 5.9152);
+    tc1 = coords_set(
+      0, 0, 0.0001);
+    rot_transpose(_insert_monitor_xy_var._rotation_absolute, tr1);
+    tc2 = rot_apply(tr1, tc1);
+    _insert_monitor_div_var._position_absolute = coords_add(_insert_monitor_xy_var._position_absolute, tc2);
     tc1 = coords_sub(_insert_monitor_xy_var._position_absolute, _insert_monitor_div_var._position_absolute);
     _insert_monitor_div_var._position_relative = rot_apply(_insert_monitor_div_var._rotation_absolute, tc1);
   } /* insert_monitor_div=Monitor_nD() AT ROTATED */
@@ -19449,13 +19512,17 @@ int _insert_monitor_lam_setpos(void)
     tc2 = coords_set(0,0,0);
     Rotation tr1;
     rot_set_rotation(tr1,0,0,0);
-    rot_set_rotation(_insert_monitor_lam_var._rotation_absolute,
+    rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_mul(tr1, _insert_monitor_div_var._rotation_absolute, _insert_monitor_lam_var._rotation_absolute);
     rot_transpose(_insert_monitor_div_var._rotation_absolute, tr1);
     rot_mul(_insert_monitor_lam_var._rotation_absolute, tr1, _insert_monitor_lam_var._rotation_relative);
     _insert_monitor_lam_var._rotation_is_identity =  rot_test_identity(_insert_monitor_lam_var._rotation_relative);
-    _insert_monitor_lam_var._position_absolute = coords_set(
-      -0.017, 0, 5.9153);
+    tc1 = coords_set(
+      0, 0, 0.0001);
+    rot_transpose(_insert_monitor_div_var._rotation_absolute, tr1);
+    tc2 = rot_apply(tr1, tc1);
+    _insert_monitor_lam_var._position_absolute = coords_add(_insert_monitor_div_var._position_absolute, tc2);
     tc1 = coords_sub(_insert_monitor_div_var._position_absolute, _insert_monitor_lam_var._position_absolute);
     _insert_monitor_lam_var._position_relative = rot_apply(_insert_monitor_lam_var._rotation_absolute, tc1);
   } /* insert_monitor_lam=Monitor_nD() AT ROTATED */
@@ -19643,13 +19710,17 @@ int _inset_monitor_ToF_setpos(void)
     tc2 = coords_set(0,0,0);
     Rotation tr1;
     rot_set_rotation(tr1,0,0,0);
-    rot_set_rotation(_inset_monitor_ToF_var._rotation_absolute,
+    rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_mul(tr1, _insert_monitor_lam_var._rotation_absolute, _inset_monitor_ToF_var._rotation_absolute);
     rot_transpose(_insert_monitor_lam_var._rotation_absolute, tr1);
     rot_mul(_inset_monitor_ToF_var._rotation_absolute, tr1, _inset_monitor_ToF_var._rotation_relative);
     _inset_monitor_ToF_var._rotation_is_identity =  rot_test_identity(_inset_monitor_ToF_var._rotation_relative);
-    _inset_monitor_ToF_var._position_absolute = coords_set(
-      -0.017, 0, 5.9154);
+    tc1 = coords_set(
+      0, 0, 0.0001);
+    rot_transpose(_insert_monitor_lam_var._rotation_absolute, tr1);
+    tc2 = rot_apply(tr1, tc1);
+    _inset_monitor_ToF_var._position_absolute = coords_add(_insert_monitor_lam_var._position_absolute, tc2);
     tc1 = coords_sub(_insert_monitor_lam_var._position_absolute, _inset_monitor_ToF_var._position_absolute);
     _inset_monitor_ToF_var._position_relative = rot_apply(_inset_monitor_ToF_var._rotation_absolute, tc1);
   } /* inset_monitor_ToF=Monitor_nD() AT ROTATED */
@@ -21936,13 +22007,17 @@ int _B1_monitor_xy_setpos(void)
     tc2 = coords_set(0,0,0);
     Rotation tr1;
     rot_set_rotation(tr1,0,0,0);
-    rot_set_rotation(_B1_monitor_xy_var._rotation_absolute,
-      (0)*DEG2RAD, (0.12454202414165)*DEG2RAD, (0)*DEG2RAD);
+    rot_set_rotation(tr1,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_mul(tr1, _BW_Chopper_1_var._rotation_absolute, _B1_monitor_xy_var._rotation_absolute);
     rot_transpose(_BW_Chopper_1_var._rotation_absolute, tr1);
     rot_mul(_B1_monitor_xy_var._rotation_absolute, tr1, _B1_monitor_xy_var._rotation_relative);
     _B1_monitor_xy_var._rotation_is_identity =  rot_test_identity(_B1_monitor_xy_var._rotation_relative);
-    _B1_monitor_xy_var._position_absolute = coords_set(
-      0.011348994153930106, 0, 32.1);
+    tc1 = coords_set(
+      0, 0, 0.0001);
+    rot_transpose(_BW_Chopper_1_var._rotation_absolute, tr1);
+    tc2 = rot_apply(tr1, tc1);
+    _B1_monitor_xy_var._position_absolute = coords_add(_BW_Chopper_1_var._position_absolute, tc2);
     tc1 = coords_sub(_BW_Chopper_1_var._position_absolute, _B1_monitor_xy_var._position_absolute);
     _B1_monitor_xy_var._position_relative = rot_apply(_B1_monitor_xy_var._rotation_absolute, tc1);
   } /* B1_monitor_xy=Monitor_nD() AT ROTATED */
@@ -22137,7 +22212,7 @@ int _B1_monitor_lam_setpos(void)
     rot_mul(_B1_monitor_lam_var._rotation_absolute, tr1, _B1_monitor_lam_var._rotation_relative);
     _B1_monitor_lam_var._rotation_is_identity =  rot_test_identity(_B1_monitor_lam_var._rotation_relative);
     tc1 = coords_set(
-      0, 0, 1e-06);
+      0, 0, 0.0001);
     rot_transpose(_B1_monitor_xy_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _B1_monitor_lam_var._position_absolute = coords_add(_B1_monitor_xy_var._position_absolute, tc2);
@@ -22335,7 +22410,7 @@ int _BW1_monitor_ToF_setpos(void)
     rot_mul(_BW1_monitor_ToF_var._rotation_absolute, tr1, _BW1_monitor_ToF_var._rotation_relative);
     _BW1_monitor_ToF_var._rotation_is_identity =  rot_test_identity(_BW1_monitor_ToF_var._rotation_relative);
     tc1 = coords_set(
-      0, 0, 1e-06);
+      0, 0, 0.0001);
     rot_transpose(_B1_monitor_lam_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _BW1_monitor_ToF_var._position_absolute = coords_add(_B1_monitor_lam_var._position_absolute, tc2);
@@ -22401,12 +22476,12 @@ int _BW1_monitor_ToF_setpos(void)
   return(0);
 } /* _BW1_monitor_ToF_setpos */
 
-/* component guide_49=Guide_anyshape() SETTING, POSITION/ROTATION */
+/* component guide_49=Guide_anyshape_r() SETTING, POSITION/ROTATION */
 int _guide_49_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_guide_49_setpos] component guide_49=Guide_anyshape() SETTING [Guide_anyshape:0]");
+  SIG_MESSAGE("[_guide_49_setpos] component guide_49=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
   stracpy(_guide_49_var._name, "guide_49", 16384);
-  stracpy(_guide_49_var._type, "Guide_anyshape", 16384);
+  stracpy(_guide_49_var._type, "Guide_anyshape_r", 16384);
   _guide_49_var._index=52;
   int current_setpos_index = 52;
   _guide_49_var._parameters.xwidth = 0;
@@ -22416,17 +22491,16 @@ int _guide_49_setpos(void)
   _guide_49_var._parameters.transmit = 0;
   _guide_49_var._parameters.R0 = 0.99;
   _guide_49_var._parameters.Qc = 0.0219;
-  _guide_49_var._parameters.alpha = 3;
-  _guide_49_var._parameters.m = 2;
-  _guide_49_var._parameters.W = 0.003;
-  _guide_49_var._parameters.reflect[0]='\0';
+  _guide_49_var._parameters.alpha = 0;
+  _guide_49_var._parameters.m = 0;
+  _guide_49_var._parameters.W = 0;
   if("./OFF_files/try49.off" && strlen("./OFF_files/try49.off"))
     stracpy(_guide_49_var._parameters.geometry, "./OFF_files/try49.off" ? "./OFF_files/try49.off" : "", 16384);
   else 
   _guide_49_var._parameters.geometry[0]='\0';
 
 
-  /* component guide_49=Guide_anyshape() AT ROTATED */
+  /* component guide_49=Guide_anyshape_r() AT ROTATED */
   {
     Coords tc1, tc2;
     tc1 = coords_set(0,0,0);
@@ -22442,7 +22516,7 @@ int _guide_49_setpos(void)
       0, 0, 0);
     tc1 = coords_sub(_BW1_monitor_ToF_var._position_absolute, _guide_49_var._position_absolute);
     _guide_49_var._position_relative = rot_apply(_guide_49_var._rotation_absolute, tc1);
-  } /* guide_49=Guide_anyshape() AT ROTATED */
+  } /* guide_49=Guide_anyshape_r() AT ROTATED */
   DEBUG_COMPONENT("guide_49", _guide_49_var._position_absolute, _guide_49_var._rotation_absolute);
   instrument->_position_absolute[52] = _guide_49_var._position_absolute;
   instrument->_position_relative[52] = _guide_49_var._position_relative;
@@ -22453,7 +22527,7 @@ int _guide_49_setpos(void)
   if(nxhandle) {
     if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
     MPI_MASTER(
-        mccomp_placement_type_nexus(nxhandle,"0051_guide_49", _guide_49_var._position_absolute, _guide_49_var._rotation_absolute, "Guide_anyshape");
+        mccomp_placement_type_nexus(nxhandle,"0051_guide_49", _guide_49_var._position_absolute, _guide_49_var._rotation_absolute, "Guide_anyshape_r");
         mccomp_param_nexus(nxhandle,"0051_guide_49", "xwidth", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0051_guide_49", "yheight", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0051_guide_49", "zdepth", "0", "0","MCNUM");
@@ -22461,10 +22535,9 @@ int _guide_49_setpos(void)
         mccomp_param_nexus(nxhandle,"0051_guide_49", "transmit", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0051_guide_49", "R0", "0.99", "0.99","MCNUM");
         mccomp_param_nexus(nxhandle,"0051_guide_49", "Qc", "0.0219", "0.0219","MCNUM");
-        mccomp_param_nexus(nxhandle,"0051_guide_49", "alpha", "3", "3","MCNUM");
-        mccomp_param_nexus(nxhandle,"0051_guide_49", "m", "2", "2","MCNUM");
-        mccomp_param_nexus(nxhandle,"0051_guide_49", "W", "0.003", "0.003","MCNUM");
-        mccomp_param_nexus(nxhandle,"0051_guide_49", "reflect", 0, 0, "char*");
+        mccomp_param_nexus(nxhandle,"0051_guide_49", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0051_guide_49", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0051_guide_49", "W", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0051_guide_49", "geometry", 0, "./OFF_files/try49.off", "char*");
       );
     }
@@ -22475,12 +22548,12 @@ int _guide_49_setpos(void)
   return(0);
 } /* _guide_49_setpos */
 
-/* component guide_50=Guide_anyshape() SETTING, POSITION/ROTATION */
+/* component guide_50=Guide_anyshape_r() SETTING, POSITION/ROTATION */
 int _guide_50_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_guide_50_setpos] component guide_50=Guide_anyshape() SETTING [Guide_anyshape:0]");
+  SIG_MESSAGE("[_guide_50_setpos] component guide_50=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
   stracpy(_guide_50_var._name, "guide_50", 16384);
-  stracpy(_guide_50_var._type, "Guide_anyshape", 16384);
+  stracpy(_guide_50_var._type, "Guide_anyshape_r", 16384);
   _guide_50_var._index=53;
   int current_setpos_index = 53;
   _guide_50_var._parameters.xwidth = 0;
@@ -22490,17 +22563,16 @@ int _guide_50_setpos(void)
   _guide_50_var._parameters.transmit = 0;
   _guide_50_var._parameters.R0 = 0.99;
   _guide_50_var._parameters.Qc = 0.0219;
-  _guide_50_var._parameters.alpha = 3;
-  _guide_50_var._parameters.m = 2;
-  _guide_50_var._parameters.W = 0.003;
-  _guide_50_var._parameters.reflect[0]='\0';
+  _guide_50_var._parameters.alpha = 0;
+  _guide_50_var._parameters.m = 0;
+  _guide_50_var._parameters.W = 0;
   if("./OFF_files/try50.off" && strlen("./OFF_files/try50.off"))
     stracpy(_guide_50_var._parameters.geometry, "./OFF_files/try50.off" ? "./OFF_files/try50.off" : "", 16384);
   else 
   _guide_50_var._parameters.geometry[0]='\0';
 
 
-  /* component guide_50=Guide_anyshape() AT ROTATED */
+  /* component guide_50=Guide_anyshape_r() AT ROTATED */
   {
     Coords tc1, tc2;
     tc1 = coords_set(0,0,0);
@@ -22516,7 +22588,7 @@ int _guide_50_setpos(void)
       0, 0, 0);
     tc1 = coords_sub(_guide_49_var._position_absolute, _guide_50_var._position_absolute);
     _guide_50_var._position_relative = rot_apply(_guide_50_var._rotation_absolute, tc1);
-  } /* guide_50=Guide_anyshape() AT ROTATED */
+  } /* guide_50=Guide_anyshape_r() AT ROTATED */
   DEBUG_COMPONENT("guide_50", _guide_50_var._position_absolute, _guide_50_var._rotation_absolute);
   instrument->_position_absolute[53] = _guide_50_var._position_absolute;
   instrument->_position_relative[53] = _guide_50_var._position_relative;
@@ -22527,7 +22599,7 @@ int _guide_50_setpos(void)
   if(nxhandle) {
     if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
     MPI_MASTER(
-        mccomp_placement_type_nexus(nxhandle,"0052_guide_50", _guide_50_var._position_absolute, _guide_50_var._rotation_absolute, "Guide_anyshape");
+        mccomp_placement_type_nexus(nxhandle,"0052_guide_50", _guide_50_var._position_absolute, _guide_50_var._rotation_absolute, "Guide_anyshape_r");
         mccomp_param_nexus(nxhandle,"0052_guide_50", "xwidth", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0052_guide_50", "yheight", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0052_guide_50", "zdepth", "0", "0","MCNUM");
@@ -22535,10 +22607,9 @@ int _guide_50_setpos(void)
         mccomp_param_nexus(nxhandle,"0052_guide_50", "transmit", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0052_guide_50", "R0", "0.99", "0.99","MCNUM");
         mccomp_param_nexus(nxhandle,"0052_guide_50", "Qc", "0.0219", "0.0219","MCNUM");
-        mccomp_param_nexus(nxhandle,"0052_guide_50", "alpha", "3", "3","MCNUM");
-        mccomp_param_nexus(nxhandle,"0052_guide_50", "m", "2", "2","MCNUM");
-        mccomp_param_nexus(nxhandle,"0052_guide_50", "W", "0.003", "0.003","MCNUM");
-        mccomp_param_nexus(nxhandle,"0052_guide_50", "reflect", 0, 0, "char*");
+        mccomp_param_nexus(nxhandle,"0052_guide_50", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0052_guide_50", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0052_guide_50", "W", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0052_guide_50", "geometry", 0, "./OFF_files/try50.off", "char*");
       );
     }
@@ -22549,12 +22620,12 @@ int _guide_50_setpos(void)
   return(0);
 } /* _guide_50_setpos */
 
-/* component guide_51=Guide_anyshape() SETTING, POSITION/ROTATION */
+/* component guide_51=Guide_anyshape_r() SETTING, POSITION/ROTATION */
 int _guide_51_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_guide_51_setpos] component guide_51=Guide_anyshape() SETTING [Guide_anyshape:0]");
+  SIG_MESSAGE("[_guide_51_setpos] component guide_51=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
   stracpy(_guide_51_var._name, "guide_51", 16384);
-  stracpy(_guide_51_var._type, "Guide_anyshape", 16384);
+  stracpy(_guide_51_var._type, "Guide_anyshape_r", 16384);
   _guide_51_var._index=54;
   int current_setpos_index = 54;
   _guide_51_var._parameters.xwidth = 0;
@@ -22564,17 +22635,16 @@ int _guide_51_setpos(void)
   _guide_51_var._parameters.transmit = 0;
   _guide_51_var._parameters.R0 = 0.99;
   _guide_51_var._parameters.Qc = 0.0219;
-  _guide_51_var._parameters.alpha = 3;
-  _guide_51_var._parameters.m = 2;
-  _guide_51_var._parameters.W = 0.003;
-  _guide_51_var._parameters.reflect[0]='\0';
+  _guide_51_var._parameters.alpha = 0;
+  _guide_51_var._parameters.m = 0;
+  _guide_51_var._parameters.W = 0;
   if("./OFF_files/try51.off" && strlen("./OFF_files/try51.off"))
     stracpy(_guide_51_var._parameters.geometry, "./OFF_files/try51.off" ? "./OFF_files/try51.off" : "", 16384);
   else 
   _guide_51_var._parameters.geometry[0]='\0';
 
 
-  /* component guide_51=Guide_anyshape() AT ROTATED */
+  /* component guide_51=Guide_anyshape_r() AT ROTATED */
   {
     Coords tc1, tc2;
     tc1 = coords_set(0,0,0);
@@ -22590,7 +22660,7 @@ int _guide_51_setpos(void)
       0, 0, 0);
     tc1 = coords_sub(_guide_50_var._position_absolute, _guide_51_var._position_absolute);
     _guide_51_var._position_relative = rot_apply(_guide_51_var._rotation_absolute, tc1);
-  } /* guide_51=Guide_anyshape() AT ROTATED */
+  } /* guide_51=Guide_anyshape_r() AT ROTATED */
   DEBUG_COMPONENT("guide_51", _guide_51_var._position_absolute, _guide_51_var._rotation_absolute);
   instrument->_position_absolute[54] = _guide_51_var._position_absolute;
   instrument->_position_relative[54] = _guide_51_var._position_relative;
@@ -22601,7 +22671,7 @@ int _guide_51_setpos(void)
   if(nxhandle) {
     if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
     MPI_MASTER(
-        mccomp_placement_type_nexus(nxhandle,"0053_guide_51", _guide_51_var._position_absolute, _guide_51_var._rotation_absolute, "Guide_anyshape");
+        mccomp_placement_type_nexus(nxhandle,"0053_guide_51", _guide_51_var._position_absolute, _guide_51_var._rotation_absolute, "Guide_anyshape_r");
         mccomp_param_nexus(nxhandle,"0053_guide_51", "xwidth", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0053_guide_51", "yheight", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0053_guide_51", "zdepth", "0", "0","MCNUM");
@@ -22609,10 +22679,9 @@ int _guide_51_setpos(void)
         mccomp_param_nexus(nxhandle,"0053_guide_51", "transmit", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0053_guide_51", "R0", "0.99", "0.99","MCNUM");
         mccomp_param_nexus(nxhandle,"0053_guide_51", "Qc", "0.0219", "0.0219","MCNUM");
-        mccomp_param_nexus(nxhandle,"0053_guide_51", "alpha", "3", "3","MCNUM");
-        mccomp_param_nexus(nxhandle,"0053_guide_51", "m", "2", "2","MCNUM");
-        mccomp_param_nexus(nxhandle,"0053_guide_51", "W", "0.003", "0.003","MCNUM");
-        mccomp_param_nexus(nxhandle,"0053_guide_51", "reflect", 0, 0, "char*");
+        mccomp_param_nexus(nxhandle,"0053_guide_51", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0053_guide_51", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0053_guide_51", "W", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0053_guide_51", "geometry", 0, "./OFF_files/try51.off", "char*");
       );
     }
@@ -22623,12 +22692,12 @@ int _guide_51_setpos(void)
   return(0);
 } /* _guide_51_setpos */
 
-/* component guide_52=Guide_anyshape() SETTING, POSITION/ROTATION */
+/* component guide_52=Guide_anyshape_r() SETTING, POSITION/ROTATION */
 int _guide_52_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_guide_52_setpos] component guide_52=Guide_anyshape() SETTING [Guide_anyshape:0]");
+  SIG_MESSAGE("[_guide_52_setpos] component guide_52=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
   stracpy(_guide_52_var._name, "guide_52", 16384);
-  stracpy(_guide_52_var._type, "Guide_anyshape", 16384);
+  stracpy(_guide_52_var._type, "Guide_anyshape_r", 16384);
   _guide_52_var._index=55;
   int current_setpos_index = 55;
   _guide_52_var._parameters.xwidth = 0;
@@ -22638,17 +22707,16 @@ int _guide_52_setpos(void)
   _guide_52_var._parameters.transmit = 0;
   _guide_52_var._parameters.R0 = 0.99;
   _guide_52_var._parameters.Qc = 0.0219;
-  _guide_52_var._parameters.alpha = 3;
-  _guide_52_var._parameters.m = 2;
-  _guide_52_var._parameters.W = 0.003;
-  _guide_52_var._parameters.reflect[0]='\0';
+  _guide_52_var._parameters.alpha = 0;
+  _guide_52_var._parameters.m = 0;
+  _guide_52_var._parameters.W = 0;
   if("./OFF_files/try52.off" && strlen("./OFF_files/try52.off"))
     stracpy(_guide_52_var._parameters.geometry, "./OFF_files/try52.off" ? "./OFF_files/try52.off" : "", 16384);
   else 
   _guide_52_var._parameters.geometry[0]='\0';
 
 
-  /* component guide_52=Guide_anyshape() AT ROTATED */
+  /* component guide_52=Guide_anyshape_r() AT ROTATED */
   {
     Coords tc1, tc2;
     tc1 = coords_set(0,0,0);
@@ -22664,7 +22732,7 @@ int _guide_52_setpos(void)
       0, 0, 0);
     tc1 = coords_sub(_guide_51_var._position_absolute, _guide_52_var._position_absolute);
     _guide_52_var._position_relative = rot_apply(_guide_52_var._rotation_absolute, tc1);
-  } /* guide_52=Guide_anyshape() AT ROTATED */
+  } /* guide_52=Guide_anyshape_r() AT ROTATED */
   DEBUG_COMPONENT("guide_52", _guide_52_var._position_absolute, _guide_52_var._rotation_absolute);
   instrument->_position_absolute[55] = _guide_52_var._position_absolute;
   instrument->_position_relative[55] = _guide_52_var._position_relative;
@@ -22675,7 +22743,7 @@ int _guide_52_setpos(void)
   if(nxhandle) {
     if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
     MPI_MASTER(
-        mccomp_placement_type_nexus(nxhandle,"0054_guide_52", _guide_52_var._position_absolute, _guide_52_var._rotation_absolute, "Guide_anyshape");
+        mccomp_placement_type_nexus(nxhandle,"0054_guide_52", _guide_52_var._position_absolute, _guide_52_var._rotation_absolute, "Guide_anyshape_r");
         mccomp_param_nexus(nxhandle,"0054_guide_52", "xwidth", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0054_guide_52", "yheight", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0054_guide_52", "zdepth", "0", "0","MCNUM");
@@ -22683,10 +22751,9 @@ int _guide_52_setpos(void)
         mccomp_param_nexus(nxhandle,"0054_guide_52", "transmit", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0054_guide_52", "R0", "0.99", "0.99","MCNUM");
         mccomp_param_nexus(nxhandle,"0054_guide_52", "Qc", "0.0219", "0.0219","MCNUM");
-        mccomp_param_nexus(nxhandle,"0054_guide_52", "alpha", "3", "3","MCNUM");
-        mccomp_param_nexus(nxhandle,"0054_guide_52", "m", "2", "2","MCNUM");
-        mccomp_param_nexus(nxhandle,"0054_guide_52", "W", "0.003", "0.003","MCNUM");
-        mccomp_param_nexus(nxhandle,"0054_guide_52", "reflect", 0, 0, "char*");
+        mccomp_param_nexus(nxhandle,"0054_guide_52", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0054_guide_52", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0054_guide_52", "W", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0054_guide_52", "geometry", 0, "./OFF_files/try52.off", "char*");
       );
     }
@@ -22697,12 +22764,12 @@ int _guide_52_setpos(void)
   return(0);
 } /* _guide_52_setpos */
 
-/* component guide_53=Guide_anyshape() SETTING, POSITION/ROTATION */
+/* component guide_53=Guide_anyshape_r() SETTING, POSITION/ROTATION */
 int _guide_53_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_guide_53_setpos] component guide_53=Guide_anyshape() SETTING [Guide_anyshape:0]");
+  SIG_MESSAGE("[_guide_53_setpos] component guide_53=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
   stracpy(_guide_53_var._name, "guide_53", 16384);
-  stracpy(_guide_53_var._type, "Guide_anyshape", 16384);
+  stracpy(_guide_53_var._type, "Guide_anyshape_r", 16384);
   _guide_53_var._index=56;
   int current_setpos_index = 56;
   _guide_53_var._parameters.xwidth = 0;
@@ -22712,17 +22779,16 @@ int _guide_53_setpos(void)
   _guide_53_var._parameters.transmit = 0;
   _guide_53_var._parameters.R0 = 0.99;
   _guide_53_var._parameters.Qc = 0.0219;
-  _guide_53_var._parameters.alpha = 3;
-  _guide_53_var._parameters.m = 2;
-  _guide_53_var._parameters.W = 0.003;
-  _guide_53_var._parameters.reflect[0]='\0';
+  _guide_53_var._parameters.alpha = 0;
+  _guide_53_var._parameters.m = 0;
+  _guide_53_var._parameters.W = 0;
   if("./OFF_files/try53.off" && strlen("./OFF_files/try53.off"))
     stracpy(_guide_53_var._parameters.geometry, "./OFF_files/try53.off" ? "./OFF_files/try53.off" : "", 16384);
   else 
   _guide_53_var._parameters.geometry[0]='\0';
 
 
-  /* component guide_53=Guide_anyshape() AT ROTATED */
+  /* component guide_53=Guide_anyshape_r() AT ROTATED */
   {
     Coords tc1, tc2;
     tc1 = coords_set(0,0,0);
@@ -22738,7 +22804,7 @@ int _guide_53_setpos(void)
       0, 0, 0);
     tc1 = coords_sub(_guide_52_var._position_absolute, _guide_53_var._position_absolute);
     _guide_53_var._position_relative = rot_apply(_guide_53_var._rotation_absolute, tc1);
-  } /* guide_53=Guide_anyshape() AT ROTATED */
+  } /* guide_53=Guide_anyshape_r() AT ROTATED */
   DEBUG_COMPONENT("guide_53", _guide_53_var._position_absolute, _guide_53_var._rotation_absolute);
   instrument->_position_absolute[56] = _guide_53_var._position_absolute;
   instrument->_position_relative[56] = _guide_53_var._position_relative;
@@ -22749,7 +22815,7 @@ int _guide_53_setpos(void)
   if(nxhandle) {
     if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
     MPI_MASTER(
-        mccomp_placement_type_nexus(nxhandle,"0055_guide_53", _guide_53_var._position_absolute, _guide_53_var._rotation_absolute, "Guide_anyshape");
+        mccomp_placement_type_nexus(nxhandle,"0055_guide_53", _guide_53_var._position_absolute, _guide_53_var._rotation_absolute, "Guide_anyshape_r");
         mccomp_param_nexus(nxhandle,"0055_guide_53", "xwidth", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0055_guide_53", "yheight", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0055_guide_53", "zdepth", "0", "0","MCNUM");
@@ -22757,10 +22823,9 @@ int _guide_53_setpos(void)
         mccomp_param_nexus(nxhandle,"0055_guide_53", "transmit", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0055_guide_53", "R0", "0.99", "0.99","MCNUM");
         mccomp_param_nexus(nxhandle,"0055_guide_53", "Qc", "0.0219", "0.0219","MCNUM");
-        mccomp_param_nexus(nxhandle,"0055_guide_53", "alpha", "3", "3","MCNUM");
-        mccomp_param_nexus(nxhandle,"0055_guide_53", "m", "2", "2","MCNUM");
-        mccomp_param_nexus(nxhandle,"0055_guide_53", "W", "0.003", "0.003","MCNUM");
-        mccomp_param_nexus(nxhandle,"0055_guide_53", "reflect", 0, 0, "char*");
+        mccomp_param_nexus(nxhandle,"0055_guide_53", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0055_guide_53", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0055_guide_53", "W", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0055_guide_53", "geometry", 0, "./OFF_files/try53.off", "char*");
       );
     }
@@ -22771,12 +22836,12 @@ int _guide_53_setpos(void)
   return(0);
 } /* _guide_53_setpos */
 
-/* component guide_54=Guide_anyshape() SETTING, POSITION/ROTATION */
+/* component guide_54=Guide_anyshape_r() SETTING, POSITION/ROTATION */
 int _guide_54_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_guide_54_setpos] component guide_54=Guide_anyshape() SETTING [Guide_anyshape:0]");
+  SIG_MESSAGE("[_guide_54_setpos] component guide_54=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
   stracpy(_guide_54_var._name, "guide_54", 16384);
-  stracpy(_guide_54_var._type, "Guide_anyshape", 16384);
+  stracpy(_guide_54_var._type, "Guide_anyshape_r", 16384);
   _guide_54_var._index=57;
   int current_setpos_index = 57;
   _guide_54_var._parameters.xwidth = 0;
@@ -22786,17 +22851,16 @@ int _guide_54_setpos(void)
   _guide_54_var._parameters.transmit = 0;
   _guide_54_var._parameters.R0 = 0.99;
   _guide_54_var._parameters.Qc = 0.0219;
-  _guide_54_var._parameters.alpha = 3;
-  _guide_54_var._parameters.m = 2;
-  _guide_54_var._parameters.W = 0.003;
-  _guide_54_var._parameters.reflect[0]='\0';
+  _guide_54_var._parameters.alpha = 0;
+  _guide_54_var._parameters.m = 0;
+  _guide_54_var._parameters.W = 0;
   if("./OFF_files/try54.off" && strlen("./OFF_files/try54.off"))
     stracpy(_guide_54_var._parameters.geometry, "./OFF_files/try54.off" ? "./OFF_files/try54.off" : "", 16384);
   else 
   _guide_54_var._parameters.geometry[0]='\0';
 
 
-  /* component guide_54=Guide_anyshape() AT ROTATED */
+  /* component guide_54=Guide_anyshape_r() AT ROTATED */
   {
     Coords tc1, tc2;
     tc1 = coords_set(0,0,0);
@@ -22812,7 +22876,7 @@ int _guide_54_setpos(void)
       0, 0, 0);
     tc1 = coords_sub(_guide_53_var._position_absolute, _guide_54_var._position_absolute);
     _guide_54_var._position_relative = rot_apply(_guide_54_var._rotation_absolute, tc1);
-  } /* guide_54=Guide_anyshape() AT ROTATED */
+  } /* guide_54=Guide_anyshape_r() AT ROTATED */
   DEBUG_COMPONENT("guide_54", _guide_54_var._position_absolute, _guide_54_var._rotation_absolute);
   instrument->_position_absolute[57] = _guide_54_var._position_absolute;
   instrument->_position_relative[57] = _guide_54_var._position_relative;
@@ -22823,7 +22887,7 @@ int _guide_54_setpos(void)
   if(nxhandle) {
     if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
     MPI_MASTER(
-        mccomp_placement_type_nexus(nxhandle,"0056_guide_54", _guide_54_var._position_absolute, _guide_54_var._rotation_absolute, "Guide_anyshape");
+        mccomp_placement_type_nexus(nxhandle,"0056_guide_54", _guide_54_var._position_absolute, _guide_54_var._rotation_absolute, "Guide_anyshape_r");
         mccomp_param_nexus(nxhandle,"0056_guide_54", "xwidth", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0056_guide_54", "yheight", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0056_guide_54", "zdepth", "0", "0","MCNUM");
@@ -22831,10 +22895,9 @@ int _guide_54_setpos(void)
         mccomp_param_nexus(nxhandle,"0056_guide_54", "transmit", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0056_guide_54", "R0", "0.99", "0.99","MCNUM");
         mccomp_param_nexus(nxhandle,"0056_guide_54", "Qc", "0.0219", "0.0219","MCNUM");
-        mccomp_param_nexus(nxhandle,"0056_guide_54", "alpha", "3", "3","MCNUM");
-        mccomp_param_nexus(nxhandle,"0056_guide_54", "m", "2", "2","MCNUM");
-        mccomp_param_nexus(nxhandle,"0056_guide_54", "W", "0.003", "0.003","MCNUM");
-        mccomp_param_nexus(nxhandle,"0056_guide_54", "reflect", 0, 0, "char*");
+        mccomp_param_nexus(nxhandle,"0056_guide_54", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0056_guide_54", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0056_guide_54", "W", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0056_guide_54", "geometry", 0, "./OFF_files/try54.off", "char*");
       );
     }
@@ -22845,12 +22908,12 @@ int _guide_54_setpos(void)
   return(0);
 } /* _guide_54_setpos */
 
-/* component guide_55=Guide_anyshape() SETTING, POSITION/ROTATION */
+/* component guide_55=Guide_anyshape_r() SETTING, POSITION/ROTATION */
 int _guide_55_setpos(void)
 { /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_guide_55_setpos] component guide_55=Guide_anyshape() SETTING [Guide_anyshape:0]");
+  SIG_MESSAGE("[_guide_55_setpos] component guide_55=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
   stracpy(_guide_55_var._name, "guide_55", 16384);
-  stracpy(_guide_55_var._type, "Guide_anyshape", 16384);
+  stracpy(_guide_55_var._type, "Guide_anyshape_r", 16384);
   _guide_55_var._index=58;
   int current_setpos_index = 58;
   _guide_55_var._parameters.xwidth = 0;
@@ -22860,17 +22923,16 @@ int _guide_55_setpos(void)
   _guide_55_var._parameters.transmit = 0;
   _guide_55_var._parameters.R0 = 0.99;
   _guide_55_var._parameters.Qc = 0.0219;
-  _guide_55_var._parameters.alpha = 3;
-  _guide_55_var._parameters.m = 2;
-  _guide_55_var._parameters.W = 0.003;
-  _guide_55_var._parameters.reflect[0]='\0';
+  _guide_55_var._parameters.alpha = 0;
+  _guide_55_var._parameters.m = 0;
+  _guide_55_var._parameters.W = 0;
   if("./OFF_files/try55.off" && strlen("./OFF_files/try55.off"))
     stracpy(_guide_55_var._parameters.geometry, "./OFF_files/try55.off" ? "./OFF_files/try55.off" : "", 16384);
   else 
   _guide_55_var._parameters.geometry[0]='\0';
 
 
-  /* component guide_55=Guide_anyshape() AT ROTATED */
+  /* component guide_55=Guide_anyshape_r() AT ROTATED */
   {
     Coords tc1, tc2;
     tc1 = coords_set(0,0,0);
@@ -22886,7 +22948,7 @@ int _guide_55_setpos(void)
       0, 0, 0);
     tc1 = coords_sub(_guide_54_var._position_absolute, _guide_55_var._position_absolute);
     _guide_55_var._position_relative = rot_apply(_guide_55_var._rotation_absolute, tc1);
-  } /* guide_55=Guide_anyshape() AT ROTATED */
+  } /* guide_55=Guide_anyshape_r() AT ROTATED */
   DEBUG_COMPONENT("guide_55", _guide_55_var._position_absolute, _guide_55_var._rotation_absolute);
   instrument->_position_absolute[58] = _guide_55_var._position_absolute;
   instrument->_position_relative[58] = _guide_55_var._position_relative;
@@ -22897,7 +22959,7 @@ int _guide_55_setpos(void)
   if(nxhandle) {
     if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
     MPI_MASTER(
-        mccomp_placement_type_nexus(nxhandle,"0057_guide_55", _guide_55_var._position_absolute, _guide_55_var._rotation_absolute, "Guide_anyshape");
+        mccomp_placement_type_nexus(nxhandle,"0057_guide_55", _guide_55_var._position_absolute, _guide_55_var._rotation_absolute, "Guide_anyshape_r");
         mccomp_param_nexus(nxhandle,"0057_guide_55", "xwidth", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0057_guide_55", "yheight", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0057_guide_55", "zdepth", "0", "0","MCNUM");
@@ -22905,10 +22967,9 @@ int _guide_55_setpos(void)
         mccomp_param_nexus(nxhandle,"0057_guide_55", "transmit", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0057_guide_55", "R0", "0.99", "0.99","MCNUM");
         mccomp_param_nexus(nxhandle,"0057_guide_55", "Qc", "0.0219", "0.0219","MCNUM");
-        mccomp_param_nexus(nxhandle,"0057_guide_55", "alpha", "3", "3","MCNUM");
-        mccomp_param_nexus(nxhandle,"0057_guide_55", "m", "2", "2","MCNUM");
-        mccomp_param_nexus(nxhandle,"0057_guide_55", "W", "0.003", "0.003","MCNUM");
-        mccomp_param_nexus(nxhandle,"0057_guide_55", "reflect", 0, 0, "char*");
+        mccomp_param_nexus(nxhandle,"0057_guide_55", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0057_guide_55", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0057_guide_55", "W", "0", "0","MCNUM");
         mccomp_param_nexus(nxhandle,"0057_guide_55", "geometry", 0, "./OFF_files/try55.off", "char*");
       );
     }
@@ -23134,7 +23195,7 @@ int _B2_monitor_xy_setpos(void)
     rot_mul(_B2_monitor_xy_var._rotation_absolute, tr1, _B2_monitor_xy_var._rotation_relative);
     _B2_monitor_xy_var._rotation_is_identity =  rot_test_identity(_B2_monitor_xy_var._rotation_relative);
     tc1 = coords_set(
-      0, 0, 1e-06);
+      0, 0, 0.0001);
     rot_transpose(_BW_Chopper_2_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _B2_monitor_xy_var._position_absolute = coords_add(_BW_Chopper_2_var._position_absolute, tc2);
@@ -23332,7 +23393,7 @@ int _B2_monitor_lam_setpos(void)
     rot_mul(_B2_monitor_lam_var._rotation_absolute, tr1, _B2_monitor_lam_var._rotation_relative);
     _B2_monitor_lam_var._rotation_is_identity =  rot_test_identity(_B2_monitor_lam_var._rotation_relative);
     tc1 = coords_set(
-      0, 0, 1e-06);
+      0, 0, 0.0001);
     rot_transpose(_B2_monitor_xy_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
     _B2_monitor_lam_var._position_absolute = coords_add(_B2_monitor_xy_var._position_absolute, tc2);
@@ -23523,13 +23584,17 @@ int _BW2_monitor_ToF_setpos(void)
     tc2 = coords_set(0,0,0);
     Rotation tr1;
     rot_set_rotation(tr1,0,0,0);
-    rot_set_rotation(_BW2_monitor_ToF_var._rotation_absolute,
-      (0)*DEG2RAD, (0.16273933122724)*DEG2RAD, (0)*DEG2RAD);
+    rot_set_rotation(tr1,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_mul(tr1, _B2_monitor_lam_var._rotation_absolute, _BW2_monitor_ToF_var._rotation_absolute);
     rot_transpose(_B2_monitor_lam_var._rotation_absolute, tr1);
     rot_mul(_BW2_monitor_ToF_var._rotation_absolute, tr1, _BW2_monitor_ToF_var._rotation_relative);
     _BW2_monitor_ToF_var._rotation_is_identity =  rot_test_identity(_BW2_monitor_ToF_var._rotation_relative);
-    _BW2_monitor_ToF_var._position_absolute = coords_set(
-      0.03140505829452013, 0.0, 40.1);
+    tc1 = coords_set(
+      0, 0, 0.0001);
+    rot_transpose(_B2_monitor_lam_var._rotation_absolute, tr1);
+    tc2 = rot_apply(tr1, tc1);
+    _BW2_monitor_ToF_var._position_absolute = coords_add(_B2_monitor_lam_var._position_absolute, tc2);
     tc1 = coords_sub(_B2_monitor_lam_var._position_absolute, _BW2_monitor_ToF_var._position_absolute);
     _BW2_monitor_ToF_var._position_relative = rot_apply(_BW2_monitor_ToF_var._rotation_absolute, tc1);
   } /* BW2_monitor_ToF=Monitor_nD() AT ROTATED */
@@ -26832,6 +26897,631 @@ int _guide_101_setpos(void)
   return(0);
 } /* _guide_101_setpos */
 
+/* component PulseShapingChopper1_HR=DiskChopper() SETTING, POSITION/ROTATION */
+int _PulseShapingChopper1_HR_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_PulseShapingChopper1_HR_setpos] component PulseShapingChopper1_HR=DiskChopper() SETTING [DiskChopper:0]");
+  stracpy(_PulseShapingChopper1_HR_var._name, "PulseShapingChopper1_HR", 16384);
+  stracpy(_PulseShapingChopper1_HR_var._type, "DiskChopper", 16384);
+  _PulseShapingChopper1_HR_var._index=108;
+  int current_setpos_index = 108;
+  _PulseShapingChopper1_HR_var._parameters.theta_0 = 2;
+  _PulseShapingChopper1_HR_var._parameters.radius = radius_P1;
+  _PulseShapingChopper1_HR_var._parameters.yheight = 0.095;
+  _PulseShapingChopper1_HR_var._parameters.nu = f_P1;
+  _PulseShapingChopper1_HR_var._parameters.nslit = 2;
+  _PulseShapingChopper1_HR_var._parameters.jitter = 0;
+  _PulseShapingChopper1_HR_var._parameters.delay = delay_P1;
+  _PulseShapingChopper1_HR_var._parameters.isfirst = 0;
+  _PulseShapingChopper1_HR_var._parameters.n_pulse = 1;
+  _PulseShapingChopper1_HR_var._parameters.abs_out = 1;
+  _PulseShapingChopper1_HR_var._parameters.phase = 0;
+  _PulseShapingChopper1_HR_var._parameters.xwidth = 0;
+  _PulseShapingChopper1_HR_var._parameters.verbose = 0;
+
+
+  /* component PulseShapingChopper1_HR=DiskChopper() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_PulseShapingChopper1_HR_var._rotation_absolute,
+      (0)*DEG2RAD, (0.430122381481144)*DEG2RAD, (180)*DEG2RAD);
+    rot_transpose(_guide_101_var._rotation_absolute, tr1);
+    rot_mul(_PulseShapingChopper1_HR_var._rotation_absolute, tr1, _PulseShapingChopper1_HR_var._rotation_relative);
+    _PulseShapingChopper1_HR_var._rotation_is_identity =  rot_test_identity(_PulseShapingChopper1_HR_var._rotation_relative);
+    _PulseShapingChopper1_HR_var._position_absolute = coords_set(
+      0.4108460115539497, 0.0, 107.95);
+    tc1 = coords_sub(_guide_101_var._position_absolute, _PulseShapingChopper1_HR_var._position_absolute);
+    _PulseShapingChopper1_HR_var._position_relative = rot_apply(_PulseShapingChopper1_HR_var._rotation_absolute, tc1);
+  } /* PulseShapingChopper1_HR=DiskChopper() AT ROTATED */
+  DEBUG_COMPONENT("PulseShapingChopper1_HR", _PulseShapingChopper1_HR_var._position_absolute, _PulseShapingChopper1_HR_var._rotation_absolute);
+  instrument->_position_absolute[108] = _PulseShapingChopper1_HR_var._position_absolute;
+  instrument->_position_relative[108] = _PulseShapingChopper1_HR_var._position_relative;
+    _PulseShapingChopper1_HR_var._position_relative_is_zero =  coords_test_zero(_PulseShapingChopper1_HR_var._position_relative);
+  instrument->counter_N[108]  = instrument->counter_P[108] = instrument->counter_P2[108] = 0;
+  instrument->counter_AbsorbProp[108]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0107_PulseShapingChopper1_HR", _PulseShapingChopper1_HR_var._position_absolute, _PulseShapingChopper1_HR_var._rotation_absolute, "DiskChopper");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "theta_0", "0", "2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "radius", "0.5", "radius_P1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "yheight", "NONE", "0.095","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "nu", "NONE", "f_P1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "nslit", "3", "2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "jitter", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "delay", "0", "delay_P1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "isfirst", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "n_pulse", "1", "1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "abs_out", "1", "1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "phase", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "verbose", "0", "0","MCNUM");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _PulseShapingChopper1_HR_setpos */
+
+/* component PulseShapingChopper1_HF=DiskChopper() SETTING, POSITION/ROTATION */
+int _PulseShapingChopper1_HF_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_PulseShapingChopper1_HF_setpos] component PulseShapingChopper1_HF=DiskChopper() SETTING [DiskChopper:0]");
+  stracpy(_PulseShapingChopper1_HF_var._name, "PulseShapingChopper1_HF", 16384);
+  stracpy(_PulseShapingChopper1_HF_var._type, "DiskChopper", 16384);
+  _PulseShapingChopper1_HF_var._index=109;
+  int current_setpos_index = 109;
+  _PulseShapingChopper1_HF_var._parameters.theta_0 = 35;
+  _PulseShapingChopper1_HF_var._parameters.radius = radius_P1;
+  _PulseShapingChopper1_HF_var._parameters.yheight = 0.095;
+  _PulseShapingChopper1_HF_var._parameters.nu = f_P1;
+  _PulseShapingChopper1_HF_var._parameters.nslit = 2;
+  _PulseShapingChopper1_HF_var._parameters.jitter = 0;
+  _PulseShapingChopper1_HF_var._parameters.delay = delay_P1;
+  _PulseShapingChopper1_HF_var._parameters.isfirst = 0;
+  _PulseShapingChopper1_HF_var._parameters.n_pulse = 1;
+  _PulseShapingChopper1_HF_var._parameters.abs_out = 1;
+  _PulseShapingChopper1_HF_var._parameters.phase = 0;
+  _PulseShapingChopper1_HF_var._parameters.xwidth = 0;
+  _PulseShapingChopper1_HF_var._parameters.verbose = 0;
+
+
+  /* component PulseShapingChopper1_HF=DiskChopper() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_PulseShapingChopper1_HF_var._rotation_absolute,
+      (0)*DEG2RAD, (0.430122381481144)*DEG2RAD, (180)*DEG2RAD);
+    rot_transpose(_PulseShapingChopper1_HR_var._rotation_absolute, tr1);
+    rot_mul(_PulseShapingChopper1_HF_var._rotation_absolute, tr1, _PulseShapingChopper1_HF_var._rotation_relative);
+    _PulseShapingChopper1_HF_var._rotation_is_identity =  rot_test_identity(_PulseShapingChopper1_HF_var._rotation_relative);
+    _PulseShapingChopper1_HF_var._position_absolute = coords_set(
+      0.4108460115539497, 0.0, 107.95);
+    tc1 = coords_sub(_PulseShapingChopper1_HR_var._position_absolute, _PulseShapingChopper1_HF_var._position_absolute);
+    _PulseShapingChopper1_HF_var._position_relative = rot_apply(_PulseShapingChopper1_HF_var._rotation_absolute, tc1);
+  } /* PulseShapingChopper1_HF=DiskChopper() AT ROTATED */
+  DEBUG_COMPONENT("PulseShapingChopper1_HF", _PulseShapingChopper1_HF_var._position_absolute, _PulseShapingChopper1_HF_var._rotation_absolute);
+  instrument->_position_absolute[109] = _PulseShapingChopper1_HF_var._position_absolute;
+  instrument->_position_relative[109] = _PulseShapingChopper1_HF_var._position_relative;
+    _PulseShapingChopper1_HF_var._position_relative_is_zero =  coords_test_zero(_PulseShapingChopper1_HF_var._position_relative);
+  instrument->counter_N[109]  = instrument->counter_P[109] = instrument->counter_P2[109] = 0;
+  instrument->counter_AbsorbProp[109]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0108_PulseShapingChopper1_HF", _PulseShapingChopper1_HF_var._position_absolute, _PulseShapingChopper1_HF_var._rotation_absolute, "DiskChopper");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "theta_0", "0", "35","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "radius", "0.5", "radius_P1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "yheight", "NONE", "0.095","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "nu", "NONE", "f_P1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "nslit", "3", "2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "jitter", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "delay", "0", "delay_P1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "isfirst", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "n_pulse", "1", "1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "abs_out", "1", "1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "phase", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "verbose", "0", "0","MCNUM");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _PulseShapingChopper1_HF_setpos */
+
+/* component PulseShapingChopper2=MultiDiskChopper() SETTING, POSITION/ROTATION */
+int _PulseShapingChopper2_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_PulseShapingChopper2_setpos] component PulseShapingChopper2=MultiDiskChopper() SETTING [MultiDiskChopper:0]");
+  stracpy(_PulseShapingChopper2_var._name, "PulseShapingChopper2", 16384);
+  stracpy(_PulseShapingChopper2_var._type, "MultiDiskChopper", 16384);
+  _PulseShapingChopper2_var._index=110;
+  int current_setpos_index = 110;
+  if(theta_pos_P2 && strlen(theta_pos_P2))
+    stracpy(_PulseShapingChopper2_var._parameters.slit_center, theta_pos_P2 ? theta_pos_P2 : "", 16384);
+  else 
+  _PulseShapingChopper2_var._parameters.slit_center[0]='\0';
+  if(theta_width_P2 && strlen(theta_width_P2))
+    stracpy(_PulseShapingChopper2_var._parameters.slit_width, theta_width_P2 ? theta_width_P2 : "", 16384);
+  else 
+  _PulseShapingChopper2_var._parameters.slit_width[0]='\0';
+  _PulseShapingChopper2_var._parameters.nslits = nslits_P2;
+  _PulseShapingChopper2_var._parameters.delta_y = delta_y_P2;
+  _PulseShapingChopper2_var._parameters.nu = f_P2;
+  _PulseShapingChopper2_var._parameters.nrev = 0;
+  _PulseShapingChopper2_var._parameters.ratio = 1;
+  _PulseShapingChopper2_var._parameters.jitter = 0;
+  _PulseShapingChopper2_var._parameters.delay = delay_P2;
+  _PulseShapingChopper2_var._parameters.isfirst = 0;
+  _PulseShapingChopper2_var._parameters.phase = 0;
+  _PulseShapingChopper2_var._parameters.radius = radius_P2;
+  _PulseShapingChopper2_var._parameters.equal = 0;
+  _PulseShapingChopper2_var._parameters.abs_out = 0;
+  _PulseShapingChopper2_var._parameters.verbose = 0;
+
+
+  /* component PulseShapingChopper2=MultiDiskChopper() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_PulseShapingChopper2_var._rotation_absolute,
+      (0)*DEG2RAD, (0.430122381481144)*DEG2RAD, (0)*DEG2RAD);
+    rot_transpose(_PulseShapingChopper1_HF_var._rotation_absolute, tr1);
+    rot_mul(_PulseShapingChopper2_var._rotation_absolute, tr1, _PulseShapingChopper2_var._rotation_relative);
+    _PulseShapingChopper2_var._rotation_is_identity =  rot_test_identity(_PulseShapingChopper2_var._rotation_relative);
+    _PulseShapingChopper2_var._position_absolute = coords_set(
+      0.41159673083080733, 0.0, 108.055);
+    tc1 = coords_sub(_PulseShapingChopper1_HF_var._position_absolute, _PulseShapingChopper2_var._position_absolute);
+    _PulseShapingChopper2_var._position_relative = rot_apply(_PulseShapingChopper2_var._rotation_absolute, tc1);
+  } /* PulseShapingChopper2=MultiDiskChopper() AT ROTATED */
+  DEBUG_COMPONENT("PulseShapingChopper2", _PulseShapingChopper2_var._position_absolute, _PulseShapingChopper2_var._rotation_absolute);
+  instrument->_position_absolute[110] = _PulseShapingChopper2_var._position_absolute;
+  instrument->_position_relative[110] = _PulseShapingChopper2_var._position_relative;
+    _PulseShapingChopper2_var._position_relative_is_zero =  coords_test_zero(_PulseShapingChopper2_var._position_relative);
+  instrument->counter_N[110]  = instrument->counter_P[110] = instrument->counter_P2[110] = 0;
+  instrument->counter_AbsorbProp[110]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0109_PulseShapingChopper2", _PulseShapingChopper2_var._position_absolute, _PulseShapingChopper2_var._rotation_absolute, "MultiDiskChopper");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "slit_center", "0 180", theta_pos_P2, "char*");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "slit_width", "10 20", theta_width_P2, "char*");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "nslits", "2", "nslits_P2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "delta_y", "-0.3", "delta_y_P2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "nu", "0", "f_P2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "nrev", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "ratio", "1", "1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "jitter", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "delay", "0", "delay_P2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "isfirst", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "phase", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "radius", "0.375", "radius_P2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "equal", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "abs_out", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "verbose", "0", "0","MCNUM");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _PulseShapingChopper2_setpos */
+
+/* component P_monitor_ToF=Monitor_nD() SETTING, POSITION/ROTATION */
+int _P_monitor_ToF_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_P_monitor_ToF_setpos] component P_monitor_ToF=Monitor_nD() SETTING [Monitor_nD:0]");
+  stracpy(_P_monitor_ToF_var._name, "P_monitor_ToF", 16384);
+  stracpy(_P_monitor_ToF_var._type, "Monitor_nD", 16384);
+  _P_monitor_ToF_var._index=111;
+  int current_setpos_index = 111;
+  if("" && strlen(""))
+    stracpy(_P_monitor_ToF_var._parameters.user0, "" ? "" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.user0[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_ToF_var._parameters.user1, "" ? "" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.user1[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_ToF_var._parameters.user2, "" ? "" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.user2[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_ToF_var._parameters.user3, "" ? "" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.user3[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_ToF_var._parameters.user4, "" ? "" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.user4[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_ToF_var._parameters.user5, "" ? "" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.user5[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_ToF_var._parameters.user6, "" ? "" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.user6[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_ToF_var._parameters.user7, "" ? "" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.user7[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_ToF_var._parameters.user8, "" ? "" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.user8[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_ToF_var._parameters.user9, "" ? "" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.user9[0]='\0';
+  _P_monitor_ToF_var._parameters.xwidth = 0.06;
+  _P_monitor_ToF_var._parameters.yheight = 0.084;
+  _P_monitor_ToF_var._parameters.zdepth = 0;
+  _P_monitor_ToF_var._parameters.xmin = 0;
+  _P_monitor_ToF_var._parameters.xmax = 0;
+  _P_monitor_ToF_var._parameters.ymin = 0;
+  _P_monitor_ToF_var._parameters.ymax = 0;
+  _P_monitor_ToF_var._parameters.zmin = 0;
+  _P_monitor_ToF_var._parameters.zmax = 0;
+  _P_monitor_ToF_var._parameters.bins = 0;
+  _P_monitor_ToF_var._parameters.min = -1e40;
+  _P_monitor_ToF_var._parameters.max = 1e40;
+  _P_monitor_ToF_var._parameters.restore_neutron = 1;
+  _P_monitor_ToF_var._parameters.radius = 0;
+  if("t limits [0.04:0.100] bins = 20000" && strlen("t limits [0.04:0.100] bins = 20000"))
+    stracpy(_P_monitor_ToF_var._parameters.options, "t limits [0.04:0.100] bins = 20000" ? "t limits [0.04:0.100] bins = 20000" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.options[0]='\0';
+  if("P_monitor_tof.dat" && strlen("P_monitor_tof.dat"))
+    stracpy(_P_monitor_ToF_var._parameters.filename, "P_monitor_tof.dat" ? "P_monitor_tof.dat" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.filename[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_ToF_var._parameters.geometry, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.geometry[0]='\0';
+  _P_monitor_ToF_var._parameters.nowritefile = 0;
+  _P_monitor_ToF_var._parameters.nexus_bins = 0;
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_ToF_var._parameters.username0, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.username0[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_ToF_var._parameters.username1, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.username1[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_ToF_var._parameters.username2, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.username2[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_ToF_var._parameters.username3, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.username3[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_ToF_var._parameters.username4, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.username4[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_ToF_var._parameters.username5, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.username5[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_ToF_var._parameters.username6, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.username6[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_ToF_var._parameters.username7, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.username7[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_ToF_var._parameters.username8, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.username8[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_ToF_var._parameters.username9, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_ToF_var._parameters.username9[0]='\0';
+
+
+  /* component P_monitor_ToF=Monitor_nD() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(tr1,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_mul(tr1, _PulseShapingChopper2_var._rotation_absolute, _P_monitor_ToF_var._rotation_absolute);
+    rot_transpose(_PulseShapingChopper2_var._rotation_absolute, tr1);
+    rot_mul(_P_monitor_ToF_var._rotation_absolute, tr1, _P_monitor_ToF_var._rotation_relative);
+    _P_monitor_ToF_var._rotation_is_identity =  rot_test_identity(_P_monitor_ToF_var._rotation_relative);
+    tc1 = coords_set(
+      0, 0, 0.0001);
+    rot_transpose(_PulseShapingChopper2_var._rotation_absolute, tr1);
+    tc2 = rot_apply(tr1, tc1);
+    _P_monitor_ToF_var._position_absolute = coords_add(_PulseShapingChopper2_var._position_absolute, tc2);
+    tc1 = coords_sub(_PulseShapingChopper2_var._position_absolute, _P_monitor_ToF_var._position_absolute);
+    _P_monitor_ToF_var._position_relative = rot_apply(_P_monitor_ToF_var._rotation_absolute, tc1);
+  } /* P_monitor_ToF=Monitor_nD() AT ROTATED */
+  DEBUG_COMPONENT("P_monitor_ToF", _P_monitor_ToF_var._position_absolute, _P_monitor_ToF_var._rotation_absolute);
+  instrument->_position_absolute[111] = _P_monitor_ToF_var._position_absolute;
+  instrument->_position_relative[111] = _P_monitor_ToF_var._position_relative;
+    _P_monitor_ToF_var._position_relative_is_zero =  coords_test_zero(_P_monitor_ToF_var._position_relative);
+  instrument->counter_N[111]  = instrument->counter_P[111] = instrument->counter_P2[111] = 0;
+  instrument->counter_AbsorbProp[111]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0110_P_monitor_ToF", _P_monitor_ToF_var._position_absolute, _P_monitor_ToF_var._rotation_absolute, "Monitor_nD");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "user0", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "user1", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "user2", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "user3", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "user4", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "user5", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "user6", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "user7", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "user8", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "user9", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "xwidth", "0", "0.06","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "yheight", "0", "0.084","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "xmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "xmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "ymin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "ymax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "zmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "zmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "min", "-1e40", "-1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "max", "1e40", "1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "restore_neutron", "0", "1","int");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "radius", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "options", "NULL", "t limits [0.04:0.100] bins = 20000", "char*");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "filename", "NULL", "P_monitor_tof.dat", "char*");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "geometry", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "nowritefile", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "nexus_bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "username0", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "username1", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "username2", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "username3", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "username4", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "username5", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "username6", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "username7", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "username8", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "username9", "NULL", "NULL", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _P_monitor_ToF_setpos */
+
+/* component P_monitor_lam=Monitor_nD() SETTING, POSITION/ROTATION */
+int _P_monitor_lam_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_P_monitor_lam_setpos] component P_monitor_lam=Monitor_nD() SETTING [Monitor_nD:0]");
+  stracpy(_P_monitor_lam_var._name, "P_monitor_lam", 16384);
+  stracpy(_P_monitor_lam_var._type, "Monitor_nD", 16384);
+  _P_monitor_lam_var._index=112;
+  int current_setpos_index = 112;
+  if("" && strlen(""))
+    stracpy(_P_monitor_lam_var._parameters.user0, "" ? "" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.user0[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_lam_var._parameters.user1, "" ? "" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.user1[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_lam_var._parameters.user2, "" ? "" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.user2[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_lam_var._parameters.user3, "" ? "" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.user3[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_lam_var._parameters.user4, "" ? "" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.user4[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_lam_var._parameters.user5, "" ? "" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.user5[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_lam_var._parameters.user6, "" ? "" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.user6[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_lam_var._parameters.user7, "" ? "" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.user7[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_lam_var._parameters.user8, "" ? "" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.user8[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_lam_var._parameters.user9, "" ? "" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.user9[0]='\0';
+  _P_monitor_lam_var._parameters.xwidth = 0.06;
+  _P_monitor_lam_var._parameters.yheight = 0.085;
+  _P_monitor_lam_var._parameters.zdepth = 0;
+  _P_monitor_lam_var._parameters.xmin = 0;
+  _P_monitor_lam_var._parameters.xmax = 0;
+  _P_monitor_lam_var._parameters.ymin = 0;
+  _P_monitor_lam_var._parameters.ymax = 0;
+  _P_monitor_lam_var._parameters.zmin = 0;
+  _P_monitor_lam_var._parameters.zmax = 0;
+  _P_monitor_lam_var._parameters.bins = 0;
+  _P_monitor_lam_var._parameters.min = -1e40;
+  _P_monitor_lam_var._parameters.max = 1e40;
+  _P_monitor_lam_var._parameters.restore_neutron = 1;
+  _P_monitor_lam_var._parameters.radius = 0;
+  if("lambda limits [0.5:10.0] bins = 130" && strlen("lambda limits [0.5:10.0] bins = 130"))
+    stracpy(_P_monitor_lam_var._parameters.options, "lambda limits [0.5:10.0] bins = 130" ? "lambda limits [0.5:10.0] bins = 130" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.options[0]='\0';
+  if("P_monitor_lam.dat" && strlen("P_monitor_lam.dat"))
+    stracpy(_P_monitor_lam_var._parameters.filename, "P_monitor_lam.dat" ? "P_monitor_lam.dat" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.filename[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_lam_var._parameters.geometry, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.geometry[0]='\0';
+  _P_monitor_lam_var._parameters.nowritefile = 0;
+  _P_monitor_lam_var._parameters.nexus_bins = 0;
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_lam_var._parameters.username0, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.username0[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_lam_var._parameters.username1, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.username1[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_lam_var._parameters.username2, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.username2[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_lam_var._parameters.username3, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.username3[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_lam_var._parameters.username4, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.username4[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_lam_var._parameters.username5, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.username5[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_lam_var._parameters.username6, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.username6[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_lam_var._parameters.username7, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.username7[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_lam_var._parameters.username8, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.username8[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_lam_var._parameters.username9, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_lam_var._parameters.username9[0]='\0';
+
+
+  /* component P_monitor_lam=Monitor_nD() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(tr1,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_mul(tr1, _P_monitor_ToF_var._rotation_absolute, _P_monitor_lam_var._rotation_absolute);
+    rot_transpose(_P_monitor_ToF_var._rotation_absolute, tr1);
+    rot_mul(_P_monitor_lam_var._rotation_absolute, tr1, _P_monitor_lam_var._rotation_relative);
+    _P_monitor_lam_var._rotation_is_identity =  rot_test_identity(_P_monitor_lam_var._rotation_relative);
+    tc1 = coords_set(
+      0, 0, 0.0001);
+    rot_transpose(_P_monitor_ToF_var._rotation_absolute, tr1);
+    tc2 = rot_apply(tr1, tc1);
+    _P_monitor_lam_var._position_absolute = coords_add(_P_monitor_ToF_var._position_absolute, tc2);
+    tc1 = coords_sub(_P_monitor_ToF_var._position_absolute, _P_monitor_lam_var._position_absolute);
+    _P_monitor_lam_var._position_relative = rot_apply(_P_monitor_lam_var._rotation_absolute, tc1);
+  } /* P_monitor_lam=Monitor_nD() AT ROTATED */
+  DEBUG_COMPONENT("P_monitor_lam", _P_monitor_lam_var._position_absolute, _P_monitor_lam_var._rotation_absolute);
+  instrument->_position_absolute[112] = _P_monitor_lam_var._position_absolute;
+  instrument->_position_relative[112] = _P_monitor_lam_var._position_relative;
+    _P_monitor_lam_var._position_relative_is_zero =  coords_test_zero(_P_monitor_lam_var._position_relative);
+  instrument->counter_N[112]  = instrument->counter_P[112] = instrument->counter_P2[112] = 0;
+  instrument->counter_AbsorbProp[112]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0111_P_monitor_lam", _P_monitor_lam_var._position_absolute, _P_monitor_lam_var._rotation_absolute, "Monitor_nD");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "user0", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "user1", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "user2", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "user3", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "user4", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "user5", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "user6", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "user7", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "user8", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "user9", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "xwidth", "0", "0.06","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "yheight", "0", "0.085","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "xmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "xmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "ymin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "ymax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "zmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "zmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "min", "-1e40", "-1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "max", "1e40", "1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "restore_neutron", "0", "1","int");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "radius", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "options", "NULL", "lambda limits [0.5:10.0] bins = 130", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "filename", "NULL", "P_monitor_lam.dat", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "geometry", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "nowritefile", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "nexus_bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "username0", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "username1", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "username2", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "username3", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "username4", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "username5", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "username6", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "username7", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "username8", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "username9", "NULL", "NULL", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _P_monitor_lam_setpos */
+
 _class_ESS_butterfly *class_ESS_butterfly_init(_class_ESS_butterfly *_comp
 ) {
   #define sector (_comp->_parameters.sector)
@@ -28022,51 +28712,110 @@ _class_MultiDiskChopper *class_MultiDiskChopper_init(_class_MultiDiskChopper *_c
   return(_comp);
 } /* class_MultiDiskChopper_init */
 
-_class_Guide_anyshape *class_Guide_anyshape_init(_class_Guide_anyshape *_comp
+_class_DiskChopper *class_DiskChopper_init(_class_DiskChopper *_comp
 ) {
-  #define xwidth (_comp->_parameters.xwidth)
+  #define theta_0 (_comp->_parameters.theta_0)
+  #define radius (_comp->_parameters.radius)
   #define yheight (_comp->_parameters.yheight)
-  #define zdepth (_comp->_parameters.zdepth)
-  #define center (_comp->_parameters.center)
-  #define transmit (_comp->_parameters.transmit)
-  #define R0 (_comp->_parameters.R0)
-  #define Qc (_comp->_parameters.Qc)
-  #define alpha (_comp->_parameters.alpha)
-  #define m (_comp->_parameters.m)
-  #define W (_comp->_parameters.W)
-  #define reflect (_comp->_parameters.reflect)
-  #define geometry (_comp->_parameters.geometry)
-  #define offdata (_comp->_parameters.offdata)
-  #define pTable (_comp->_parameters.pTable)
-  SIG_MESSAGE("[_guide_49_init] component guide_49=Guide_anyshape() INITIALISE [Guide_anyshape:0]");
+  #define nu (_comp->_parameters.nu)
+  #define nslit (_comp->_parameters.nslit)
+  #define jitter (_comp->_parameters.jitter)
+  #define delay (_comp->_parameters.delay)
+  #define isfirst (_comp->_parameters.isfirst)
+  #define n_pulse (_comp->_parameters.n_pulse)
+  #define abs_out (_comp->_parameters.abs_out)
+  #define phase (_comp->_parameters.phase)
+  #define xwidth (_comp->_parameters.xwidth)
+  #define verbose (_comp->_parameters.verbose)
+  #define Tg (_comp->_parameters.Tg)
+  #define To (_comp->_parameters.To)
+  #define delta_y (_comp->_parameters.delta_y)
+  #define height (_comp->_parameters.height)
+  #define omega (_comp->_parameters.omega)
+  SIG_MESSAGE("[_PulseShapingChopper1_HR_init] component PulseShapingChopper1_HR=DiskChopper() INITIALISE [DiskChopper:0]");
 
-  /* initialize OFF object from the file(s) */
-  if (!off_init (geometry, xwidth, yheight, zdepth, !center, &offdata))
-    exit (-1);
-
-  /* optionally initialize reflectivity curves */
-  if (reflect && strlen (reflect) && strcmp (reflect, "NULL") && strcmp (reflect, "0")) {
-    if (Table_Read (&pTable, reflect, 1) <= 0) /* read 1st block data from file into pTable */
-      exit (fprintf (stderr, "Guide_anyshape: %s: can not read file %s. Aborting.\n", NAME_CURRENT_COMP, reflect));
-    else
-      Table_Rebin (&pTable); /* rebin as evenly, increasing array */
+  /* If slit height 'unset', assume full opening */
+  if (yheight == 0) {
+    height = radius;
+  } else {
+    height = yheight;
   }
-  #undef xwidth
+  delta_y = radius - height / 2; /* radius at beam center */
+  omega = 2.0 * PI * nu;         /* rad/s */
+  if (xwidth && !theta_0 && radius)
+    theta_0 = 2 * RAD2DEG * asin (xwidth / 2 / delta_y);
+
+  if (nslit <= 0 || theta_0 <= 0 || radius <= 0) {
+    fprintf (stderr, "DiskChopper: %s: nslit, theta_0 and radius must be > 0\n", NAME_CURRENT_COMP);
+    exit (-1);
+  }
+  if (nslit * theta_0 >= 360) {
+    fprintf (stderr, "DiskChopper: %s: nslit * theta_0 exceeds 2PI\n", NAME_CURRENT_COMP);
+    exit (-1);
+  }
+  if (yheight && yheight > radius) {
+    fprintf (stderr, "DiskChopper: %s: yheight must be < radius\n", NAME_CURRENT_COMP);
+    exit (-1);
+  }
+  if (isfirst && n_pulse <= 0) {
+    fprintf (stderr, "DiskChopper: %s: wrong First chopper pulse number (n_pulse=%g)\n", NAME_CURRENT_COMP, n_pulse);
+    exit (-1);
+  }
+  if (!omega) {
+    fprintf (stderr, "DiskChopper: %s WARNING: chopper frequency is 0!\n", NAME_CURRENT_COMP);
+    omega = 1e-15; /* We should actually use machine epsilon here... */
+  }
+  if (!abs_out) {
+    fprintf (stderr, "DiskChopper: %s WARNING: chopper will NOT absorb neutrons outside radius %g [m]\n", NAME_CURRENT_COMP, radius);
+  }
+
+  theta_0 *= DEG2RAD;
+
+  /* Calulate delay from phase and vice versa */
+  if (phase) {
+    if (delay) {
+      fprintf (stderr, "DiskChopper: %s WARNING: delay AND phase specified. Using phase setting\n", NAME_CURRENT_COMP);
+    }
+    phase *= DEG2RAD;
+    /* 'Delay' should always be a delay, taking rotation direction into account: */
+    delay = phase / fabs (omega);
+  } else {
+    phase = delay * omega; /* rad */
+  }
+
+  /* Time from opening of slit to next opening of slit */
+  Tg = 2.0 * PI / fabs (omega) / nslit;
+
+  /* How long can neutrons pass the Chopper at a single point */
+  To = theta_0 / fabs (omega);
+
+  if (!xwidth)
+    xwidth = 2 * delta_y * sin (theta_0 / 2);
+
+  if (verbose && nu) {
+    printf ("DiskChopper: %s: frequency=%g [Hz] %g [rpm], time frame=%g [s] phase=%g [deg]\n", NAME_CURRENT_COMP, nu, nu * 60, Tg, phase * RAD2DEG);
+    printf ("             %g slits, angle=%g [deg] height=%g [m], width=%g [m] at radius=%g [m]\n", nslit, theta_0 * RAD2DEG, height, xwidth, delta_y);
+  }
+  #undef theta_0
+  #undef radius
   #undef yheight
-  #undef zdepth
-  #undef center
-  #undef transmit
-  #undef R0
-  #undef Qc
-  #undef alpha
-  #undef m
-  #undef W
-  #undef reflect
-  #undef geometry
-  #undef offdata
-  #undef pTable
+  #undef nu
+  #undef nslit
+  #undef jitter
+  #undef delay
+  #undef isfirst
+  #undef n_pulse
+  #undef abs_out
+  #undef phase
+  #undef xwidth
+  #undef verbose
+  #undef Tg
+  #undef To
+  #undef delta_y
+  #undef height
+  #undef omega
   return(_comp);
-} /* class_Guide_anyshape_init */
+} /* class_DiskChopper_init */
 
 
 
@@ -28082,6 +28831,8 @@ int init(void) { /* called by mccode_main for TRex:INITIALISE */
   SIG_MESSAGE("[TRex] INITIALISE [(null):-1]");
   #define L0 (instrument->_parameters.L0)
   #define d_Li (instrument->_parameters.d_Li)
+  #define RRM (instrument->_parameters.RRM)
+  #define phase_P (instrument->_parameters.phase_P)
   #define mod_type (instrument->_parameters.mod_type)
   #define bender (instrument->_parameters.bender)
   #define b_rot (instrument->_parameters.b_rot)
@@ -28105,7 +28856,8 @@ printf("lamb_2: %g \n", lamb_2);
 // frequencies
 f_BW1 = f;
 f_BW2 = f;
-
+f_P1 = RRM*f*0.75;
+f_P2 = -f_P1;
 
 // characteristic wavelength 
 
@@ -28115,6 +28867,8 @@ v0 = 2*PI*K2V/L0;       // speed center neutron
 // time of flight and chopper phases
 tof_BW1 = T_offset + L_BW1/v0;
 tof_BW2 = T_offset + L_BW2/v0;
+tof_P1 = T_offset + L_P1/v0;
+tof_P2 = T_offset + L_P2/v0;
 
 /* Chopper parameters */
 
@@ -28130,11 +28884,28 @@ delta_y_BW2 = delta_y_BW1;
 delay_BW2 = tof_BW2; // time delay
 nslits_BW2 = 1;
 
+// P1 Chopper
+radius_P1 = 0.35;
+delta_y_P1 = 0.305;
+delay_P1 = tof_P1; //time delay
+nslits_P1 = 4;
+phase_P1 = phase_P;// angular delay
+
+
+
+// P2 Chopper
+radius_P2 = 0.35;
+delta_y_P2 = delta_y_P1;
+delay_P2 = tof_P2; //time delay
+nslits_P2 = 4;
+phase_P2 = phase_P;// angular delay
 
 
 }
   #undef L0
   #undef d_Li
+  #undef RRM
+  #undef phase_P
   #undef mod_type
   #undef bender
   #undef b_rot
@@ -28189,13 +28960,13 @@ nslits_BW2 = 1;
   _B1_monitor_xy_setpos(); /* type Monitor_nD */
   _B1_monitor_lam_setpos(); /* type Monitor_nD */
   _BW1_monitor_ToF_setpos(); /* type Monitor_nD */
-  _guide_49_setpos(); /* type Guide_anyshape */
-  _guide_50_setpos(); /* type Guide_anyshape */
-  _guide_51_setpos(); /* type Guide_anyshape */
-  _guide_52_setpos(); /* type Guide_anyshape */
-  _guide_53_setpos(); /* type Guide_anyshape */
-  _guide_54_setpos(); /* type Guide_anyshape */
-  _guide_55_setpos(); /* type Guide_anyshape */
+  _guide_49_setpos(); /* type Guide_anyshape_r */
+  _guide_50_setpos(); /* type Guide_anyshape_r */
+  _guide_51_setpos(); /* type Guide_anyshape_r */
+  _guide_52_setpos(); /* type Guide_anyshape_r */
+  _guide_53_setpos(); /* type Guide_anyshape_r */
+  _guide_54_setpos(); /* type Guide_anyshape_r */
+  _guide_55_setpos(); /* type Guide_anyshape_r */
   _BW_Chopper_2_setpos(); /* type MultiDiskChopper */
   _B2_monitor_xy_setpos(); /* type Monitor_nD */
   _B2_monitor_lam_setpos(); /* type Monitor_nD */
@@ -28245,6 +29016,11 @@ nslits_BW2 = 1;
   _guide_99_setpos(); /* type Guide_anyshape_r */
   _guide_100_setpos(); /* type Guide_anyshape_r */
   _guide_101_setpos(); /* type Guide_anyshape_r */
+  _PulseShapingChopper1_HR_setpos(); /* type DiskChopper */
+  _PulseShapingChopper1_HF_setpos(); /* type DiskChopper */
+  _PulseShapingChopper2_setpos(); /* type MultiDiskChopper */
+  _P_monitor_ToF_setpos(); /* type Monitor_nD */
+  _P_monitor_lam_setpos(); /* type Monitor_nD */
 
   /* call iteratively all components INITIALISE */
   class_ESS_butterfly_init(&_source_var);
@@ -28349,19 +29125,19 @@ nslits_BW2 = 1;
 
   class_Monitor_nD_init(&_BW1_monitor_ToF_var);
 
-  class_Guide_anyshape_init(&_guide_49_var);
+  class_Guide_anyshape_r_init(&_guide_49_var);
 
-  class_Guide_anyshape_init(&_guide_50_var);
+  class_Guide_anyshape_r_init(&_guide_50_var);
 
-  class_Guide_anyshape_init(&_guide_51_var);
+  class_Guide_anyshape_r_init(&_guide_51_var);
 
-  class_Guide_anyshape_init(&_guide_52_var);
+  class_Guide_anyshape_r_init(&_guide_52_var);
 
-  class_Guide_anyshape_init(&_guide_53_var);
+  class_Guide_anyshape_r_init(&_guide_53_var);
 
-  class_Guide_anyshape_init(&_guide_54_var);
+  class_Guide_anyshape_r_init(&_guide_54_var);
 
-  class_Guide_anyshape_init(&_guide_55_var);
+  class_Guide_anyshape_r_init(&_guide_55_var);
 
   class_MultiDiskChopper_init(&_BW_Chopper_2_var);
 
@@ -28460,6 +29236,16 @@ nslits_BW2 = 1;
   class_Guide_anyshape_r_init(&_guide_100_var);
 
   class_Guide_anyshape_r_init(&_guide_101_var);
+
+  class_DiskChopper_init(&_PulseShapingChopper1_HR_var);
+
+  class_DiskChopper_init(&_PulseShapingChopper1_HF_var);
+
+  class_MultiDiskChopper_init(&_PulseShapingChopper2_var);
+
+  class_Monitor_nD_init(&_P_monitor_ToF_var);
+
+  class_Monitor_nD_init(&_P_monitor_lam_var);
 
   if (mcdotrace) display();
   DEBUG_INSTR_END();
@@ -28573,6 +29359,11 @@ nslits_BW2 = 1;
 #pragma acc update device(_guide_99_var)
 #pragma acc update device(_guide_100_var)
 #pragma acc update device(_guide_101_var)
+#pragma acc update device(_PulseShapingChopper1_HR_var)
+#pragma acc update device(_PulseShapingChopper1_HF_var)
+#pragma acc update device(_PulseShapingChopper2_var)
+#pragma acc update device(_P_monitor_ToF_var)
+#pragma acc update device(_P_monitor_lam_var)
 #pragma acc update device(_instrument_var)
 #endif
 
@@ -29861,114 +30652,56 @@ void class_MultiDiskChopper_trace(_class_MultiDiskChopper *_comp
 } /* class_MultiDiskChopper_trace */
 
 #pragma acc routine
-void class_Guide_anyshape_trace(_class_Guide_anyshape *_comp
+void class_DiskChopper_trace(_class_DiskChopper *_comp
   , _class_particle *_particle) {
   ABSORBED=SCATTERED=RESTORE=0;
-  #define xwidth (_comp->_parameters.xwidth)
+  #define theta_0 (_comp->_parameters.theta_0)
+  #define radius (_comp->_parameters.radius)
   #define yheight (_comp->_parameters.yheight)
-  #define zdepth (_comp->_parameters.zdepth)
-  #define center (_comp->_parameters.center)
-  #define transmit (_comp->_parameters.transmit)
-  #define R0 (_comp->_parameters.R0)
-  #define Qc (_comp->_parameters.Qc)
-  #define alpha (_comp->_parameters.alpha)
-  #define m (_comp->_parameters.m)
-  #define W (_comp->_parameters.W)
-  #define reflect (_comp->_parameters.reflect)
-  #define geometry (_comp->_parameters.geometry)
-  #define offdata (_comp->_parameters.offdata)
-  #define pTable (_comp->_parameters.pTable)
-  SIG_MESSAGE("[_guide_49_trace] component guide_49=Guide_anyshape() TRACE [Guide_anyshape:0]");
+  #define nu (_comp->_parameters.nu)
+  #define nslit (_comp->_parameters.nslit)
+  #define jitter (_comp->_parameters.jitter)
+  #define delay (_comp->_parameters.delay)
+  #define isfirst (_comp->_parameters.isfirst)
+  #define n_pulse (_comp->_parameters.n_pulse)
+  #define abs_out (_comp->_parameters.abs_out)
+  #define phase (_comp->_parameters.phase)
+  #define xwidth (_comp->_parameters.xwidth)
+  #define verbose (_comp->_parameters.verbose)
+  #define Tg (_comp->_parameters.Tg)
+  #define To (_comp->_parameters.To)
+  #define delta_y (_comp->_parameters.delta_y)
+  #define height (_comp->_parameters.height)
+  #define omega (_comp->_parameters.omega)
+  SIG_MESSAGE("[_PulseShapingChopper1_HR_trace] component PulseShapingChopper1_HR=DiskChopper() TRACE [DiskChopper:0]");
 
-  int intersect = 0;
-  int counter = 0;
-  /* main loop for multiple reflections */
-  #ifdef OPENACC
-  off_struct thread_offdata = offdata;
-  #else
-  #define thread_offdata offdata
-  #endif
-  do {
-    double t0 = 0, t3 = 0, dt = 0;
-    Coords n0, n3, n = { 0, 0, 0 };
-    /* determine intersections with object */
+  double toff;
+  double yprime;
+  PROP_Z0;
+  yprime = y + delta_y;
 
-    double mc_gx = 0.0, mc_gy = 0.0, mc_gz = 0.0;
-    if (mcgravitation) {
-      Coords locgrav;
-      locgrav = rot_apply (_comp->_rotation_absolute, coords_set (0, -GRAVITY, 0));
-      coords_get (locgrav, &mc_gx, &mc_gy, &mc_gz);
-    }
+  /* Is neutron outside the vertical slit range and should we absorb? */
+  if (abs_out && (x * x + yprime * yprime) > radius * radius) {
+    ABSORB;
+  }
+  /* Does neutron hit inner solid part of chopper in case of yheight!=radius? */
+  if ((x * x + yprime * yprime) < (radius - height) * (radius - height)) {
+    ABSORB;
+  }
 
-    intersect = off_intersect (&t0, &t3, &n0, &n3, x, y, z, vx, vy, vz, mc_gx, mc_gy, mc_gz, thread_offdata);
+  if (isfirst) {
+    /* all events are put in the transmitted time frame */
+    t = atan2 (x, yprime) / omega + To * randpm1 () / 2.0 + delay + (jitter ? jitter * randnorm () : 0) + (n_pulse > 1 ? floor (n_pulse * rand01 ()) * Tg : 0);
+    /* correction: chopper slits transmission opening/full disk */
+    p *= nslit * theta_0 / 2.0 / PI;
+  } else {
+    toff = fabs (t - atan2 (x, yprime) / omega - delay - (jitter ? jitter * randnorm () : 0));
 
-    /* get the smallest positive */
-    if (t0 > 0) {
-      dt = t0;
-      n = n0;
-    }
-    if (intersect > 1 && dt <= 0 && t3 > dt) {
-      dt = t3;
-      n = n3;
-    }
-
-    /* exit loop when no intersection forward */
-    if (dt <= 0 || !intersect)
-      break;
-
-    double nx, ny, nz;
-    coords_get (n, &nx, &ny, &nz);
-
-    /* propagate neutron to reflection point, must be before n_dot_v with gravity */
-    PROP_DT (dt);
-
-    /* test if the angle is large in case the object has an internal coating */
-    double n2 = nx * nx + ny * ny + nz * nz;
-    double n_dot_v = scalar_prod (vx, vy, vz, nx, ny, nz);
-    double q = 2 * fabs (n_dot_v) * V2K / sqrt (n2);
-
-    /* handle surface intersection */
-    double R = 0;
-    /* Reflectivity (see component Guide). */
-    if (reflect && strlen (reflect) && strcmp (reflect, "NULL") && strcmp (reflect, "0"))
-      TableReflecFunc (q, &pTable, &R);
-    else {
-      double par[] = { R0, Qc, alpha, m, W };
-      StdReflecFunc (q, par, &R);
-    }
-
-    if (R > 1) {
-      fprintf (stderr, "Guide_anyshape: %s: Warning: Reflectivity R=%g > 1 lowered to R=1.\n", NAME_CURRENT_COMP, R);
-      R = 1;
-    }
-    /* now handle either probability when transmit or reflect */
-    if (R > 0) {
-      /* when allowing transmission, we should check if indeed we reflect */
-      if (!transmit || (transmit && rand01 () < R)) {
-        /* reflect velocity: -q -> -2*n*n.v/|n|^2 */
-        if (!transmit)
-          p *= R;
-        n_dot_v *= 2 / n2;
-        vx -= nx * n_dot_v;
-        vy -= ny * n_dot_v;
-        vz -= nz * n_dot_v;
-        SCATTER;
-      } else {
-        if (transmit) {
-          p *= (1 - R); /* transmitted beam has non reflected weight */
-        } else
-          ABSORB;
-      }
-    } else {
-      /* R=0: no reflection: absorb or transmit through when allowed */
-      if (!transmit)
-        ABSORB;
-    }
-
-    /* leave surface by a small amount so that next intersection is not the same one */
-    PROP_DT (1e-9);
-  } while (intersect && counter++ < CHAR_BUF_LENGTH);
-  /* end of main loop */
+    /* does neutron hit outside slit? */
+    if (fmod (toff + To / 2.0, Tg) > To)
+      ABSORB;
+  }
+  SCATTER;
 #ifndef NOABSORB_INF_NAN
   /* Check for nan or inf particle parms */ 
   if(isnan(p + t + vx + vy + vz + x + y + z)) ABSORB;
@@ -29983,22 +30716,26 @@ void class_Guide_anyshape_trace(_class_Guide_anyshape *_comp
   if(isnan(y)  ||  isinf(y)) printf("NAN or INF found in y,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
   if(isnan(z)  ||  isinf(z)) printf("NAN or INF found in z,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
 #endif
-  #undef xwidth
+  #undef theta_0
+  #undef radius
   #undef yheight
-  #undef zdepth
-  #undef center
-  #undef transmit
-  #undef R0
-  #undef Qc
-  #undef alpha
-  #undef m
-  #undef W
-  #undef reflect
-  #undef geometry
-  #undef offdata
-  #undef pTable
+  #undef nu
+  #undef nslit
+  #undef jitter
+  #undef delay
+  #undef isfirst
+  #undef n_pulse
+  #undef abs_out
+  #undef phase
+  #undef xwidth
+  #undef verbose
+  #undef Tg
+  #undef To
+  #undef delta_y
+  #undef height
+  #undef omega
   return;
-} /* class_Guide_anyshape_trace */
+} /* class_DiskChopper_trace */
 
 /* *****************************************************************************
 * instrument 'TRex' TRACE
@@ -31093,7 +31830,7 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       _particle->_index++;
       if (!ABSORBED) { DEBUG_STATE(); }
     } /* end component BW1_monitor_ToF [51] */
-    /* begin component guide_49=Guide_anyshape() [52] */
+    /* begin component guide_49=Guide_anyshape_r() [52] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
       if (_guide_49_var._rotation_is_identity) {
         if(!_guide_49_var._position_relative_is_zero) {
@@ -31108,13 +31845,13 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       _particle_save = *_particle;
       DEBUG_COMP(_guide_49_var._name);
       DEBUG_STATE();
-      class_Guide_anyshape_trace(&_guide_49_var, _particle);
+      class_Guide_anyshape_r_trace(&_guide_49_var, _particle);
       if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
       _particle->_index++;
       if (!ABSORBED) { DEBUG_STATE(); }
     } /* end component guide_49 [52] */
-    /* begin component guide_50=Guide_anyshape() [53] */
+    /* begin component guide_50=Guide_anyshape_r() [53] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
       if (_guide_50_var._rotation_is_identity) {
         if(!_guide_50_var._position_relative_is_zero) {
@@ -31129,13 +31866,13 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       _particle_save = *_particle;
       DEBUG_COMP(_guide_50_var._name);
       DEBUG_STATE();
-      class_Guide_anyshape_trace(&_guide_50_var, _particle);
+      class_Guide_anyshape_r_trace(&_guide_50_var, _particle);
       if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
       _particle->_index++;
       if (!ABSORBED) { DEBUG_STATE(); }
     } /* end component guide_50 [53] */
-    /* begin component guide_51=Guide_anyshape() [54] */
+    /* begin component guide_51=Guide_anyshape_r() [54] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
       if (_guide_51_var._rotation_is_identity) {
         if(!_guide_51_var._position_relative_is_zero) {
@@ -31150,13 +31887,13 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       _particle_save = *_particle;
       DEBUG_COMP(_guide_51_var._name);
       DEBUG_STATE();
-      class_Guide_anyshape_trace(&_guide_51_var, _particle);
+      class_Guide_anyshape_r_trace(&_guide_51_var, _particle);
       if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
       _particle->_index++;
       if (!ABSORBED) { DEBUG_STATE(); }
     } /* end component guide_51 [54] */
-    /* begin component guide_52=Guide_anyshape() [55] */
+    /* begin component guide_52=Guide_anyshape_r() [55] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
       if (_guide_52_var._rotation_is_identity) {
         if(!_guide_52_var._position_relative_is_zero) {
@@ -31171,13 +31908,13 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       _particle_save = *_particle;
       DEBUG_COMP(_guide_52_var._name);
       DEBUG_STATE();
-      class_Guide_anyshape_trace(&_guide_52_var, _particle);
+      class_Guide_anyshape_r_trace(&_guide_52_var, _particle);
       if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
       _particle->_index++;
       if (!ABSORBED) { DEBUG_STATE(); }
     } /* end component guide_52 [55] */
-    /* begin component guide_53=Guide_anyshape() [56] */
+    /* begin component guide_53=Guide_anyshape_r() [56] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
       if (_guide_53_var._rotation_is_identity) {
         if(!_guide_53_var._position_relative_is_zero) {
@@ -31192,13 +31929,13 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       _particle_save = *_particle;
       DEBUG_COMP(_guide_53_var._name);
       DEBUG_STATE();
-      class_Guide_anyshape_trace(&_guide_53_var, _particle);
+      class_Guide_anyshape_r_trace(&_guide_53_var, _particle);
       if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
       _particle->_index++;
       if (!ABSORBED) { DEBUG_STATE(); }
     } /* end component guide_53 [56] */
-    /* begin component guide_54=Guide_anyshape() [57] */
+    /* begin component guide_54=Guide_anyshape_r() [57] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
       if (_guide_54_var._rotation_is_identity) {
         if(!_guide_54_var._position_relative_is_zero) {
@@ -31213,13 +31950,13 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       _particle_save = *_particle;
       DEBUG_COMP(_guide_54_var._name);
       DEBUG_STATE();
-      class_Guide_anyshape_trace(&_guide_54_var, _particle);
+      class_Guide_anyshape_r_trace(&_guide_54_var, _particle);
       if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
       _particle->_index++;
       if (!ABSORBED) { DEBUG_STATE(); }
     } /* end component guide_54 [57] */
-    /* begin component guide_55=Guide_anyshape() [58] */
+    /* begin component guide_55=Guide_anyshape_r() [58] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
       if (_guide_55_var._rotation_is_identity) {
         if(!_guide_55_var._position_relative_is_zero) {
@@ -31234,7 +31971,7 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       _particle_save = *_particle;
       DEBUG_COMP(_guide_55_var._name);
       DEBUG_STATE();
-      class_Guide_anyshape_trace(&_guide_55_var, _particle);
+      class_Guide_anyshape_r_trace(&_guide_55_var, _particle);
       if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
       _particle->_index++;
@@ -32269,7 +33006,119 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       _particle->_index++;
       if (!ABSORBED) { DEBUG_STATE(); }
     } /* end component guide_101 [107] */
-    if (_particle->_index > 107)
+    /* begin component PulseShapingChopper1_HR=DiskChopper() [108] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_PulseShapingChopper1_HR_var._rotation_is_identity) {
+        if(!_PulseShapingChopper1_HR_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _PulseShapingChopper1_HR_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_PulseShapingChopper1_HR_var._position_relative, _PulseShapingChopper1_HR_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 108) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_PulseShapingChopper1_HR_var._name);
+      DEBUG_STATE();
+      class_DiskChopper_trace(&_PulseShapingChopper1_HR_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      // GROUP PulseShapingChopper1: from PulseShapingChopper1_HR [108] to PulseShapingChopper1_HF [109]
+      if (SCATTERED) _particle->_index = 109; // when SCATTERED in GROUP: reach exit of GROUP after PulseShapingChopper1_HF
+      else particle_restore(_particle, &_particle_save); // not SCATTERED in GROUP, restore
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component PulseShapingChopper1_HR [108] */
+    /* begin component PulseShapingChopper1_HF=DiskChopper() [109] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_PulseShapingChopper1_HF_var._rotation_is_identity) {
+        if(!_PulseShapingChopper1_HF_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _PulseShapingChopper1_HF_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_PulseShapingChopper1_HF_var._position_relative, _PulseShapingChopper1_HF_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 109) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      // 2nd or higher GROUP member, "reuse" coordinate-changed _particle_save from 1st GROUP element.
+      mccoordschange(_PulseShapingChopper1_HF_var._position_relative, _PulseShapingChopper1_HF_var._rotation_relative, &_particle_save);
+      DEBUG_COMP(_PulseShapingChopper1_HF_var._name);
+      DEBUG_STATE();
+      class_DiskChopper_trace(&_PulseShapingChopper1_HF_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      // GROUP PulseShapingChopper1: from PulseShapingChopper1_HR [108] to PulseShapingChopper1_HF [109]
+      if (SCATTERED) _particle->_index = 109; // when SCATTERED in GROUP: reach exit of GROUP after PulseShapingChopper1_HF
+      else ABSORBED=1;     // not SCATTERED at end of GROUP: removes left events
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component PulseShapingChopper1_HF [109] */
+    /* begin component PulseShapingChopper2=MultiDiskChopper() [110] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_PulseShapingChopper2_var._rotation_is_identity) {
+        if(!_PulseShapingChopper2_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _PulseShapingChopper2_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_PulseShapingChopper2_var._position_relative, _PulseShapingChopper2_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 110) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_PulseShapingChopper2_var._name);
+      DEBUG_STATE();
+      class_MultiDiskChopper_trace(&_PulseShapingChopper2_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component PulseShapingChopper2 [110] */
+    /* begin component P_monitor_ToF=Monitor_nD() [111] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_P_monitor_ToF_var._rotation_is_identity) {
+        if(!_P_monitor_ToF_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _P_monitor_ToF_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_P_monitor_ToF_var._position_relative, _P_monitor_ToF_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 111) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_P_monitor_ToF_var._name);
+      DEBUG_STATE();
+      class_Monitor_nD_trace(&_P_monitor_ToF_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component P_monitor_ToF [111] */
+    /* begin component P_monitor_lam=Monitor_nD() [112] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_P_monitor_lam_var._rotation_is_identity) {
+        if(!_P_monitor_lam_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _P_monitor_lam_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_P_monitor_lam_var._position_relative, _P_monitor_lam_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 112) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_P_monitor_lam_var._name);
+      DEBUG_STATE();
+      class_Monitor_nD_trace(&_P_monitor_lam_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component P_monitor_lam [112] */
+    if (_particle->_index > 112)
       ABSORBED++; /* absorbed when passed all components */
   } /* while !ABSORBED */
 
@@ -33209,7 +34058,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
 #endif
           mccoordschange(_guide_49_var._position_relative, _guide_49_var._rotation_relative, _particle);
         _particle_save = *_particle;
-        class_Guide_anyshape_trace(&_guide_49_var, _particle);
+        class_Guide_anyshape_r_trace(&_guide_49_var, _particle);
         if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
         _particle->_index++;
@@ -33224,7 +34073,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
 #endif
           mccoordschange(_guide_50_var._position_relative, _guide_50_var._rotation_relative, _particle);
         _particle_save = *_particle;
-        class_Guide_anyshape_trace(&_guide_50_var, _particle);
+        class_Guide_anyshape_r_trace(&_guide_50_var, _particle);
         if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
         _particle->_index++;
@@ -33239,7 +34088,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
 #endif
           mccoordschange(_guide_51_var._position_relative, _guide_51_var._rotation_relative, _particle);
         _particle_save = *_particle;
-        class_Guide_anyshape_trace(&_guide_51_var, _particle);
+        class_Guide_anyshape_r_trace(&_guide_51_var, _particle);
         if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
         _particle->_index++;
@@ -33254,7 +34103,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
 #endif
           mccoordschange(_guide_52_var._position_relative, _guide_52_var._rotation_relative, _particle);
         _particle_save = *_particle;
-        class_Guide_anyshape_trace(&_guide_52_var, _particle);
+        class_Guide_anyshape_r_trace(&_guide_52_var, _particle);
         if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
         _particle->_index++;
@@ -33269,7 +34118,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
 #endif
           mccoordschange(_guide_53_var._position_relative, _guide_53_var._rotation_relative, _particle);
         _particle_save = *_particle;
-        class_Guide_anyshape_trace(&_guide_53_var, _particle);
+        class_Guide_anyshape_r_trace(&_guide_53_var, _particle);
         if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
         _particle->_index++;
@@ -33284,7 +34133,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
 #endif
           mccoordschange(_guide_54_var._position_relative, _guide_54_var._rotation_relative, _particle);
         _particle_save = *_particle;
-        class_Guide_anyshape_trace(&_guide_54_var, _particle);
+        class_Guide_anyshape_r_trace(&_guide_54_var, _particle);
         if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
         _particle->_index++;
@@ -33299,7 +34148,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
 #endif
           mccoordschange(_guide_55_var._position_relative, _guide_55_var._rotation_relative, _particle);
         _particle_save = *_particle;
-        class_Guide_anyshape_trace(&_guide_55_var, _particle);
+        class_Guide_anyshape_r_trace(&_guide_55_var, _particle);
         if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
         _particle->_index++;
@@ -34040,6 +34889,87 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         _particle->_index++;
       }
 
+      // PulseShapingChopper1_HR
+    if (!ABSORBED && _particle->_index == 108) {
+#ifndef MULTICORE
+        if (_PulseShapingChopper1_HR_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _PulseShapingChopper1_HR_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_PulseShapingChopper1_HR_var._position_relative, _PulseShapingChopper1_HR_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_DiskChopper_trace(&_PulseShapingChopper1_HR_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      // GROUP PulseShapingChopper1: from PulseShapingChopper1_HR [108] to PulseShapingChopper1_HF [109]
+      if (SCATTERED) _particle->_index = 109; // when SCATTERED in GROUP: reach exit of GROUP after PulseShapingChopper1_HF
+      else ABSORBED=0; // not SCATTERED within GROUP: always tries next
+        _particle->_index++;
+      }
+
+      // PulseShapingChopper1_HF
+    if (!ABSORBED && _particle->_index == 109) {
+#ifndef MULTICORE
+        if (_PulseShapingChopper1_HF_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _PulseShapingChopper1_HF_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_PulseShapingChopper1_HF_var._position_relative, _PulseShapingChopper1_HF_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_DiskChopper_trace(&_PulseShapingChopper1_HF_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      // GROUP PulseShapingChopper1: from PulseShapingChopper1_HR [108] to PulseShapingChopper1_HF [109]
+      if (SCATTERED) _particle->_index = 109; // when SCATTERED in GROUP: reach exit of GROUP after PulseShapingChopper1_HF
+      else ABSORBED=1;     // not SCATTERED at end of GROUP: removes left events
+        _particle->_index++;
+      }
+
+      // PulseShapingChopper2
+    if (!ABSORBED && _particle->_index == 110) {
+#ifndef MULTICORE
+        if (_PulseShapingChopper2_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _PulseShapingChopper2_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_PulseShapingChopper2_var._position_relative, _PulseShapingChopper2_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_MultiDiskChopper_trace(&_PulseShapingChopper2_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // P_monitor_ToF
+    if (!ABSORBED && _particle->_index == 111) {
+#ifndef MULTICORE
+        if (_P_monitor_ToF_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _P_monitor_ToF_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_P_monitor_ToF_var._position_relative, _P_monitor_ToF_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Monitor_nD_trace(&_P_monitor_ToF_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // P_monitor_lam
+    if (!ABSORBED && _particle->_index == 112) {
+#ifndef MULTICORE
+        if (_P_monitor_lam_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _P_monitor_lam_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_P_monitor_lam_var._position_relative, _P_monitor_lam_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Monitor_nD_trace(&_P_monitor_lam_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
     }
 
     // jump to next viable seed
@@ -34315,6 +35245,13 @@ int save(FILE *handle) { /* called by mccode_main for TRex:SAVE */
 
 
 
+
+
+
+
+  class_Monitor_nD_save(&_P_monitor_ToF_var);
+
+  class_Monitor_nD_save(&_P_monitor_lam_var);
 
   if (!handle) siminfo_close(); 
 
@@ -34593,6 +35530,11 @@ int finally(void) { /* called by mccode_main for TRex:FINALLY */
 #pragma acc update host(_guide_99_var)
 #pragma acc update host(_guide_100_var)
 #pragma acc update host(_guide_101_var)
+#pragma acc update host(_PulseShapingChopper1_HR_var)
+#pragma acc update host(_PulseShapingChopper1_HF_var)
+#pragma acc update host(_PulseShapingChopper2_var)
+#pragma acc update host(_P_monitor_ToF_var)
+#pragma acc update host(_P_monitor_lam_var)
 #pragma acc update host(_instrument_var)
 
   siminfo_init(NULL);
@@ -34602,6 +35544,8 @@ int finally(void) { /* called by mccode_main for TRex:FINALLY */
   SIG_MESSAGE("[TRex] FINALLY [(null):-1]");
   #define L0 (instrument->_parameters.L0)
   #define d_Li (instrument->_parameters.d_Li)
+  #define RRM (instrument->_parameters.RRM)
+  #define phase_P (instrument->_parameters.phase_P)
   #define mod_type (instrument->_parameters.mod_type)
   #define bender (instrument->_parameters.bender)
   #define b_rot (instrument->_parameters.b_rot)
@@ -34610,6 +35554,8 @@ int finally(void) { /* called by mccode_main for TRex:FINALLY */
 }
   #undef L0
   #undef d_Li
+  #undef RRM
+  #undef phase_P
   #undef mod_type
   #undef bender
   #undef b_rot
@@ -34735,6 +35681,14 @@ int finally(void) { /* called by mccode_main for TRex:FINALLY */
 
 
 
+
+
+
+  class_MultiDiskChopper_finally(&_PulseShapingChopper2_var);
+
+  class_Monitor_nD_finally(&_P_monitor_ToF_var);
+
+  class_Monitor_nD_finally(&_P_monitor_lam_var);
 
   siminfo_close(); 
 
@@ -35333,43 +36287,67 @@ _class_MultiDiskChopper *class_MultiDiskChopper_display(_class_MultiDiskChopper 
   return(_comp);
 } /* class_MultiDiskChopper_display */
 
-_class_Guide_anyshape *class_Guide_anyshape_display(_class_Guide_anyshape *_comp
+_class_DiskChopper *class_DiskChopper_display(_class_DiskChopper *_comp
 ) {
-  #define xwidth (_comp->_parameters.xwidth)
+  #define theta_0 (_comp->_parameters.theta_0)
+  #define radius (_comp->_parameters.radius)
   #define yheight (_comp->_parameters.yheight)
-  #define zdepth (_comp->_parameters.zdepth)
-  #define center (_comp->_parameters.center)
-  #define transmit (_comp->_parameters.transmit)
-  #define R0 (_comp->_parameters.R0)
-  #define Qc (_comp->_parameters.Qc)
-  #define alpha (_comp->_parameters.alpha)
-  #define m (_comp->_parameters.m)
-  #define W (_comp->_parameters.W)
-  #define reflect (_comp->_parameters.reflect)
-  #define geometry (_comp->_parameters.geometry)
-  #define offdata (_comp->_parameters.offdata)
-  #define pTable (_comp->_parameters.pTable)
-  SIG_MESSAGE("[_guide_49_display] component guide_49=Guide_anyshape() DISPLAY [Guide_anyshape:0]");
+  #define nu (_comp->_parameters.nu)
+  #define nslit (_comp->_parameters.nslit)
+  #define jitter (_comp->_parameters.jitter)
+  #define delay (_comp->_parameters.delay)
+  #define isfirst (_comp->_parameters.isfirst)
+  #define n_pulse (_comp->_parameters.n_pulse)
+  #define abs_out (_comp->_parameters.abs_out)
+  #define phase (_comp->_parameters.phase)
+  #define xwidth (_comp->_parameters.xwidth)
+  #define verbose (_comp->_parameters.verbose)
+  #define Tg (_comp->_parameters.Tg)
+  #define To (_comp->_parameters.To)
+  #define delta_y (_comp->_parameters.delta_y)
+  #define height (_comp->_parameters.height)
+  #define omega (_comp->_parameters.omega)
+  SIG_MESSAGE("[_PulseShapingChopper1_HR_display] component PulseShapingChopper1_HR=DiskChopper() DISPLAY [DiskChopper:0]");
 
   printf("MCDISPLAY: component %s\n", _comp->_name);
-  /* display the object */
-  off_display (offdata);
-  #undef xwidth
+
+  int j;
+  /* Arrays for storing geometry of slit/beamstop */
+
+  circle ("xy", 0, -delta_y, 0, radius);
+
+  /* Drawing the slit(s) */
+  for (j = 0; j < nslit; j++) {
+    /* Angular start/end of slit */
+    double tmin = j * (2.0 * PI / nslit) - theta_0 / 2.0 + phase;
+    double tmax = tmin + theta_0;
+    /* Draw lines for each slit. */
+
+    line (radius * sin (tmin), radius * cos (tmin) - delta_y, 0, (radius - height) * sin (tmin), (radius - height) * cos (tmin) - delta_y, 0);
+    line ((radius - height) * sin (tmin), (radius - height) * cos (tmin) - delta_y, 0, (radius - height) * sin (tmax), (radius - height) * cos (tmax) - delta_y,
+          0);
+    line ((radius - height) * sin (tmax), (radius - height) * cos (tmax) - delta_y, 0, radius * sin (tmax), radius * cos (tmax) - delta_y, 0);
+  }
+  #undef theta_0
+  #undef radius
   #undef yheight
-  #undef zdepth
-  #undef center
-  #undef transmit
-  #undef R0
-  #undef Qc
-  #undef alpha
-  #undef m
-  #undef W
-  #undef reflect
-  #undef geometry
-  #undef offdata
-  #undef pTable
+  #undef nu
+  #undef nslit
+  #undef jitter
+  #undef delay
+  #undef isfirst
+  #undef n_pulse
+  #undef abs_out
+  #undef phase
+  #undef xwidth
+  #undef verbose
+  #undef Tg
+  #undef To
+  #undef delta_y
+  #undef height
+  #undef omega
   return(_comp);
-} /* class_Guide_anyshape_display */
+} /* class_DiskChopper_display */
 
 
   #undef magnify
@@ -35488,19 +36466,19 @@ int display(void) { /* called by mccode_main for TRex:DISPLAY */
 
   class_Monitor_nD_display(&_BW1_monitor_ToF_var);
 
-  class_Guide_anyshape_display(&_guide_49_var);
+  class_Guide_anyshape_r_display(&_guide_49_var);
 
-  class_Guide_anyshape_display(&_guide_50_var);
+  class_Guide_anyshape_r_display(&_guide_50_var);
 
-  class_Guide_anyshape_display(&_guide_51_var);
+  class_Guide_anyshape_r_display(&_guide_51_var);
 
-  class_Guide_anyshape_display(&_guide_52_var);
+  class_Guide_anyshape_r_display(&_guide_52_var);
 
-  class_Guide_anyshape_display(&_guide_53_var);
+  class_Guide_anyshape_r_display(&_guide_53_var);
 
-  class_Guide_anyshape_display(&_guide_54_var);
+  class_Guide_anyshape_r_display(&_guide_54_var);
 
-  class_Guide_anyshape_display(&_guide_55_var);
+  class_Guide_anyshape_r_display(&_guide_55_var);
 
   class_MultiDiskChopper_display(&_BW_Chopper_2_var);
 
@@ -35599,6 +36577,16 @@ int display(void) { /* called by mccode_main for TRex:DISPLAY */
   class_Guide_anyshape_r_display(&_guide_100_var);
 
   class_Guide_anyshape_r_display(&_guide_101_var);
+
+  class_DiskChopper_display(&_PulseShapingChopper1_HR_var);
+
+  class_DiskChopper_display(&_PulseShapingChopper1_HF_var);
+
+  class_MultiDiskChopper_display(&_PulseShapingChopper2_var);
+
+  class_Monitor_nD_display(&_P_monitor_ToF_var);
+
+  class_Monitor_nD_display(&_P_monitor_lam_var);
 
   printf("MCDISPLAY: end\n");
 
@@ -35718,6 +36706,11 @@ void* _getvar_parameters(char* compname)
   if (!strcmp(compname, "guide_99")) return (void *) &(_guide_99_var._parameters);
   if (!strcmp(compname, "guide_100")) return (void *) &(_guide_100_var._parameters);
   if (!strcmp(compname, "guide_101")) return (void *) &(_guide_101_var._parameters);
+  if (!strcmp(compname, "PulseShapingChopper1_HR")) return (void *) &(_PulseShapingChopper1_HR_var._parameters);
+  if (!strcmp(compname, "PulseShapingChopper1_HF")) return (void *) &(_PulseShapingChopper1_HF_var._parameters);
+  if (!strcmp(compname, "PulseShapingChopper2")) return (void *) &(_PulseShapingChopper2_var._parameters);
+  if (!strcmp(compname, "P_monitor_ToF")) return (void *) &(_P_monitor_ToF_var._parameters);
+  if (!strcmp(compname, "P_monitor_lam")) return (void *) &(_P_monitor_lam_var._parameters);
   return 0;
 }
 
@@ -35838,6 +36831,11 @@ int _getcomp_index(char* compname)
   if (!strcmp(compname, "guide_99")) return 105;
   if (!strcmp(compname, "guide_100")) return 106;
   if (!strcmp(compname, "guide_101")) return 107;
+  if (!strcmp(compname, "PulseShapingChopper1_HR")) return 108;
+  if (!strcmp(compname, "PulseShapingChopper1_HF")) return 109;
+  if (!strcmp(compname, "PulseShapingChopper2")) return 110;
+  if (!strcmp(compname, "P_monitor_ToF")) return 111;
+  if (!strcmp(compname, "P_monitor_lam")) return 112;
   return -1;
 }
 

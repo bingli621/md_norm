@@ -15,7 +15,7 @@
 * 
 * %Identification
 * Written by: Bing Li
-* Date: 15:01:18 on August 06, 2026
+* Date: 17:29:28 on August 06, 2026
 * Origin: DMSC
 * %INSTRUMENT_SITE: Generated_instruments
 * 
@@ -28,9 +28,11 @@
 * %Parameters
 * L0: [unit] wavelength in [Å] used to calculate the minimum and maximum wavelength for the source component by adding and subtracting a set wavelength
 * d_Li: [unit] wavelength band in [Å] to be simulated
+* RRM: [unit] repetition rate multiplication
+* phase_P: [unit] angular offset for the P-Chopper {0: 20deg Opening, 55: 35deg Opening}
 * mod_type: [unit] this variable determines which moderator type is used {0: Thermal moderator, 1: Bispectral moderator, 2: Cold moderator}
 * bender: [unit] bender out = 0, bender in = 1
-* b_rot: [unit] rotation of the cold neutron bender
+* b_rot: [unit] in [deg], rotation of the cold neutron bender
 * 
 * %Link 
 * 
@@ -40,9 +42,11 @@
 DEFINE INSTRUMENT TRex (
 L0 = 2.4, // wavelength in [Å] used to calculate the minimum and maximum wavelength for the source component by adding and subtracting a set wavelength
 d_Li = 0.845, // wavelength band in [Å] to be simulated
+int RRM = 18, // repetition rate multiplication
+int phase_P = 0, // angular offset for the P-Chopper {0: 20deg Opening, 55: 35deg Opening}
 int mod_type = 1, // this variable determines which moderator type is used {0: Thermal moderator, 1: Bispectral moderator, 2: Cold moderator}
 int bender = 0, // bender out = 0, bender in = 1
-b_rot = -0.5 // rotation of the cold neutron bender
+b_rot = -0.5 // in [deg], rotation of the cold neutron bender
 )
 
 DECLARE 
@@ -56,7 +60,7 @@ double rTopUpPar[5] = {0.99,0.0219,3.02,4.0,0.003};
 double rTopDownPar[5] = {0.99,0.0219,3.02,4.0,0.003};
 
 
-double tof_BW1, tof_BW2;
+double tof_BW1, tof_BW2, tof_P1, tof_P2;
 
 // characteristic wavelength
 double v0;
@@ -66,6 +70,8 @@ double v0;
 // distances
 double L_BW1 = 32;
 double L_BW2 = 40;
+double L_P1 = 107.95;
+double L_P2 = 108.05;
 
 // BW1 Chopper
 double f_BW1;
@@ -77,7 +83,7 @@ double delay_BW1; //time delay
 double nslits_BW1;
 
 
- // BW2 Chopper
+// BW2 Chopper
 double f_BW2;
 double radius_BW2;
 char theta_pos_BW2[256] = "0";
@@ -85,6 +91,27 @@ char theta_width_BW2[256] = "63.3";
 double delta_y_BW2;
 double delay_BW2; //time delay
 double nslits_BW2;
+
+// P1 Chopper
+double f_P1;
+double radius_P1;
+char theta_pos_P1[256] = "0 -55 -180 -235";
+char theta_width_P1[256] = "2 35 2 35";
+double delta_y_P1;
+double delay_P1; //time delay
+double nslits_P1;
+double phase_P1;// angular delay
+
+
+// P2 Chopper
+double f_P2;
+double radius_P2;
+char theta_pos_P2[256] = "0 -55 -180 -235";
+char theta_width_P2[256] = "2 35 2 35";
+double delta_y_P2;
+double delay_P2; //time delay
+double nslits_P2;
+double phase_P2;// angular delay
 
 
 
@@ -111,7 +138,8 @@ printf("lamb_2: %g \n", lamb_2);
 // frequencies
 f_BW1 = f;
 f_BW2 = f;
-
+f_P1 = RRM*f*0.75;
+f_P2 = -f_P1;
 
 // characteristic wavelength 
 
@@ -121,6 +149,8 @@ v0 = 2*PI*K2V/L0;       // speed center neutron
 // time of flight and chopper phases
 tof_BW1 = T_offset + L_BW1/v0;
 tof_BW2 = T_offset + L_BW2/v0;
+tof_P1 = T_offset + L_P1/v0;
+tof_P2 = T_offset + L_P2/v0;
 
 /* Chopper parameters */
 
@@ -136,6 +166,21 @@ delta_y_BW2 = delta_y_BW1;
 delay_BW2 = tof_BW2; // time delay
 nslits_BW2 = 1;
 
+// P1 Chopper
+radius_P1 = 0.35;
+delta_y_P1 = 0.305;
+delay_P1 = tof_P1; //time delay
+nslits_P1 = 4;
+phase_P1 = phase_P;// angular delay
+
+
+
+// P2 Chopper
+radius_P2 = 0.35;
+delta_y_P2 = delta_y_P1;
+delay_P2 = tof_P2; //time delay
+nslits_P2 = 4;
+phase_P2 = phase_P;// angular delay
 
 
 %}
@@ -162,13 +207,13 @@ COMPONENT source_monitor_div = Monitor_nD(
  xwidth = 0.09, yheight = 0.03,
  restore_neutron = 1, options = "hdiv limits [-4.5:4.5] bins = 100, vdiv limits [-2.5:2.5] bins = 100",
  filename = "source_monitor_div.dat")
-AT (-0.002, 0, 1.8954) ABSOLUTE
+AT (0, 0, 0.0001) RELATIVE PREVIOUS
 
 COMPONENT source_monitor_lam = Monitor_nD(
  xwidth = 0.09, yheight = 0.03,
  restore_neutron = 1, options = "lambda limits [0.5:7.0] bins = 130",
  filename = "source_monitor_lam.dat")
-AT (-0.002, 0, 1.8955) ABSOLUTE
+AT (0, 0, 0.0001) RELATIVE PREVIOUS
 
 // NBOA section
 COMPONENT guide_0 = Guide_anyshape_r(
@@ -228,25 +273,25 @@ COMPONENT insert_monitor_xy = Monitor_nD(
  xwidth = 0.06, yheight = 0.046,
  restore_neutron = 1, options = "x limits [-0.04:0.04] bins = 100, y limits [-0.033:0.033] bins = 100",
  filename = "insert_monitor_xy.dat")
-AT (-0.017, 0.0, 5.9151) ABSOLUTE
+AT (0, 0, 0.0001) RELATIVE PREVIOUS
 
 COMPONENT insert_monitor_div = Monitor_nD(
  xwidth = 0.06, yheight = 0.046,
  restore_neutron = 1, options = "hdiv limits [-2.0:2.0] bins = 201, vdiv limits [-1.0:1.0] bins = 201",
  filename = "insert_monitor_div.dat")
-AT (-0.017, 0, 5.9152) ABSOLUTE
+AT (0, 0, 0.0001) RELATIVE PREVIOUS
 
 COMPONENT insert_monitor_lam = Monitor_nD(
  xwidth = 0.06, yheight = 0.046,
  restore_neutron = 1, options = "lambda limits [0.5:7.0] bins = 130",
  filename = "insert_monitor_lam.dat")
-AT (-0.017, 0, 5.9153) ABSOLUTE
+AT (0, 0, 0.0001) RELATIVE PREVIOUS
 
 COMPONENT inset_monitor_ToF = Monitor_nD(
  xwidth = 0.07, yheight = 0.07,
  restore_neutron = 1, options = "t limits [0.0:0.020] bins = 20000",
  filename = "inset_monitor_ToF.dat")
-AT (-0.017, 0, 5.9154) ABSOLUTE
+AT (0, 0, 0.0001) RELATIVE PREVIOUS
 
 // In-bunker section plus a little bit
 COMPONENT guide_13 = Guide_anyshape_r(
@@ -375,46 +420,45 @@ COMPONENT B1_monitor_xy = Monitor_nD(
  xwidth = 0.07, yheight = 0.09,
  restore_neutron = 1, options = "x limits [-0.035:0.035] bins = 100, y limits [-0.045:0.045] bins = 100",
  filename = "BW1_monitor_xy.dat")
-AT (0.011348994153930106, 0, 32.1) ABSOLUTE
-ROTATED (0, 0.12454202414165, 0) ABSOLUTE
+AT (0, 0, 0.0001) RELATIVE PREVIOUS
 
 COMPONENT B1_monitor_lam = Monitor_nD(
  xwidth = 0.07, yheight = 0.09,
  restore_neutron = 1, options = "lambda limits [0.5:10.0] bins = 130",
  filename = "BW1_monitor_lam.dat")
-AT (0, 0, 1e-06) RELATIVE PREVIOUS
+AT (0, 0, 0.0001) RELATIVE PREVIOUS
 
 COMPONENT BW1_monitor_ToF = Monitor_nD(
  xwidth = 0.07, yheight = 0.09,
  restore_neutron = 1, options = "t limits [0.0:0.050] bins = 20000",
  filename = "BW1_monitor_ToF.dat")
-AT (0, 0, 1e-06) RELATIVE PREVIOUS
+AT (0, 0, 0.0001) RELATIVE PREVIOUS
 
-COMPONENT guide_49 = Guide_anyshape(
+COMPONENT guide_49 = Guide_anyshape_r(
  geometry = "./OFF_files/try49.off")
 AT (0, 0, 0) ABSOLUTE
 
-COMPONENT guide_50 = Guide_anyshape(
+COMPONENT guide_50 = Guide_anyshape_r(
  geometry = "./OFF_files/try50.off")
 AT (0, 0, 0) ABSOLUTE
 
-COMPONENT guide_51 = Guide_anyshape(
+COMPONENT guide_51 = Guide_anyshape_r(
  geometry = "./OFF_files/try51.off")
 AT (0, 0, 0) ABSOLUTE
 
-COMPONENT guide_52 = Guide_anyshape(
+COMPONENT guide_52 = Guide_anyshape_r(
  geometry = "./OFF_files/try52.off")
 AT (0, 0, 0) ABSOLUTE
 
-COMPONENT guide_53 = Guide_anyshape(
+COMPONENT guide_53 = Guide_anyshape_r(
  geometry = "./OFF_files/try53.off")
 AT (0, 0, 0) ABSOLUTE
 
-COMPONENT guide_54 = Guide_anyshape(
+COMPONENT guide_54 = Guide_anyshape_r(
  geometry = "./OFF_files/try54.off")
 AT (0, 0, 0) ABSOLUTE
 
-COMPONENT guide_55 = Guide_anyshape(
+COMPONENT guide_55 = Guide_anyshape_r(
  geometry = "./OFF_files/try55.off")
 AT (0, 0, 0) ABSOLUTE
 
@@ -431,20 +475,19 @@ COMPONENT B2_monitor_xy = Monitor_nD(
  xwidth = 0.06, yheight = 0.085,
  restore_neutron = 1, options = "x limits [-0.0375:0.0375] bins = 100, y limits [-0.05:0.05] bins = 100",
  filename = "BW2_monitor_xy.dat")
-AT (0, 0, 1e-06) RELATIVE PREVIOUS
+AT (0, 0, 0.0001) RELATIVE PREVIOUS
 
 COMPONENT B2_monitor_lam = Monitor_nD(
  xwidth = 0.06, yheight = 0.085,
  restore_neutron = 1, options = "lambda limits [0.5:10.0] bins = 130",
  filename = "BW2_monitor_lam.dat")
-AT (0, 0, 1e-06) RELATIVE PREVIOUS
+AT (0, 0, 0.0001) RELATIVE PREVIOUS
 
 COMPONENT BW2_monitor_ToF = Monitor_nD(
  xwidth = 0.06, yheight = 0.084,
  restore_neutron = 1, options = "t limits [0.0:0.050] bins = 20000",
  filename = "BW2_monitor_ToF.dat")
-AT (0.03140505829452013, 0.0, 40.1) ABSOLUTE
-ROTATED (0, 0.16273933122724, 0) ABSOLUTE
+AT (0, 0, 0.0001) RELATIVE PREVIOUS
 
 COMPONENT guide_57 = Guide_anyshape_r(
  geometry = "./OFF_files/try57.off")
@@ -625,6 +668,43 @@ AT (0, 0, 0) ABSOLUTE
 COMPONENT guide_101 = Guide_anyshape_r(
  geometry = "./OFF_files/try101.off")
 AT (0, 0, 0) ABSOLUTE
+
+// /* ---------------------- P-Choppers -------------------- */
+COMPONENT PulseShapingChopper1_HR = DiskChopper(
+ theta_0 = 2, radius = radius_P1,
+ yheight = 0.095, nu = f_P1,
+ nslit = 2, delay = delay_P1)
+AT (0.4108460115539497, 0.0, 107.95) ABSOLUTE
+ROTATED (0, 0.430122381481144, 180) ABSOLUTE
+GROUP PulseShapingChopper1
+
+COMPONENT PulseShapingChopper1_HF = DiskChopper(
+ theta_0 = 35, radius = radius_P1,
+ yheight = 0.095, nu = f_P1,
+ nslit = 2, delay = delay_P1)
+AT (0.4108460115539497, 0.0, 107.95) ABSOLUTE
+ROTATED (0, 0.430122381481144, 180) ABSOLUTE
+GROUP PulseShapingChopper1
+
+COMPONENT PulseShapingChopper2 = MultiDiskChopper(
+ slit_center = theta_pos_P2, slit_width = theta_width_P2,
+ nslits = nslits_P2, delta_y = delta_y_P2,
+ nu = f_P2, delay = delay_P2,
+ radius = radius_P2)
+AT (0.41159673083080733, 0.0, 108.055) ABSOLUTE
+ROTATED (0, 0.430122381481144, 0) ABSOLUTE
+
+COMPONENT P_monitor_ToF = Monitor_nD(
+ xwidth = 0.06, yheight = 0.084,
+ restore_neutron = 1, options = "t limits [0.04:0.100] bins = 20000",
+ filename = "P_monitor_tof.dat")
+AT (0, 0, 0.0001) RELATIVE PREVIOUS
+
+COMPONENT P_monitor_lam = Monitor_nD(
+ xwidth = 0.06, yheight = 0.085,
+ restore_neutron = 1, options = "lambda limits [0.5:10.0] bins = 130",
+ filename = "P_monitor_lam.dat")
+AT (0, 0, 0.0001) RELATIVE PREVIOUS
 
 FINALLY 
 %{

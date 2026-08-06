@@ -15,7 +15,7 @@
 * 
 * %Identification
 * Written by: Bing Li
-* Date: 18:49:37 on August 05, 2026
+* Date: 15:01:18 on August 06, 2026
 * Origin: DMSC
 * %INSTRUMENT_SITE: Generated_instruments
 * 
@@ -52,18 +52,22 @@ double lamb_1; // Wavelength min in [AA]
 double lamb_2; // Wavelength max in [AA]
 double T_offset = 0.0017; // Time offset in [s] to shift to the center of long pulse
 double f = 14.0; // Source frequency in [Hz]
+double rTopUpPar[5] = {0.99,0.0219,3.02,4.0,0.003};
+double rTopDownPar[5] = {0.99,0.0219,3.02,4.0,0.003};
 
 
-double tof_BW1;
+double tof_BW1, tof_BW2;
 
 // characteristic wavelength
 double v0;
 
 
-// BW1 Chopper
 
+// distances
 double L_BW1 = 32;
+double L_BW2 = 40;
 
+// BW1 Chopper
 double f_BW1;
 double radius_BW1;
 char theta_pos_BW1[256] = "0";
@@ -71,6 +75,18 @@ char theta_width_BW1[256] = "61.4";
 double delta_y_BW1;
 double delay_BW1; //time delay
 double nslits_BW1;
+
+
+ // BW2 Chopper
+double f_BW2;
+double radius_BW2;
+char theta_pos_BW2[256] = "0";
+char theta_width_BW2[256] = "63.3";
+double delta_y_BW2;
+double delay_BW2; //time delay
+double nslits_BW2;
+
+
 
 %}
 
@@ -94,6 +110,7 @@ printf("lamb_2: %g \n", lamb_2);
 
 // frequencies
 f_BW1 = f;
+f_BW2 = f;
 
 
 // characteristic wavelength 
@@ -103,14 +120,23 @@ v0 = 2*PI*K2V/L0;       // speed center neutron
 
 // time of flight and chopper phases
 tof_BW1 = T_offset + L_BW1/v0;
+tof_BW2 = T_offset + L_BW2/v0;
 
-// Chopper parameters
+/* Chopper parameters */
 
 // BW1 Chopper
 radius_BW1 = 0.35;
 delta_y_BW1 = -0.3075;
-delay_BW1 = tof_BW1; //time delay
+delay_BW1 = tof_BW1; // time delay
 nslits_BW1 = 1;
+
+// BW2 Chopper
+radius_BW2 = 0.35;
+delta_y_BW2 = delta_y_BW1;
+delay_BW2 = tof_BW2; // time delay
+nslits_BW2 = 1;
+
+
 
 %}
 
@@ -121,7 +147,8 @@ COMPONENT source = ESS_butterfly(
  dist = 2, focus_xw = 0.095,
  focus_yh = 0.035, Lmin = lamb_1,
  Lmax = lamb_2, n_pulses = 1,
- acc_power = 2)
+ acc_power = 2, tfocus_dist = L_BW1,
+ tfocus_time = tof_BW1, tfocus_width = 0.02)
 AT (0, 0, 0) ABSOLUTE
 
 // Note: -0.002 because guide is asymmetric here (47mm-43mm)/2
@@ -183,8 +210,8 @@ COMPONENT bender = Pol_bender(
  xwidth = 0.06384, yheight = 0.046,
  length = 0.05, radius = 7.2,
  nslit = 425, d = 1e-06,
- endFlat = 0, rTopUpPar = {0.99, 3.02, 4.0, 0.0219, 0.003},
- rTopDownPar = {0.99, 3.02, 4.0, 0.0219, 0.003}, drawOption = 2)
+ endFlat = 0, rTopUpPar = rTopUpPar,
+ rTopDownPar = rTopDownPar, drawOption = 2)
 WHEN (bender==1)
 AT (-0.017, 0, 5.399) ABSOLUTE
 ROTATED (0.00192, b_rot, 0) ABSOLUTE
@@ -335,7 +362,7 @@ COMPONENT guide_47 = Guide_anyshape_r(
  geometry = "./OFF_files/try47.off")
 AT (0, 0, 0) ABSOLUTE
 
-// Bandwidth chopper 1 
+// Bandwidth chopper 1
 COMPONENT BW_Chopper_1 = MultiDiskChopper(
  slit_center = theta_pos_BW1, slit_width = theta_width_BW1,
  nslits = nslits_BW1, delta_y = delta_y_BW1,
@@ -362,6 +389,242 @@ COMPONENT BW1_monitor_ToF = Monitor_nD(
  restore_neutron = 1, options = "t limits [0.0:0.050] bins = 20000",
  filename = "BW1_monitor_ToF.dat")
 AT (0, 0, 1e-06) RELATIVE PREVIOUS
+
+COMPONENT guide_49 = Guide_anyshape(
+ geometry = "./OFF_files/try49.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_50 = Guide_anyshape(
+ geometry = "./OFF_files/try50.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_51 = Guide_anyshape(
+ geometry = "./OFF_files/try51.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_52 = Guide_anyshape(
+ geometry = "./OFF_files/try52.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_53 = Guide_anyshape(
+ geometry = "./OFF_files/try53.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_54 = Guide_anyshape(
+ geometry = "./OFF_files/try54.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_55 = Guide_anyshape(
+ geometry = "./OFF_files/try55.off")
+AT (0, 0, 0) ABSOLUTE
+
+// Bandwidth chopper 2 
+COMPONENT BW_Chopper_2 = MultiDiskChopper(
+ slit_center = theta_pos_BW2, slit_width = theta_width_BW2,
+ nslits = nslits_BW2, delta_y = delta_y_BW2,
+ nu = f_BW2, delay = delay_BW2,
+ radius = radius_BW2)
+AT (0.03140505829452013, 0.0, 40.0) ABSOLUTE
+ROTATED (0, 0.16273933122724, 0) ABSOLUTE
+
+COMPONENT B2_monitor_xy = Monitor_nD(
+ xwidth = 0.06, yheight = 0.085,
+ restore_neutron = 1, options = "x limits [-0.0375:0.0375] bins = 100, y limits [-0.05:0.05] bins = 100",
+ filename = "BW2_monitor_xy.dat")
+AT (0, 0, 1e-06) RELATIVE PREVIOUS
+
+COMPONENT B2_monitor_lam = Monitor_nD(
+ xwidth = 0.06, yheight = 0.085,
+ restore_neutron = 1, options = "lambda limits [0.5:10.0] bins = 130",
+ filename = "BW2_monitor_lam.dat")
+AT (0, 0, 1e-06) RELATIVE PREVIOUS
+
+COMPONENT BW2_monitor_ToF = Monitor_nD(
+ xwidth = 0.06, yheight = 0.084,
+ restore_neutron = 1, options = "t limits [0.0:0.050] bins = 20000",
+ filename = "BW2_monitor_ToF.dat")
+AT (0.03140505829452013, 0.0, 40.1) ABSOLUTE
+ROTATED (0, 0.16273933122724, 0) ABSOLUTE
+
+COMPONENT guide_57 = Guide_anyshape_r(
+ geometry = "./OFF_files/try57.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_58 = Guide_anyshape_r(
+ geometry = "./OFF_files/try58.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_59 = Guide_anyshape_r(
+ geometry = "./OFF_files/try59.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_60 = Guide_anyshape_r(
+ geometry = "./OFF_files/try60.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_61 = Guide_anyshape_r(
+ geometry = "./OFF_files/try61.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_62 = Guide_anyshape_r(
+ geometry = "./OFF_files/try62.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_63 = Guide_anyshape_r(
+ geometry = "./OFF_files/try63.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_64 = Guide_anyshape_r(
+ geometry = "./OFF_files/try64.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_65 = Guide_anyshape_r(
+ geometry = "./OFF_files/try65.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_66 = Guide_anyshape_r(
+ geometry = "./OFF_files/try66.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_67 = Guide_anyshape_r(
+ geometry = "./OFF_files/try67.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_68 = Guide_anyshape_r(
+ geometry = "./OFF_files/try68.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_69 = Guide_anyshape_r(
+ geometry = "./OFF_files/try69.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_70 = Guide_anyshape_r(
+ geometry = "./OFF_files/try70.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_71 = Guide_anyshape_r(
+ geometry = "./OFF_files/try71.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_72 = Guide_anyshape_r(
+ geometry = "./OFF_files/try72.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_73 = Guide_anyshape_r(
+ geometry = "./OFF_files/try73.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_74 = Guide_anyshape_r(
+ geometry = "./OFF_files/try74.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_75 = Guide_anyshape_r(
+ geometry = "./OFF_files/try75.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_76 = Guide_anyshape_r(
+ geometry = "./OFF_files/try76.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_77 = Guide_anyshape_r(
+ geometry = "./OFF_files/try77.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_78 = Guide_anyshape_r(
+ geometry = "./OFF_files/try78.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_79 = Guide_anyshape_r(
+ geometry = "./OFF_files/try79.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_80 = Guide_anyshape_r(
+ geometry = "./OFF_files/try80.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_81 = Guide_anyshape_r(
+ geometry = "./OFF_files/try81.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_82 = Guide_anyshape_r(
+ geometry = "./OFF_files/try82.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_83 = Guide_anyshape_r(
+ geometry = "./OFF_files/try83.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_84 = Guide_anyshape_r(
+ geometry = "./OFF_files/try84.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_85 = Guide_anyshape_r(
+ geometry = "./OFF_files/try85.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_86 = Guide_anyshape_r(
+ geometry = "./OFF_files/try86.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_87 = Guide_anyshape_r(
+ geometry = "./OFF_files/try87.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_88 = Guide_anyshape_r(
+ geometry = "./OFF_files/try88.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_89 = Guide_anyshape_r(
+ geometry = "./OFF_files/try89.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_90 = Guide_anyshape_r(
+ geometry = "./OFF_files/try90.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_91 = Guide_anyshape_r(
+ geometry = "./OFF_files/try91.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_92 = Guide_anyshape_r(
+ geometry = "./OFF_files/try92.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_93 = Guide_anyshape_r(
+ geometry = "./OFF_files/try93.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_94 = Guide_anyshape_r(
+ geometry = "./OFF_files/try94.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_95 = Guide_anyshape_r(
+ geometry = "./OFF_files/try95.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_96 = Guide_anyshape_r(
+ geometry = "./OFF_files/try96.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_97 = Guide_anyshape_r(
+ geometry = "./OFF_files/try97.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_98 = Guide_anyshape_r(
+ geometry = "./OFF_files/try98.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_99 = Guide_anyshape_r(
+ geometry = "./OFF_files/try99.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_100 = Guide_anyshape_r(
+ geometry = "./OFF_files/try100.off")
+AT (0, 0, 0) ABSOLUTE
+
+COMPONENT guide_101 = Guide_anyshape_r(
+ geometry = "./OFF_files/try101.off")
+AT (0, 0, 0) ABSOLUTE
 
 FINALLY 
 %{

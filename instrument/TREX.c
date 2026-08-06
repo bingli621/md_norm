@@ -2,7 +2,7 @@
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
  * Instrument: TRex.instr (TRex)
- * Date:       Wed Aug  5 18:49:38 2026
+ * Date:       Thu Aug  6 15:01:19 2026
  * File:       ./TRex.c
  * CFLAGS=  -DUSE_OFF 
  */
@@ -6982,7 +6982,7 @@ int traceenabled = 1;
 #else
 int traceenabled = 0;
 #endif
-#define MCSTAS "/Users/bingli/GitHub/md_norm/.pixi/envs/default/share/mcstas/resources/"
+#define MCSTAS "/Users/bingli/Documents/GitHub/mdnorm/.pixi/envs/default/share/mcstas/resources/"
 int   defaultmain         = 1;
 char  instrument_name[]   = "TRex";
 char  instrument_source[] = "TRex.instr";
@@ -7010,12 +7010,12 @@ typedef struct _struct_instrument_parameters _class_instrument_parameters;
 struct _instrument_struct {
   char   _name[256]; /* the name of this instrument e.g. 'TRex' */
 /* Counters per component instance */
-  double counter_AbsorbProp[53]; /* absorbed events in PROP routines */
-  double counter_N[53], counter_P[53], counter_P2[53]; /* event counters after each component instance */
-  _class_particle _trajectory[53]; /* current trajectory for STORE/RESTORE */
+  double counter_AbsorbProp[109]; /* absorbed events in PROP routines */
+  double counter_N[109], counter_P[109], counter_P2[109]; /* event counters after each component instance */
+  _class_particle _trajectory[109]; /* current trajectory for STORE/RESTORE */
 /* Components position table (absolute and relative coords) */
-  Coords _position_relative[53]; /* positions of all components */
-  Coords _position_absolute[53];
+  Coords _position_relative[109]; /* positions of all components */
+  Coords _position_absolute[109];
   _class_instrument_parameters _parameters; /* instrument parameters */
 } _instrument_var;
 struct _instrument_struct *instrument = & _instrument_var;
@@ -16624,6 +16624,11 @@ double GetConstantField(double mc_pol_length, double mc_pol_lambda,
     slit_print_if (condition, "Warning", message, component);
   }
 
+/* Shared user declarations for all components types 'Guide_anyshape'. */
+
+
+
+
 
 
 /* ************************************************************************** */
@@ -16880,8 +16885,8 @@ struct _struct_Pol_bender_parameters {
   MCNUM d;
   int debug;
   int endFlat;
-  MCNUM rTopUpPar[5];
-  MCNUM rTopDownPar[5];
+  MCNUM* rTopUpPar;
+  MCNUM* rTopDownPar;
   MCNUM rBotUpPar[5];
   MCNUM rBotDownPar[5];
   MCNUM rLeftUpPar[5];
@@ -17123,7 +17128,211 @@ _class_Monitor_nD _B1_monitor_lam_var;
 _class_Monitor_nD _BW1_monitor_ToF_var;
 #pragma acc declare create ( _BW1_monitor_ToF_var )
 
-int mcNUMCOMP = 51;
+/* component guide_49=Guide_anyshape() [52] DECLARE */
+/* Parameter definition for component type 'Guide_anyshape' */
+struct _struct_Guide_anyshape_parameters {
+  /* Component type 'Guide_anyshape' setting parameters */
+  MCNUM xwidth;
+  MCNUM yheight;
+  MCNUM zdepth;
+  MCNUM center;
+  MCNUM transmit;
+  MCNUM R0;
+  MCNUM Qc;
+  MCNUM alpha;
+  MCNUM m;
+  MCNUM W;
+  char reflect[16384];
+  char geometry[16384];
+  /* Component type 'Guide_anyshape' private parameters */
+  off_struct  offdata;
+  t_Table  pTable;
+}; /* _struct_Guide_anyshape_parameters */
+typedef struct _struct_Guide_anyshape_parameters _class_Guide_anyshape_parameters;
+
+/* Parameters for component type 'Guide_anyshape' */
+struct _struct_Guide_anyshape {
+  char     _name[256]; /* e.g. guide_49 */
+  char     _type[256]; /* Guide_anyshape */
+  long     _index; /* e.g. 2 index in TRACE list */
+  Coords   _position_absolute;
+  Coords   _position_relative; /* wrt PREVIOUS */
+  Rotation _rotation_absolute;
+  Rotation _rotation_relative; /* wrt PREVIOUS */
+  int      _rotation_is_identity;
+  int      _position_relative_is_zero;
+  _class_Guide_anyshape_parameters _parameters;
+};
+typedef struct _struct_Guide_anyshape _class_Guide_anyshape;
+_class_Guide_anyshape _guide_49_var;
+#pragma acc declare create ( _guide_49_var )
+
+_class_Guide_anyshape _guide_50_var;
+#pragma acc declare create ( _guide_50_var )
+
+_class_Guide_anyshape _guide_51_var;
+#pragma acc declare create ( _guide_51_var )
+
+_class_Guide_anyshape _guide_52_var;
+#pragma acc declare create ( _guide_52_var )
+
+_class_Guide_anyshape _guide_53_var;
+#pragma acc declare create ( _guide_53_var )
+
+_class_Guide_anyshape _guide_54_var;
+#pragma acc declare create ( _guide_54_var )
+
+_class_Guide_anyshape _guide_55_var;
+#pragma acc declare create ( _guide_55_var )
+
+_class_MultiDiskChopper _BW_Chopper_2_var;
+#pragma acc declare create ( _BW_Chopper_2_var )
+
+_class_Monitor_nD _B2_monitor_xy_var;
+#pragma acc declare create ( _B2_monitor_xy_var )
+
+_class_Monitor_nD _B2_monitor_lam_var;
+#pragma acc declare create ( _B2_monitor_lam_var )
+
+_class_Monitor_nD _BW2_monitor_ToF_var;
+#pragma acc declare create ( _BW2_monitor_ToF_var )
+
+_class_Guide_anyshape_r _guide_57_var;
+#pragma acc declare create ( _guide_57_var )
+
+_class_Guide_anyshape_r _guide_58_var;
+#pragma acc declare create ( _guide_58_var )
+
+_class_Guide_anyshape_r _guide_59_var;
+#pragma acc declare create ( _guide_59_var )
+
+_class_Guide_anyshape_r _guide_60_var;
+#pragma acc declare create ( _guide_60_var )
+
+_class_Guide_anyshape_r _guide_61_var;
+#pragma acc declare create ( _guide_61_var )
+
+_class_Guide_anyshape_r _guide_62_var;
+#pragma acc declare create ( _guide_62_var )
+
+_class_Guide_anyshape_r _guide_63_var;
+#pragma acc declare create ( _guide_63_var )
+
+_class_Guide_anyshape_r _guide_64_var;
+#pragma acc declare create ( _guide_64_var )
+
+_class_Guide_anyshape_r _guide_65_var;
+#pragma acc declare create ( _guide_65_var )
+
+_class_Guide_anyshape_r _guide_66_var;
+#pragma acc declare create ( _guide_66_var )
+
+_class_Guide_anyshape_r _guide_67_var;
+#pragma acc declare create ( _guide_67_var )
+
+_class_Guide_anyshape_r _guide_68_var;
+#pragma acc declare create ( _guide_68_var )
+
+_class_Guide_anyshape_r _guide_69_var;
+#pragma acc declare create ( _guide_69_var )
+
+_class_Guide_anyshape_r _guide_70_var;
+#pragma acc declare create ( _guide_70_var )
+
+_class_Guide_anyshape_r _guide_71_var;
+#pragma acc declare create ( _guide_71_var )
+
+_class_Guide_anyshape_r _guide_72_var;
+#pragma acc declare create ( _guide_72_var )
+
+_class_Guide_anyshape_r _guide_73_var;
+#pragma acc declare create ( _guide_73_var )
+
+_class_Guide_anyshape_r _guide_74_var;
+#pragma acc declare create ( _guide_74_var )
+
+_class_Guide_anyshape_r _guide_75_var;
+#pragma acc declare create ( _guide_75_var )
+
+_class_Guide_anyshape_r _guide_76_var;
+#pragma acc declare create ( _guide_76_var )
+
+_class_Guide_anyshape_r _guide_77_var;
+#pragma acc declare create ( _guide_77_var )
+
+_class_Guide_anyshape_r _guide_78_var;
+#pragma acc declare create ( _guide_78_var )
+
+_class_Guide_anyshape_r _guide_79_var;
+#pragma acc declare create ( _guide_79_var )
+
+_class_Guide_anyshape_r _guide_80_var;
+#pragma acc declare create ( _guide_80_var )
+
+_class_Guide_anyshape_r _guide_81_var;
+#pragma acc declare create ( _guide_81_var )
+
+_class_Guide_anyshape_r _guide_82_var;
+#pragma acc declare create ( _guide_82_var )
+
+_class_Guide_anyshape_r _guide_83_var;
+#pragma acc declare create ( _guide_83_var )
+
+_class_Guide_anyshape_r _guide_84_var;
+#pragma acc declare create ( _guide_84_var )
+
+_class_Guide_anyshape_r _guide_85_var;
+#pragma acc declare create ( _guide_85_var )
+
+_class_Guide_anyshape_r _guide_86_var;
+#pragma acc declare create ( _guide_86_var )
+
+_class_Guide_anyshape_r _guide_87_var;
+#pragma acc declare create ( _guide_87_var )
+
+_class_Guide_anyshape_r _guide_88_var;
+#pragma acc declare create ( _guide_88_var )
+
+_class_Guide_anyshape_r _guide_89_var;
+#pragma acc declare create ( _guide_89_var )
+
+_class_Guide_anyshape_r _guide_90_var;
+#pragma acc declare create ( _guide_90_var )
+
+_class_Guide_anyshape_r _guide_91_var;
+#pragma acc declare create ( _guide_91_var )
+
+_class_Guide_anyshape_r _guide_92_var;
+#pragma acc declare create ( _guide_92_var )
+
+_class_Guide_anyshape_r _guide_93_var;
+#pragma acc declare create ( _guide_93_var )
+
+_class_Guide_anyshape_r _guide_94_var;
+#pragma acc declare create ( _guide_94_var )
+
+_class_Guide_anyshape_r _guide_95_var;
+#pragma acc declare create ( _guide_95_var )
+
+_class_Guide_anyshape_r _guide_96_var;
+#pragma acc declare create ( _guide_96_var )
+
+_class_Guide_anyshape_r _guide_97_var;
+#pragma acc declare create ( _guide_97_var )
+
+_class_Guide_anyshape_r _guide_98_var;
+#pragma acc declare create ( _guide_98_var )
+
+_class_Guide_anyshape_r _guide_99_var;
+#pragma acc declare create ( _guide_99_var )
+
+_class_Guide_anyshape_r _guide_100_var;
+#pragma acc declare create ( _guide_100_var )
+
+_class_Guide_anyshape_r _guide_101_var;
+#pragma acc declare create ( _guide_101_var )
+
+int mcNUMCOMP = 107;
 
 /* User declarations from instrument definition. Can define functions. */
 double frac; // Used in the Source component. Defines the statistical fraction of eventsemitted from the cold part of the moderator, the value is determined later in the file depending on the moderator type that was chosen
@@ -17131,18 +17340,22 @@ double lamb_1; // Wavelength min in [AA]
 double lamb_2; // Wavelength max in [AA]
 double T_offset = 0.0017; // Time offset in [s] to shift to the center of long pulse
 double f = 14.0; // Source frequency in [Hz]
+double rTopUpPar[5] = {0.99,0.0219,3.02,4.0,0.003};
+double rTopDownPar[5] = {0.99,0.0219,3.02,4.0,0.003};
 
 
-double tof_BW1;
+double tof_BW1, tof_BW2;
 
 // characteristic wavelength
 double v0;
 
 
-// BW1 Chopper
 
+// distances
 double L_BW1 = 32;
+double L_BW2 = 40;
 
+// BW1 Chopper
 double f_BW1;
 double radius_BW1;
 char theta_pos_BW1[256] = "0";
@@ -17150,6 +17363,18 @@ char theta_width_BW1[256] = "61.4";
 double delta_y_BW1;
 double delay_BW1; //time delay
 double nslits_BW1;
+
+
+ // BW2 Chopper
+double f_BW2;
+double radius_BW2;
+char theta_pos_BW2[256] = "0";
+char theta_width_BW2[256] = "63.3";
+double delta_y_BW2;
+double delay_BW2; //time delay
+double nslits_BW2;
+
+
 
 
 #undef compcurname
@@ -17214,9 +17439,9 @@ int _source_setpos(void)
   _source_var._parameters.tmax_multiplier = 3;
   _source_var._parameters.n_pulses = 1;
   _source_var._parameters.acc_power = 2;
-  _source_var._parameters.tfocus_dist = 0;
-  _source_var._parameters.tfocus_time = 0;
-  _source_var._parameters.tfocus_width = 0;
+  _source_var._parameters.tfocus_dist = L_BW1;
+  _source_var._parameters.tfocus_time = tof_BW1;
+  _source_var._parameters.tfocus_width = 0.02;
 
 
   /* component source=ESS_butterfly() AT ROTATED */
@@ -17261,9 +17486,9 @@ int _source_setpos(void)
         mccomp_param_nexus(nxhandle,"0000_source", "tmax_multiplier", "3", "3","MCNUM");
         mccomp_param_nexus(nxhandle,"0000_source", "n_pulses", "1", "1","int");
         mccomp_param_nexus(nxhandle,"0000_source", "acc_power", "5", "2","MCNUM");
-        mccomp_param_nexus(nxhandle,"0000_source", "tfocus_dist", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0000_source", "tfocus_time", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0000_source", "tfocus_width", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0000_source", "tfocus_dist", "0", "L_BW1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0000_source", "tfocus_time", "0", "tof_BW1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0000_source", "tfocus_width", "0", "0.02","MCNUM");
       );
     }
   } else {
@@ -18448,16 +18673,8 @@ int _bender_setpos(void)
   _bender_var._parameters.d = 1e-06;
   _bender_var._parameters.debug = 0;
   _bender_var._parameters.endFlat = 0;
-  _bender_var._parameters.rTopUpPar[0] = 0.99;
-  _bender_var._parameters.rTopUpPar[1] = 3.02;
-  _bender_var._parameters.rTopUpPar[2] = 4;
-  _bender_var._parameters.rTopUpPar[3] = 0.0219;
-  _bender_var._parameters.rTopUpPar[4] = 0.003;
-  _bender_var._parameters.rTopDownPar[0] = 0.99;
-  _bender_var._parameters.rTopDownPar[1] = 3.02;
-  _bender_var._parameters.rTopDownPar[2] = 4;
-  _bender_var._parameters.rTopDownPar[3] = 0.0219;
-  _bender_var._parameters.rTopDownPar[4] = 0.003;
+  _bender_var._parameters.rTopUpPar = rTopUpPar; // default pointer allocation
+  _bender_var._parameters.rTopDownPar = rTopDownPar; // default pointer allocation
   _bender_var._parameters.rBotUpPar[0] = 0.99;
   _bender_var._parameters.rBotUpPar[1] = 0.0219;
   _bender_var._parameters.rBotUpPar[2] = 6.07;
@@ -18560,8 +18777,8 @@ int _bender_setpos(void)
         mccomp_param_nexus(nxhandle,"0012_bender", "d", "0.0", "1e-06","MCNUM");
         mccomp_param_nexus(nxhandle,"0012_bender", "debug", "0", "0","int");
         mccomp_param_nexus(nxhandle,"0012_bender", "endFlat", "0", "0","int");
-        mccomp_param_nexus(nxhandle,"0012_bender", "rTopUpPar", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }", "{ 0.99 , 3.02 , 4.0 , 0.0219 , 0.003 }","MCNUM");
-        mccomp_param_nexus(nxhandle,"0012_bender", "rTopDownPar", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }", "{ 0.99 , 3.02 , 4.0 , 0.0219 , 0.003 }","MCNUM");
+        mccomp_param_nexus(nxhandle,"0012_bender", "rTopUpPar", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }", "rTopUpPar","MCNUM");
+        mccomp_param_nexus(nxhandle,"0012_bender", "rTopDownPar", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }", "rTopDownPar","MCNUM");
         mccomp_param_nexus(nxhandle,"0012_bender", "rBotUpPar", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }","MCNUM");
         mccomp_param_nexus(nxhandle,"0012_bender", "rBotDownPar", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }","MCNUM");
         mccomp_param_nexus(nxhandle,"0012_bender", "rLeftUpPar", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }", "{ 0.99 , 0.0219 , 6.07 , 2.0 , 0.003 }","MCNUM");
@@ -22184,6 +22401,4437 @@ int _BW1_monitor_ToF_setpos(void)
   return(0);
 } /* _BW1_monitor_ToF_setpos */
 
+/* component guide_49=Guide_anyshape() SETTING, POSITION/ROTATION */
+int _guide_49_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_49_setpos] component guide_49=Guide_anyshape() SETTING [Guide_anyshape:0]");
+  stracpy(_guide_49_var._name, "guide_49", 16384);
+  stracpy(_guide_49_var._type, "Guide_anyshape", 16384);
+  _guide_49_var._index=52;
+  int current_setpos_index = 52;
+  _guide_49_var._parameters.xwidth = 0;
+  _guide_49_var._parameters.yheight = 0;
+  _guide_49_var._parameters.zdepth = 0;
+  _guide_49_var._parameters.center = 0;
+  _guide_49_var._parameters.transmit = 0;
+  _guide_49_var._parameters.R0 = 0.99;
+  _guide_49_var._parameters.Qc = 0.0219;
+  _guide_49_var._parameters.alpha = 3;
+  _guide_49_var._parameters.m = 2;
+  _guide_49_var._parameters.W = 0.003;
+  _guide_49_var._parameters.reflect[0]='\0';
+  if("./OFF_files/try49.off" && strlen("./OFF_files/try49.off"))
+    stracpy(_guide_49_var._parameters.geometry, "./OFF_files/try49.off" ? "./OFF_files/try49.off" : "", 16384);
+  else 
+  _guide_49_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_49=Guide_anyshape() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_49_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_BW1_monitor_ToF_var._rotation_absolute, tr1);
+    rot_mul(_guide_49_var._rotation_absolute, tr1, _guide_49_var._rotation_relative);
+    _guide_49_var._rotation_is_identity =  rot_test_identity(_guide_49_var._rotation_relative);
+    _guide_49_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_BW1_monitor_ToF_var._position_absolute, _guide_49_var._position_absolute);
+    _guide_49_var._position_relative = rot_apply(_guide_49_var._rotation_absolute, tc1);
+  } /* guide_49=Guide_anyshape() AT ROTATED */
+  DEBUG_COMPONENT("guide_49", _guide_49_var._position_absolute, _guide_49_var._rotation_absolute);
+  instrument->_position_absolute[52] = _guide_49_var._position_absolute;
+  instrument->_position_relative[52] = _guide_49_var._position_relative;
+    _guide_49_var._position_relative_is_zero =  coords_test_zero(_guide_49_var._position_relative);
+  instrument->counter_N[52]  = instrument->counter_P[52] = instrument->counter_P2[52] = 0;
+  instrument->counter_AbsorbProp[52]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0051_guide_49", _guide_49_var._position_absolute, _guide_49_var._rotation_absolute, "Guide_anyshape");
+        mccomp_param_nexus(nxhandle,"0051_guide_49", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0051_guide_49", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0051_guide_49", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0051_guide_49", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0051_guide_49", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0051_guide_49", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0051_guide_49", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0051_guide_49", "alpha", "3", "3","MCNUM");
+        mccomp_param_nexus(nxhandle,"0051_guide_49", "m", "2", "2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0051_guide_49", "W", "0.003", "0.003","MCNUM");
+        mccomp_param_nexus(nxhandle,"0051_guide_49", "reflect", 0, 0, "char*");
+        mccomp_param_nexus(nxhandle,"0051_guide_49", "geometry", 0, "./OFF_files/try49.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_49_setpos */
+
+/* component guide_50=Guide_anyshape() SETTING, POSITION/ROTATION */
+int _guide_50_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_50_setpos] component guide_50=Guide_anyshape() SETTING [Guide_anyshape:0]");
+  stracpy(_guide_50_var._name, "guide_50", 16384);
+  stracpy(_guide_50_var._type, "Guide_anyshape", 16384);
+  _guide_50_var._index=53;
+  int current_setpos_index = 53;
+  _guide_50_var._parameters.xwidth = 0;
+  _guide_50_var._parameters.yheight = 0;
+  _guide_50_var._parameters.zdepth = 0;
+  _guide_50_var._parameters.center = 0;
+  _guide_50_var._parameters.transmit = 0;
+  _guide_50_var._parameters.R0 = 0.99;
+  _guide_50_var._parameters.Qc = 0.0219;
+  _guide_50_var._parameters.alpha = 3;
+  _guide_50_var._parameters.m = 2;
+  _guide_50_var._parameters.W = 0.003;
+  _guide_50_var._parameters.reflect[0]='\0';
+  if("./OFF_files/try50.off" && strlen("./OFF_files/try50.off"))
+    stracpy(_guide_50_var._parameters.geometry, "./OFF_files/try50.off" ? "./OFF_files/try50.off" : "", 16384);
+  else 
+  _guide_50_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_50=Guide_anyshape() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_50_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_49_var._rotation_absolute, tr1);
+    rot_mul(_guide_50_var._rotation_absolute, tr1, _guide_50_var._rotation_relative);
+    _guide_50_var._rotation_is_identity =  rot_test_identity(_guide_50_var._rotation_relative);
+    _guide_50_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_49_var._position_absolute, _guide_50_var._position_absolute);
+    _guide_50_var._position_relative = rot_apply(_guide_50_var._rotation_absolute, tc1);
+  } /* guide_50=Guide_anyshape() AT ROTATED */
+  DEBUG_COMPONENT("guide_50", _guide_50_var._position_absolute, _guide_50_var._rotation_absolute);
+  instrument->_position_absolute[53] = _guide_50_var._position_absolute;
+  instrument->_position_relative[53] = _guide_50_var._position_relative;
+    _guide_50_var._position_relative_is_zero =  coords_test_zero(_guide_50_var._position_relative);
+  instrument->counter_N[53]  = instrument->counter_P[53] = instrument->counter_P2[53] = 0;
+  instrument->counter_AbsorbProp[53]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0052_guide_50", _guide_50_var._position_absolute, _guide_50_var._rotation_absolute, "Guide_anyshape");
+        mccomp_param_nexus(nxhandle,"0052_guide_50", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0052_guide_50", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0052_guide_50", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0052_guide_50", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0052_guide_50", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0052_guide_50", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0052_guide_50", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0052_guide_50", "alpha", "3", "3","MCNUM");
+        mccomp_param_nexus(nxhandle,"0052_guide_50", "m", "2", "2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0052_guide_50", "W", "0.003", "0.003","MCNUM");
+        mccomp_param_nexus(nxhandle,"0052_guide_50", "reflect", 0, 0, "char*");
+        mccomp_param_nexus(nxhandle,"0052_guide_50", "geometry", 0, "./OFF_files/try50.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_50_setpos */
+
+/* component guide_51=Guide_anyshape() SETTING, POSITION/ROTATION */
+int _guide_51_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_51_setpos] component guide_51=Guide_anyshape() SETTING [Guide_anyshape:0]");
+  stracpy(_guide_51_var._name, "guide_51", 16384);
+  stracpy(_guide_51_var._type, "Guide_anyshape", 16384);
+  _guide_51_var._index=54;
+  int current_setpos_index = 54;
+  _guide_51_var._parameters.xwidth = 0;
+  _guide_51_var._parameters.yheight = 0;
+  _guide_51_var._parameters.zdepth = 0;
+  _guide_51_var._parameters.center = 0;
+  _guide_51_var._parameters.transmit = 0;
+  _guide_51_var._parameters.R0 = 0.99;
+  _guide_51_var._parameters.Qc = 0.0219;
+  _guide_51_var._parameters.alpha = 3;
+  _guide_51_var._parameters.m = 2;
+  _guide_51_var._parameters.W = 0.003;
+  _guide_51_var._parameters.reflect[0]='\0';
+  if("./OFF_files/try51.off" && strlen("./OFF_files/try51.off"))
+    stracpy(_guide_51_var._parameters.geometry, "./OFF_files/try51.off" ? "./OFF_files/try51.off" : "", 16384);
+  else 
+  _guide_51_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_51=Guide_anyshape() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_51_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_50_var._rotation_absolute, tr1);
+    rot_mul(_guide_51_var._rotation_absolute, tr1, _guide_51_var._rotation_relative);
+    _guide_51_var._rotation_is_identity =  rot_test_identity(_guide_51_var._rotation_relative);
+    _guide_51_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_50_var._position_absolute, _guide_51_var._position_absolute);
+    _guide_51_var._position_relative = rot_apply(_guide_51_var._rotation_absolute, tc1);
+  } /* guide_51=Guide_anyshape() AT ROTATED */
+  DEBUG_COMPONENT("guide_51", _guide_51_var._position_absolute, _guide_51_var._rotation_absolute);
+  instrument->_position_absolute[54] = _guide_51_var._position_absolute;
+  instrument->_position_relative[54] = _guide_51_var._position_relative;
+    _guide_51_var._position_relative_is_zero =  coords_test_zero(_guide_51_var._position_relative);
+  instrument->counter_N[54]  = instrument->counter_P[54] = instrument->counter_P2[54] = 0;
+  instrument->counter_AbsorbProp[54]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0053_guide_51", _guide_51_var._position_absolute, _guide_51_var._rotation_absolute, "Guide_anyshape");
+        mccomp_param_nexus(nxhandle,"0053_guide_51", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0053_guide_51", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0053_guide_51", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0053_guide_51", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0053_guide_51", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0053_guide_51", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0053_guide_51", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0053_guide_51", "alpha", "3", "3","MCNUM");
+        mccomp_param_nexus(nxhandle,"0053_guide_51", "m", "2", "2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0053_guide_51", "W", "0.003", "0.003","MCNUM");
+        mccomp_param_nexus(nxhandle,"0053_guide_51", "reflect", 0, 0, "char*");
+        mccomp_param_nexus(nxhandle,"0053_guide_51", "geometry", 0, "./OFF_files/try51.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_51_setpos */
+
+/* component guide_52=Guide_anyshape() SETTING, POSITION/ROTATION */
+int _guide_52_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_52_setpos] component guide_52=Guide_anyshape() SETTING [Guide_anyshape:0]");
+  stracpy(_guide_52_var._name, "guide_52", 16384);
+  stracpy(_guide_52_var._type, "Guide_anyshape", 16384);
+  _guide_52_var._index=55;
+  int current_setpos_index = 55;
+  _guide_52_var._parameters.xwidth = 0;
+  _guide_52_var._parameters.yheight = 0;
+  _guide_52_var._parameters.zdepth = 0;
+  _guide_52_var._parameters.center = 0;
+  _guide_52_var._parameters.transmit = 0;
+  _guide_52_var._parameters.R0 = 0.99;
+  _guide_52_var._parameters.Qc = 0.0219;
+  _guide_52_var._parameters.alpha = 3;
+  _guide_52_var._parameters.m = 2;
+  _guide_52_var._parameters.W = 0.003;
+  _guide_52_var._parameters.reflect[0]='\0';
+  if("./OFF_files/try52.off" && strlen("./OFF_files/try52.off"))
+    stracpy(_guide_52_var._parameters.geometry, "./OFF_files/try52.off" ? "./OFF_files/try52.off" : "", 16384);
+  else 
+  _guide_52_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_52=Guide_anyshape() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_52_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_51_var._rotation_absolute, tr1);
+    rot_mul(_guide_52_var._rotation_absolute, tr1, _guide_52_var._rotation_relative);
+    _guide_52_var._rotation_is_identity =  rot_test_identity(_guide_52_var._rotation_relative);
+    _guide_52_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_51_var._position_absolute, _guide_52_var._position_absolute);
+    _guide_52_var._position_relative = rot_apply(_guide_52_var._rotation_absolute, tc1);
+  } /* guide_52=Guide_anyshape() AT ROTATED */
+  DEBUG_COMPONENT("guide_52", _guide_52_var._position_absolute, _guide_52_var._rotation_absolute);
+  instrument->_position_absolute[55] = _guide_52_var._position_absolute;
+  instrument->_position_relative[55] = _guide_52_var._position_relative;
+    _guide_52_var._position_relative_is_zero =  coords_test_zero(_guide_52_var._position_relative);
+  instrument->counter_N[55]  = instrument->counter_P[55] = instrument->counter_P2[55] = 0;
+  instrument->counter_AbsorbProp[55]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0054_guide_52", _guide_52_var._position_absolute, _guide_52_var._rotation_absolute, "Guide_anyshape");
+        mccomp_param_nexus(nxhandle,"0054_guide_52", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0054_guide_52", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0054_guide_52", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0054_guide_52", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0054_guide_52", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0054_guide_52", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0054_guide_52", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0054_guide_52", "alpha", "3", "3","MCNUM");
+        mccomp_param_nexus(nxhandle,"0054_guide_52", "m", "2", "2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0054_guide_52", "W", "0.003", "0.003","MCNUM");
+        mccomp_param_nexus(nxhandle,"0054_guide_52", "reflect", 0, 0, "char*");
+        mccomp_param_nexus(nxhandle,"0054_guide_52", "geometry", 0, "./OFF_files/try52.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_52_setpos */
+
+/* component guide_53=Guide_anyshape() SETTING, POSITION/ROTATION */
+int _guide_53_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_53_setpos] component guide_53=Guide_anyshape() SETTING [Guide_anyshape:0]");
+  stracpy(_guide_53_var._name, "guide_53", 16384);
+  stracpy(_guide_53_var._type, "Guide_anyshape", 16384);
+  _guide_53_var._index=56;
+  int current_setpos_index = 56;
+  _guide_53_var._parameters.xwidth = 0;
+  _guide_53_var._parameters.yheight = 0;
+  _guide_53_var._parameters.zdepth = 0;
+  _guide_53_var._parameters.center = 0;
+  _guide_53_var._parameters.transmit = 0;
+  _guide_53_var._parameters.R0 = 0.99;
+  _guide_53_var._parameters.Qc = 0.0219;
+  _guide_53_var._parameters.alpha = 3;
+  _guide_53_var._parameters.m = 2;
+  _guide_53_var._parameters.W = 0.003;
+  _guide_53_var._parameters.reflect[0]='\0';
+  if("./OFF_files/try53.off" && strlen("./OFF_files/try53.off"))
+    stracpy(_guide_53_var._parameters.geometry, "./OFF_files/try53.off" ? "./OFF_files/try53.off" : "", 16384);
+  else 
+  _guide_53_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_53=Guide_anyshape() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_53_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_52_var._rotation_absolute, tr1);
+    rot_mul(_guide_53_var._rotation_absolute, tr1, _guide_53_var._rotation_relative);
+    _guide_53_var._rotation_is_identity =  rot_test_identity(_guide_53_var._rotation_relative);
+    _guide_53_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_52_var._position_absolute, _guide_53_var._position_absolute);
+    _guide_53_var._position_relative = rot_apply(_guide_53_var._rotation_absolute, tc1);
+  } /* guide_53=Guide_anyshape() AT ROTATED */
+  DEBUG_COMPONENT("guide_53", _guide_53_var._position_absolute, _guide_53_var._rotation_absolute);
+  instrument->_position_absolute[56] = _guide_53_var._position_absolute;
+  instrument->_position_relative[56] = _guide_53_var._position_relative;
+    _guide_53_var._position_relative_is_zero =  coords_test_zero(_guide_53_var._position_relative);
+  instrument->counter_N[56]  = instrument->counter_P[56] = instrument->counter_P2[56] = 0;
+  instrument->counter_AbsorbProp[56]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0055_guide_53", _guide_53_var._position_absolute, _guide_53_var._rotation_absolute, "Guide_anyshape");
+        mccomp_param_nexus(nxhandle,"0055_guide_53", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0055_guide_53", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0055_guide_53", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0055_guide_53", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0055_guide_53", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0055_guide_53", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0055_guide_53", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0055_guide_53", "alpha", "3", "3","MCNUM");
+        mccomp_param_nexus(nxhandle,"0055_guide_53", "m", "2", "2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0055_guide_53", "W", "0.003", "0.003","MCNUM");
+        mccomp_param_nexus(nxhandle,"0055_guide_53", "reflect", 0, 0, "char*");
+        mccomp_param_nexus(nxhandle,"0055_guide_53", "geometry", 0, "./OFF_files/try53.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_53_setpos */
+
+/* component guide_54=Guide_anyshape() SETTING, POSITION/ROTATION */
+int _guide_54_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_54_setpos] component guide_54=Guide_anyshape() SETTING [Guide_anyshape:0]");
+  stracpy(_guide_54_var._name, "guide_54", 16384);
+  stracpy(_guide_54_var._type, "Guide_anyshape", 16384);
+  _guide_54_var._index=57;
+  int current_setpos_index = 57;
+  _guide_54_var._parameters.xwidth = 0;
+  _guide_54_var._parameters.yheight = 0;
+  _guide_54_var._parameters.zdepth = 0;
+  _guide_54_var._parameters.center = 0;
+  _guide_54_var._parameters.transmit = 0;
+  _guide_54_var._parameters.R0 = 0.99;
+  _guide_54_var._parameters.Qc = 0.0219;
+  _guide_54_var._parameters.alpha = 3;
+  _guide_54_var._parameters.m = 2;
+  _guide_54_var._parameters.W = 0.003;
+  _guide_54_var._parameters.reflect[0]='\0';
+  if("./OFF_files/try54.off" && strlen("./OFF_files/try54.off"))
+    stracpy(_guide_54_var._parameters.geometry, "./OFF_files/try54.off" ? "./OFF_files/try54.off" : "", 16384);
+  else 
+  _guide_54_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_54=Guide_anyshape() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_54_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_53_var._rotation_absolute, tr1);
+    rot_mul(_guide_54_var._rotation_absolute, tr1, _guide_54_var._rotation_relative);
+    _guide_54_var._rotation_is_identity =  rot_test_identity(_guide_54_var._rotation_relative);
+    _guide_54_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_53_var._position_absolute, _guide_54_var._position_absolute);
+    _guide_54_var._position_relative = rot_apply(_guide_54_var._rotation_absolute, tc1);
+  } /* guide_54=Guide_anyshape() AT ROTATED */
+  DEBUG_COMPONENT("guide_54", _guide_54_var._position_absolute, _guide_54_var._rotation_absolute);
+  instrument->_position_absolute[57] = _guide_54_var._position_absolute;
+  instrument->_position_relative[57] = _guide_54_var._position_relative;
+    _guide_54_var._position_relative_is_zero =  coords_test_zero(_guide_54_var._position_relative);
+  instrument->counter_N[57]  = instrument->counter_P[57] = instrument->counter_P2[57] = 0;
+  instrument->counter_AbsorbProp[57]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0056_guide_54", _guide_54_var._position_absolute, _guide_54_var._rotation_absolute, "Guide_anyshape");
+        mccomp_param_nexus(nxhandle,"0056_guide_54", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0056_guide_54", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0056_guide_54", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0056_guide_54", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0056_guide_54", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0056_guide_54", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0056_guide_54", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0056_guide_54", "alpha", "3", "3","MCNUM");
+        mccomp_param_nexus(nxhandle,"0056_guide_54", "m", "2", "2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0056_guide_54", "W", "0.003", "0.003","MCNUM");
+        mccomp_param_nexus(nxhandle,"0056_guide_54", "reflect", 0, 0, "char*");
+        mccomp_param_nexus(nxhandle,"0056_guide_54", "geometry", 0, "./OFF_files/try54.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_54_setpos */
+
+/* component guide_55=Guide_anyshape() SETTING, POSITION/ROTATION */
+int _guide_55_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_55_setpos] component guide_55=Guide_anyshape() SETTING [Guide_anyshape:0]");
+  stracpy(_guide_55_var._name, "guide_55", 16384);
+  stracpy(_guide_55_var._type, "Guide_anyshape", 16384);
+  _guide_55_var._index=58;
+  int current_setpos_index = 58;
+  _guide_55_var._parameters.xwidth = 0;
+  _guide_55_var._parameters.yheight = 0;
+  _guide_55_var._parameters.zdepth = 0;
+  _guide_55_var._parameters.center = 0;
+  _guide_55_var._parameters.transmit = 0;
+  _guide_55_var._parameters.R0 = 0.99;
+  _guide_55_var._parameters.Qc = 0.0219;
+  _guide_55_var._parameters.alpha = 3;
+  _guide_55_var._parameters.m = 2;
+  _guide_55_var._parameters.W = 0.003;
+  _guide_55_var._parameters.reflect[0]='\0';
+  if("./OFF_files/try55.off" && strlen("./OFF_files/try55.off"))
+    stracpy(_guide_55_var._parameters.geometry, "./OFF_files/try55.off" ? "./OFF_files/try55.off" : "", 16384);
+  else 
+  _guide_55_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_55=Guide_anyshape() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_55_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_54_var._rotation_absolute, tr1);
+    rot_mul(_guide_55_var._rotation_absolute, tr1, _guide_55_var._rotation_relative);
+    _guide_55_var._rotation_is_identity =  rot_test_identity(_guide_55_var._rotation_relative);
+    _guide_55_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_54_var._position_absolute, _guide_55_var._position_absolute);
+    _guide_55_var._position_relative = rot_apply(_guide_55_var._rotation_absolute, tc1);
+  } /* guide_55=Guide_anyshape() AT ROTATED */
+  DEBUG_COMPONENT("guide_55", _guide_55_var._position_absolute, _guide_55_var._rotation_absolute);
+  instrument->_position_absolute[58] = _guide_55_var._position_absolute;
+  instrument->_position_relative[58] = _guide_55_var._position_relative;
+    _guide_55_var._position_relative_is_zero =  coords_test_zero(_guide_55_var._position_relative);
+  instrument->counter_N[58]  = instrument->counter_P[58] = instrument->counter_P2[58] = 0;
+  instrument->counter_AbsorbProp[58]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0057_guide_55", _guide_55_var._position_absolute, _guide_55_var._rotation_absolute, "Guide_anyshape");
+        mccomp_param_nexus(nxhandle,"0057_guide_55", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0057_guide_55", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0057_guide_55", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0057_guide_55", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0057_guide_55", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0057_guide_55", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0057_guide_55", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0057_guide_55", "alpha", "3", "3","MCNUM");
+        mccomp_param_nexus(nxhandle,"0057_guide_55", "m", "2", "2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0057_guide_55", "W", "0.003", "0.003","MCNUM");
+        mccomp_param_nexus(nxhandle,"0057_guide_55", "reflect", 0, 0, "char*");
+        mccomp_param_nexus(nxhandle,"0057_guide_55", "geometry", 0, "./OFF_files/try55.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_55_setpos */
+
+/* component BW_Chopper_2=MultiDiskChopper() SETTING, POSITION/ROTATION */
+int _BW_Chopper_2_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_BW_Chopper_2_setpos] component BW_Chopper_2=MultiDiskChopper() SETTING [MultiDiskChopper:0]");
+  stracpy(_BW_Chopper_2_var._name, "BW_Chopper_2", 16384);
+  stracpy(_BW_Chopper_2_var._type, "MultiDiskChopper", 16384);
+  _BW_Chopper_2_var._index=59;
+  int current_setpos_index = 59;
+  if(theta_pos_BW2 && strlen(theta_pos_BW2))
+    stracpy(_BW_Chopper_2_var._parameters.slit_center, theta_pos_BW2 ? theta_pos_BW2 : "", 16384);
+  else 
+  _BW_Chopper_2_var._parameters.slit_center[0]='\0';
+  if(theta_width_BW2 && strlen(theta_width_BW2))
+    stracpy(_BW_Chopper_2_var._parameters.slit_width, theta_width_BW2 ? theta_width_BW2 : "", 16384);
+  else 
+  _BW_Chopper_2_var._parameters.slit_width[0]='\0';
+  _BW_Chopper_2_var._parameters.nslits = nslits_BW2;
+  _BW_Chopper_2_var._parameters.delta_y = delta_y_BW2;
+  _BW_Chopper_2_var._parameters.nu = f_BW2;
+  _BW_Chopper_2_var._parameters.nrev = 0;
+  _BW_Chopper_2_var._parameters.ratio = 1;
+  _BW_Chopper_2_var._parameters.jitter = 0;
+  _BW_Chopper_2_var._parameters.delay = delay_BW2;
+  _BW_Chopper_2_var._parameters.isfirst = 0;
+  _BW_Chopper_2_var._parameters.phase = 0;
+  _BW_Chopper_2_var._parameters.radius = radius_BW2;
+  _BW_Chopper_2_var._parameters.equal = 0;
+  _BW_Chopper_2_var._parameters.abs_out = 0;
+  _BW_Chopper_2_var._parameters.verbose = 0;
+
+
+  /* component BW_Chopper_2=MultiDiskChopper() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_BW_Chopper_2_var._rotation_absolute,
+      (0)*DEG2RAD, (0.16273933122724)*DEG2RAD, (0)*DEG2RAD);
+    rot_transpose(_guide_55_var._rotation_absolute, tr1);
+    rot_mul(_BW_Chopper_2_var._rotation_absolute, tr1, _BW_Chopper_2_var._rotation_relative);
+    _BW_Chopper_2_var._rotation_is_identity =  rot_test_identity(_BW_Chopper_2_var._rotation_relative);
+    _BW_Chopper_2_var._position_absolute = coords_set(
+      0.03140505829452013, 0.0, 40.0);
+    tc1 = coords_sub(_guide_55_var._position_absolute, _BW_Chopper_2_var._position_absolute);
+    _BW_Chopper_2_var._position_relative = rot_apply(_BW_Chopper_2_var._rotation_absolute, tc1);
+  } /* BW_Chopper_2=MultiDiskChopper() AT ROTATED */
+  DEBUG_COMPONENT("BW_Chopper_2", _BW_Chopper_2_var._position_absolute, _BW_Chopper_2_var._rotation_absolute);
+  instrument->_position_absolute[59] = _BW_Chopper_2_var._position_absolute;
+  instrument->_position_relative[59] = _BW_Chopper_2_var._position_relative;
+    _BW_Chopper_2_var._position_relative_is_zero =  coords_test_zero(_BW_Chopper_2_var._position_relative);
+  instrument->counter_N[59]  = instrument->counter_P[59] = instrument->counter_P2[59] = 0;
+  instrument->counter_AbsorbProp[59]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0058_BW_Chopper_2", _BW_Chopper_2_var._position_absolute, _BW_Chopper_2_var._rotation_absolute, "MultiDiskChopper");
+        mccomp_param_nexus(nxhandle,"0058_BW_Chopper_2", "slit_center", "0 180", theta_pos_BW2, "char*");
+        mccomp_param_nexus(nxhandle,"0058_BW_Chopper_2", "slit_width", "10 20", theta_width_BW2, "char*");
+        mccomp_param_nexus(nxhandle,"0058_BW_Chopper_2", "nslits", "2", "nslits_BW2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0058_BW_Chopper_2", "delta_y", "-0.3", "delta_y_BW2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0058_BW_Chopper_2", "nu", "0", "f_BW2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0058_BW_Chopper_2", "nrev", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0058_BW_Chopper_2", "ratio", "1", "1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0058_BW_Chopper_2", "jitter", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0058_BW_Chopper_2", "delay", "0", "delay_BW2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0058_BW_Chopper_2", "isfirst", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0058_BW_Chopper_2", "phase", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0058_BW_Chopper_2", "radius", "0.375", "radius_BW2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0058_BW_Chopper_2", "equal", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0058_BW_Chopper_2", "abs_out", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0058_BW_Chopper_2", "verbose", "0", "0","MCNUM");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _BW_Chopper_2_setpos */
+
+/* component B2_monitor_xy=Monitor_nD() SETTING, POSITION/ROTATION */
+int _B2_monitor_xy_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_B2_monitor_xy_setpos] component B2_monitor_xy=Monitor_nD() SETTING [Monitor_nD:0]");
+  stracpy(_B2_monitor_xy_var._name, "B2_monitor_xy", 16384);
+  stracpy(_B2_monitor_xy_var._type, "Monitor_nD", 16384);
+  _B2_monitor_xy_var._index=60;
+  int current_setpos_index = 60;
+  if("" && strlen(""))
+    stracpy(_B2_monitor_xy_var._parameters.user0, "" ? "" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.user0[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B2_monitor_xy_var._parameters.user1, "" ? "" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.user1[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B2_monitor_xy_var._parameters.user2, "" ? "" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.user2[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B2_monitor_xy_var._parameters.user3, "" ? "" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.user3[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B2_monitor_xy_var._parameters.user4, "" ? "" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.user4[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B2_monitor_xy_var._parameters.user5, "" ? "" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.user5[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B2_monitor_xy_var._parameters.user6, "" ? "" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.user6[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B2_monitor_xy_var._parameters.user7, "" ? "" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.user7[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B2_monitor_xy_var._parameters.user8, "" ? "" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.user8[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B2_monitor_xy_var._parameters.user9, "" ? "" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.user9[0]='\0';
+  _B2_monitor_xy_var._parameters.xwidth = 0.06;
+  _B2_monitor_xy_var._parameters.yheight = 0.085;
+  _B2_monitor_xy_var._parameters.zdepth = 0;
+  _B2_monitor_xy_var._parameters.xmin = 0;
+  _B2_monitor_xy_var._parameters.xmax = 0;
+  _B2_monitor_xy_var._parameters.ymin = 0;
+  _B2_monitor_xy_var._parameters.ymax = 0;
+  _B2_monitor_xy_var._parameters.zmin = 0;
+  _B2_monitor_xy_var._parameters.zmax = 0;
+  _B2_monitor_xy_var._parameters.bins = 0;
+  _B2_monitor_xy_var._parameters.min = -1e40;
+  _B2_monitor_xy_var._parameters.max = 1e40;
+  _B2_monitor_xy_var._parameters.restore_neutron = 1;
+  _B2_monitor_xy_var._parameters.radius = 0;
+  if("x limits [-0.0375:0.0375] bins = 100, y limits [-0.05:0.05] bins = 100" && strlen("x limits [-0.0375:0.0375] bins = 100, y limits [-0.05:0.05] bins = 100"))
+    stracpy(_B2_monitor_xy_var._parameters.options, "x limits [-0.0375:0.0375] bins = 100, y limits [-0.05:0.05] bins = 100" ? "x limits [-0.0375:0.0375] bins = 100, y limits [-0.05:0.05] bins = 100" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.options[0]='\0';
+  if("BW2_monitor_xy.dat" && strlen("BW2_monitor_xy.dat"))
+    stracpy(_B2_monitor_xy_var._parameters.filename, "BW2_monitor_xy.dat" ? "BW2_monitor_xy.dat" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.filename[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B2_monitor_xy_var._parameters.geometry, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.geometry[0]='\0';
+  _B2_monitor_xy_var._parameters.nowritefile = 0;
+  _B2_monitor_xy_var._parameters.nexus_bins = 0;
+  if("NULL" && strlen("NULL"))
+    stracpy(_B2_monitor_xy_var._parameters.username0, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.username0[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B2_monitor_xy_var._parameters.username1, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.username1[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B2_monitor_xy_var._parameters.username2, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.username2[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B2_monitor_xy_var._parameters.username3, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.username3[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B2_monitor_xy_var._parameters.username4, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.username4[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B2_monitor_xy_var._parameters.username5, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.username5[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B2_monitor_xy_var._parameters.username6, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.username6[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B2_monitor_xy_var._parameters.username7, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.username7[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B2_monitor_xy_var._parameters.username8, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.username8[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B2_monitor_xy_var._parameters.username9, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B2_monitor_xy_var._parameters.username9[0]='\0';
+
+
+  /* component B2_monitor_xy=Monitor_nD() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(tr1,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_mul(tr1, _BW_Chopper_2_var._rotation_absolute, _B2_monitor_xy_var._rotation_absolute);
+    rot_transpose(_BW_Chopper_2_var._rotation_absolute, tr1);
+    rot_mul(_B2_monitor_xy_var._rotation_absolute, tr1, _B2_monitor_xy_var._rotation_relative);
+    _B2_monitor_xy_var._rotation_is_identity =  rot_test_identity(_B2_monitor_xy_var._rotation_relative);
+    tc1 = coords_set(
+      0, 0, 1e-06);
+    rot_transpose(_BW_Chopper_2_var._rotation_absolute, tr1);
+    tc2 = rot_apply(tr1, tc1);
+    _B2_monitor_xy_var._position_absolute = coords_add(_BW_Chopper_2_var._position_absolute, tc2);
+    tc1 = coords_sub(_BW_Chopper_2_var._position_absolute, _B2_monitor_xy_var._position_absolute);
+    _B2_monitor_xy_var._position_relative = rot_apply(_B2_monitor_xy_var._rotation_absolute, tc1);
+  } /* B2_monitor_xy=Monitor_nD() AT ROTATED */
+  DEBUG_COMPONENT("B2_monitor_xy", _B2_monitor_xy_var._position_absolute, _B2_monitor_xy_var._rotation_absolute);
+  instrument->_position_absolute[60] = _B2_monitor_xy_var._position_absolute;
+  instrument->_position_relative[60] = _B2_monitor_xy_var._position_relative;
+    _B2_monitor_xy_var._position_relative_is_zero =  coords_test_zero(_B2_monitor_xy_var._position_relative);
+  instrument->counter_N[60]  = instrument->counter_P[60] = instrument->counter_P2[60] = 0;
+  instrument->counter_AbsorbProp[60]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0059_B2_monitor_xy", _B2_monitor_xy_var._position_absolute, _B2_monitor_xy_var._rotation_absolute, "Monitor_nD");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "user0", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "user1", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "user2", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "user3", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "user4", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "user5", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "user6", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "user7", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "user8", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "user9", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "xwidth", "0", "0.06","MCNUM");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "yheight", "0", "0.085","MCNUM");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "xmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "xmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "ymin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "ymax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "zmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "zmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "min", "-1e40", "-1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "max", "1e40", "1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "restore_neutron", "0", "1","int");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "radius", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "options", "NULL", "x limits [-0.0375:0.0375] bins = 100, y limits [-0.05:0.05] bins = 100", "char*");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "filename", "NULL", "BW2_monitor_xy.dat", "char*");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "geometry", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "nowritefile", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "nexus_bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "username0", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "username1", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "username2", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "username3", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "username4", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "username5", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "username6", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "username7", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "username8", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0059_B2_monitor_xy", "username9", "NULL", "NULL", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _B2_monitor_xy_setpos */
+
+/* component B2_monitor_lam=Monitor_nD() SETTING, POSITION/ROTATION */
+int _B2_monitor_lam_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_B2_monitor_lam_setpos] component B2_monitor_lam=Monitor_nD() SETTING [Monitor_nD:0]");
+  stracpy(_B2_monitor_lam_var._name, "B2_monitor_lam", 16384);
+  stracpy(_B2_monitor_lam_var._type, "Monitor_nD", 16384);
+  _B2_monitor_lam_var._index=61;
+  int current_setpos_index = 61;
+  if("" && strlen(""))
+    stracpy(_B2_monitor_lam_var._parameters.user0, "" ? "" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.user0[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B2_monitor_lam_var._parameters.user1, "" ? "" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.user1[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B2_monitor_lam_var._parameters.user2, "" ? "" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.user2[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B2_monitor_lam_var._parameters.user3, "" ? "" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.user3[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B2_monitor_lam_var._parameters.user4, "" ? "" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.user4[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B2_monitor_lam_var._parameters.user5, "" ? "" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.user5[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B2_monitor_lam_var._parameters.user6, "" ? "" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.user6[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B2_monitor_lam_var._parameters.user7, "" ? "" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.user7[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B2_monitor_lam_var._parameters.user8, "" ? "" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.user8[0]='\0';
+  if("" && strlen(""))
+    stracpy(_B2_monitor_lam_var._parameters.user9, "" ? "" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.user9[0]='\0';
+  _B2_monitor_lam_var._parameters.xwidth = 0.06;
+  _B2_monitor_lam_var._parameters.yheight = 0.085;
+  _B2_monitor_lam_var._parameters.zdepth = 0;
+  _B2_monitor_lam_var._parameters.xmin = 0;
+  _B2_monitor_lam_var._parameters.xmax = 0;
+  _B2_monitor_lam_var._parameters.ymin = 0;
+  _B2_monitor_lam_var._parameters.ymax = 0;
+  _B2_monitor_lam_var._parameters.zmin = 0;
+  _B2_monitor_lam_var._parameters.zmax = 0;
+  _B2_monitor_lam_var._parameters.bins = 0;
+  _B2_monitor_lam_var._parameters.min = -1e40;
+  _B2_monitor_lam_var._parameters.max = 1e40;
+  _B2_monitor_lam_var._parameters.restore_neutron = 1;
+  _B2_monitor_lam_var._parameters.radius = 0;
+  if("lambda limits [0.5:10.0] bins = 130" && strlen("lambda limits [0.5:10.0] bins = 130"))
+    stracpy(_B2_monitor_lam_var._parameters.options, "lambda limits [0.5:10.0] bins = 130" ? "lambda limits [0.5:10.0] bins = 130" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.options[0]='\0';
+  if("BW2_monitor_lam.dat" && strlen("BW2_monitor_lam.dat"))
+    stracpy(_B2_monitor_lam_var._parameters.filename, "BW2_monitor_lam.dat" ? "BW2_monitor_lam.dat" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.filename[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B2_monitor_lam_var._parameters.geometry, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.geometry[0]='\0';
+  _B2_monitor_lam_var._parameters.nowritefile = 0;
+  _B2_monitor_lam_var._parameters.nexus_bins = 0;
+  if("NULL" && strlen("NULL"))
+    stracpy(_B2_monitor_lam_var._parameters.username0, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.username0[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B2_monitor_lam_var._parameters.username1, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.username1[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B2_monitor_lam_var._parameters.username2, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.username2[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B2_monitor_lam_var._parameters.username3, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.username3[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B2_monitor_lam_var._parameters.username4, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.username4[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B2_monitor_lam_var._parameters.username5, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.username5[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B2_monitor_lam_var._parameters.username6, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.username6[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B2_monitor_lam_var._parameters.username7, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.username7[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B2_monitor_lam_var._parameters.username8, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.username8[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_B2_monitor_lam_var._parameters.username9, "NULL" ? "NULL" : "", 16384);
+  else 
+  _B2_monitor_lam_var._parameters.username9[0]='\0';
+
+
+  /* component B2_monitor_lam=Monitor_nD() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(tr1,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_mul(tr1, _B2_monitor_xy_var._rotation_absolute, _B2_monitor_lam_var._rotation_absolute);
+    rot_transpose(_B2_monitor_xy_var._rotation_absolute, tr1);
+    rot_mul(_B2_monitor_lam_var._rotation_absolute, tr1, _B2_monitor_lam_var._rotation_relative);
+    _B2_monitor_lam_var._rotation_is_identity =  rot_test_identity(_B2_monitor_lam_var._rotation_relative);
+    tc1 = coords_set(
+      0, 0, 1e-06);
+    rot_transpose(_B2_monitor_xy_var._rotation_absolute, tr1);
+    tc2 = rot_apply(tr1, tc1);
+    _B2_monitor_lam_var._position_absolute = coords_add(_B2_monitor_xy_var._position_absolute, tc2);
+    tc1 = coords_sub(_B2_monitor_xy_var._position_absolute, _B2_monitor_lam_var._position_absolute);
+    _B2_monitor_lam_var._position_relative = rot_apply(_B2_monitor_lam_var._rotation_absolute, tc1);
+  } /* B2_monitor_lam=Monitor_nD() AT ROTATED */
+  DEBUG_COMPONENT("B2_monitor_lam", _B2_monitor_lam_var._position_absolute, _B2_monitor_lam_var._rotation_absolute);
+  instrument->_position_absolute[61] = _B2_monitor_lam_var._position_absolute;
+  instrument->_position_relative[61] = _B2_monitor_lam_var._position_relative;
+    _B2_monitor_lam_var._position_relative_is_zero =  coords_test_zero(_B2_monitor_lam_var._position_relative);
+  instrument->counter_N[61]  = instrument->counter_P[61] = instrument->counter_P2[61] = 0;
+  instrument->counter_AbsorbProp[61]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0060_B2_monitor_lam", _B2_monitor_lam_var._position_absolute, _B2_monitor_lam_var._rotation_absolute, "Monitor_nD");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "user0", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "user1", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "user2", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "user3", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "user4", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "user5", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "user6", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "user7", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "user8", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "user9", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "xwidth", "0", "0.06","MCNUM");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "yheight", "0", "0.085","MCNUM");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "xmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "xmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "ymin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "ymax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "zmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "zmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "min", "-1e40", "-1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "max", "1e40", "1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "restore_neutron", "0", "1","int");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "radius", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "options", "NULL", "lambda limits [0.5:10.0] bins = 130", "char*");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "filename", "NULL", "BW2_monitor_lam.dat", "char*");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "geometry", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "nowritefile", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "nexus_bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "username0", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "username1", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "username2", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "username3", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "username4", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "username5", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "username6", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "username7", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "username8", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0060_B2_monitor_lam", "username9", "NULL", "NULL", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _B2_monitor_lam_setpos */
+
+/* component BW2_monitor_ToF=Monitor_nD() SETTING, POSITION/ROTATION */
+int _BW2_monitor_ToF_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_BW2_monitor_ToF_setpos] component BW2_monitor_ToF=Monitor_nD() SETTING [Monitor_nD:0]");
+  stracpy(_BW2_monitor_ToF_var._name, "BW2_monitor_ToF", 16384);
+  stracpy(_BW2_monitor_ToF_var._type, "Monitor_nD", 16384);
+  _BW2_monitor_ToF_var._index=62;
+  int current_setpos_index = 62;
+  if("" && strlen(""))
+    stracpy(_BW2_monitor_ToF_var._parameters.user0, "" ? "" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.user0[0]='\0';
+  if("" && strlen(""))
+    stracpy(_BW2_monitor_ToF_var._parameters.user1, "" ? "" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.user1[0]='\0';
+  if("" && strlen(""))
+    stracpy(_BW2_monitor_ToF_var._parameters.user2, "" ? "" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.user2[0]='\0';
+  if("" && strlen(""))
+    stracpy(_BW2_monitor_ToF_var._parameters.user3, "" ? "" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.user3[0]='\0';
+  if("" && strlen(""))
+    stracpy(_BW2_monitor_ToF_var._parameters.user4, "" ? "" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.user4[0]='\0';
+  if("" && strlen(""))
+    stracpy(_BW2_monitor_ToF_var._parameters.user5, "" ? "" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.user5[0]='\0';
+  if("" && strlen(""))
+    stracpy(_BW2_monitor_ToF_var._parameters.user6, "" ? "" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.user6[0]='\0';
+  if("" && strlen(""))
+    stracpy(_BW2_monitor_ToF_var._parameters.user7, "" ? "" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.user7[0]='\0';
+  if("" && strlen(""))
+    stracpy(_BW2_monitor_ToF_var._parameters.user8, "" ? "" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.user8[0]='\0';
+  if("" && strlen(""))
+    stracpy(_BW2_monitor_ToF_var._parameters.user9, "" ? "" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.user9[0]='\0';
+  _BW2_monitor_ToF_var._parameters.xwidth = 0.06;
+  _BW2_monitor_ToF_var._parameters.yheight = 0.084;
+  _BW2_monitor_ToF_var._parameters.zdepth = 0;
+  _BW2_monitor_ToF_var._parameters.xmin = 0;
+  _BW2_monitor_ToF_var._parameters.xmax = 0;
+  _BW2_monitor_ToF_var._parameters.ymin = 0;
+  _BW2_monitor_ToF_var._parameters.ymax = 0;
+  _BW2_monitor_ToF_var._parameters.zmin = 0;
+  _BW2_monitor_ToF_var._parameters.zmax = 0;
+  _BW2_monitor_ToF_var._parameters.bins = 0;
+  _BW2_monitor_ToF_var._parameters.min = -1e40;
+  _BW2_monitor_ToF_var._parameters.max = 1e40;
+  _BW2_monitor_ToF_var._parameters.restore_neutron = 1;
+  _BW2_monitor_ToF_var._parameters.radius = 0;
+  if("t limits [0.0:0.050] bins = 20000" && strlen("t limits [0.0:0.050] bins = 20000"))
+    stracpy(_BW2_monitor_ToF_var._parameters.options, "t limits [0.0:0.050] bins = 20000" ? "t limits [0.0:0.050] bins = 20000" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.options[0]='\0';
+  if("BW2_monitor_ToF.dat" && strlen("BW2_monitor_ToF.dat"))
+    stracpy(_BW2_monitor_ToF_var._parameters.filename, "BW2_monitor_ToF.dat" ? "BW2_monitor_ToF.dat" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.filename[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_BW2_monitor_ToF_var._parameters.geometry, "NULL" ? "NULL" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.geometry[0]='\0';
+  _BW2_monitor_ToF_var._parameters.nowritefile = 0;
+  _BW2_monitor_ToF_var._parameters.nexus_bins = 0;
+  if("NULL" && strlen("NULL"))
+    stracpy(_BW2_monitor_ToF_var._parameters.username0, "NULL" ? "NULL" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.username0[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_BW2_monitor_ToF_var._parameters.username1, "NULL" ? "NULL" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.username1[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_BW2_monitor_ToF_var._parameters.username2, "NULL" ? "NULL" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.username2[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_BW2_monitor_ToF_var._parameters.username3, "NULL" ? "NULL" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.username3[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_BW2_monitor_ToF_var._parameters.username4, "NULL" ? "NULL" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.username4[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_BW2_monitor_ToF_var._parameters.username5, "NULL" ? "NULL" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.username5[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_BW2_monitor_ToF_var._parameters.username6, "NULL" ? "NULL" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.username6[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_BW2_monitor_ToF_var._parameters.username7, "NULL" ? "NULL" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.username7[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_BW2_monitor_ToF_var._parameters.username8, "NULL" ? "NULL" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.username8[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_BW2_monitor_ToF_var._parameters.username9, "NULL" ? "NULL" : "", 16384);
+  else 
+  _BW2_monitor_ToF_var._parameters.username9[0]='\0';
+
+
+  /* component BW2_monitor_ToF=Monitor_nD() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_BW2_monitor_ToF_var._rotation_absolute,
+      (0)*DEG2RAD, (0.16273933122724)*DEG2RAD, (0)*DEG2RAD);
+    rot_transpose(_B2_monitor_lam_var._rotation_absolute, tr1);
+    rot_mul(_BW2_monitor_ToF_var._rotation_absolute, tr1, _BW2_monitor_ToF_var._rotation_relative);
+    _BW2_monitor_ToF_var._rotation_is_identity =  rot_test_identity(_BW2_monitor_ToF_var._rotation_relative);
+    _BW2_monitor_ToF_var._position_absolute = coords_set(
+      0.03140505829452013, 0.0, 40.1);
+    tc1 = coords_sub(_B2_monitor_lam_var._position_absolute, _BW2_monitor_ToF_var._position_absolute);
+    _BW2_monitor_ToF_var._position_relative = rot_apply(_BW2_monitor_ToF_var._rotation_absolute, tc1);
+  } /* BW2_monitor_ToF=Monitor_nD() AT ROTATED */
+  DEBUG_COMPONENT("BW2_monitor_ToF", _BW2_monitor_ToF_var._position_absolute, _BW2_monitor_ToF_var._rotation_absolute);
+  instrument->_position_absolute[62] = _BW2_monitor_ToF_var._position_absolute;
+  instrument->_position_relative[62] = _BW2_monitor_ToF_var._position_relative;
+    _BW2_monitor_ToF_var._position_relative_is_zero =  coords_test_zero(_BW2_monitor_ToF_var._position_relative);
+  instrument->counter_N[62]  = instrument->counter_P[62] = instrument->counter_P2[62] = 0;
+  instrument->counter_AbsorbProp[62]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0061_BW2_monitor_ToF", _BW2_monitor_ToF_var._position_absolute, _BW2_monitor_ToF_var._rotation_absolute, "Monitor_nD");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "user0", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "user1", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "user2", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "user3", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "user4", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "user5", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "user6", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "user7", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "user8", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "user9", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "xwidth", "0", "0.06","MCNUM");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "yheight", "0", "0.084","MCNUM");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "xmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "xmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "ymin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "ymax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "zmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "zmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "min", "-1e40", "-1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "max", "1e40", "1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "restore_neutron", "0", "1","int");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "radius", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "options", "NULL", "t limits [0.0:0.050] bins = 20000", "char*");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "filename", "NULL", "BW2_monitor_ToF.dat", "char*");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "geometry", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "nowritefile", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "nexus_bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "username0", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "username1", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "username2", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "username3", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "username4", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "username5", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "username6", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "username7", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "username8", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0061_BW2_monitor_ToF", "username9", "NULL", "NULL", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _BW2_monitor_ToF_setpos */
+
+/* component guide_57=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_57_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_57_setpos] component guide_57=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_57_var._name, "guide_57", 16384);
+  stracpy(_guide_57_var._type, "Guide_anyshape_r", 16384);
+  _guide_57_var._index=63;
+  int current_setpos_index = 63;
+  _guide_57_var._parameters.xwidth = 0;
+  _guide_57_var._parameters.yheight = 0;
+  _guide_57_var._parameters.zdepth = 0;
+  _guide_57_var._parameters.center = 0;
+  _guide_57_var._parameters.transmit = 0;
+  _guide_57_var._parameters.R0 = 0.99;
+  _guide_57_var._parameters.Qc = 0.0219;
+  _guide_57_var._parameters.alpha = 0;
+  _guide_57_var._parameters.m = 0;
+  _guide_57_var._parameters.W = 0;
+  if("./OFF_files/try57.off" && strlen("./OFF_files/try57.off"))
+    stracpy(_guide_57_var._parameters.geometry, "./OFF_files/try57.off" ? "./OFF_files/try57.off" : "", 16384);
+  else 
+  _guide_57_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_57=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_57_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_BW2_monitor_ToF_var._rotation_absolute, tr1);
+    rot_mul(_guide_57_var._rotation_absolute, tr1, _guide_57_var._rotation_relative);
+    _guide_57_var._rotation_is_identity =  rot_test_identity(_guide_57_var._rotation_relative);
+    _guide_57_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_BW2_monitor_ToF_var._position_absolute, _guide_57_var._position_absolute);
+    _guide_57_var._position_relative = rot_apply(_guide_57_var._rotation_absolute, tc1);
+  } /* guide_57=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_57", _guide_57_var._position_absolute, _guide_57_var._rotation_absolute);
+  instrument->_position_absolute[63] = _guide_57_var._position_absolute;
+  instrument->_position_relative[63] = _guide_57_var._position_relative;
+    _guide_57_var._position_relative_is_zero =  coords_test_zero(_guide_57_var._position_relative);
+  instrument->counter_N[63]  = instrument->counter_P[63] = instrument->counter_P2[63] = 0;
+  instrument->counter_AbsorbProp[63]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0062_guide_57", _guide_57_var._position_absolute, _guide_57_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0062_guide_57", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0062_guide_57", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0062_guide_57", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0062_guide_57", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0062_guide_57", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0062_guide_57", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0062_guide_57", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0062_guide_57", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0062_guide_57", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0062_guide_57", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0062_guide_57", "geometry", 0, "./OFF_files/try57.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_57_setpos */
+
+/* component guide_58=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_58_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_58_setpos] component guide_58=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_58_var._name, "guide_58", 16384);
+  stracpy(_guide_58_var._type, "Guide_anyshape_r", 16384);
+  _guide_58_var._index=64;
+  int current_setpos_index = 64;
+  _guide_58_var._parameters.xwidth = 0;
+  _guide_58_var._parameters.yheight = 0;
+  _guide_58_var._parameters.zdepth = 0;
+  _guide_58_var._parameters.center = 0;
+  _guide_58_var._parameters.transmit = 0;
+  _guide_58_var._parameters.R0 = 0.99;
+  _guide_58_var._parameters.Qc = 0.0219;
+  _guide_58_var._parameters.alpha = 0;
+  _guide_58_var._parameters.m = 0;
+  _guide_58_var._parameters.W = 0;
+  if("./OFF_files/try58.off" && strlen("./OFF_files/try58.off"))
+    stracpy(_guide_58_var._parameters.geometry, "./OFF_files/try58.off" ? "./OFF_files/try58.off" : "", 16384);
+  else 
+  _guide_58_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_58=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_58_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_57_var._rotation_absolute, tr1);
+    rot_mul(_guide_58_var._rotation_absolute, tr1, _guide_58_var._rotation_relative);
+    _guide_58_var._rotation_is_identity =  rot_test_identity(_guide_58_var._rotation_relative);
+    _guide_58_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_57_var._position_absolute, _guide_58_var._position_absolute);
+    _guide_58_var._position_relative = rot_apply(_guide_58_var._rotation_absolute, tc1);
+  } /* guide_58=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_58", _guide_58_var._position_absolute, _guide_58_var._rotation_absolute);
+  instrument->_position_absolute[64] = _guide_58_var._position_absolute;
+  instrument->_position_relative[64] = _guide_58_var._position_relative;
+    _guide_58_var._position_relative_is_zero =  coords_test_zero(_guide_58_var._position_relative);
+  instrument->counter_N[64]  = instrument->counter_P[64] = instrument->counter_P2[64] = 0;
+  instrument->counter_AbsorbProp[64]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0063_guide_58", _guide_58_var._position_absolute, _guide_58_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0063_guide_58", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0063_guide_58", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0063_guide_58", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0063_guide_58", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0063_guide_58", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0063_guide_58", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0063_guide_58", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0063_guide_58", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0063_guide_58", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0063_guide_58", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0063_guide_58", "geometry", 0, "./OFF_files/try58.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_58_setpos */
+
+/* component guide_59=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_59_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_59_setpos] component guide_59=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_59_var._name, "guide_59", 16384);
+  stracpy(_guide_59_var._type, "Guide_anyshape_r", 16384);
+  _guide_59_var._index=65;
+  int current_setpos_index = 65;
+  _guide_59_var._parameters.xwidth = 0;
+  _guide_59_var._parameters.yheight = 0;
+  _guide_59_var._parameters.zdepth = 0;
+  _guide_59_var._parameters.center = 0;
+  _guide_59_var._parameters.transmit = 0;
+  _guide_59_var._parameters.R0 = 0.99;
+  _guide_59_var._parameters.Qc = 0.0219;
+  _guide_59_var._parameters.alpha = 0;
+  _guide_59_var._parameters.m = 0;
+  _guide_59_var._parameters.W = 0;
+  if("./OFF_files/try59.off" && strlen("./OFF_files/try59.off"))
+    stracpy(_guide_59_var._parameters.geometry, "./OFF_files/try59.off" ? "./OFF_files/try59.off" : "", 16384);
+  else 
+  _guide_59_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_59=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_59_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_58_var._rotation_absolute, tr1);
+    rot_mul(_guide_59_var._rotation_absolute, tr1, _guide_59_var._rotation_relative);
+    _guide_59_var._rotation_is_identity =  rot_test_identity(_guide_59_var._rotation_relative);
+    _guide_59_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_58_var._position_absolute, _guide_59_var._position_absolute);
+    _guide_59_var._position_relative = rot_apply(_guide_59_var._rotation_absolute, tc1);
+  } /* guide_59=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_59", _guide_59_var._position_absolute, _guide_59_var._rotation_absolute);
+  instrument->_position_absolute[65] = _guide_59_var._position_absolute;
+  instrument->_position_relative[65] = _guide_59_var._position_relative;
+    _guide_59_var._position_relative_is_zero =  coords_test_zero(_guide_59_var._position_relative);
+  instrument->counter_N[65]  = instrument->counter_P[65] = instrument->counter_P2[65] = 0;
+  instrument->counter_AbsorbProp[65]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0064_guide_59", _guide_59_var._position_absolute, _guide_59_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0064_guide_59", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0064_guide_59", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0064_guide_59", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0064_guide_59", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0064_guide_59", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0064_guide_59", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0064_guide_59", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0064_guide_59", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0064_guide_59", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0064_guide_59", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0064_guide_59", "geometry", 0, "./OFF_files/try59.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_59_setpos */
+
+/* component guide_60=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_60_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_60_setpos] component guide_60=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_60_var._name, "guide_60", 16384);
+  stracpy(_guide_60_var._type, "Guide_anyshape_r", 16384);
+  _guide_60_var._index=66;
+  int current_setpos_index = 66;
+  _guide_60_var._parameters.xwidth = 0;
+  _guide_60_var._parameters.yheight = 0;
+  _guide_60_var._parameters.zdepth = 0;
+  _guide_60_var._parameters.center = 0;
+  _guide_60_var._parameters.transmit = 0;
+  _guide_60_var._parameters.R0 = 0.99;
+  _guide_60_var._parameters.Qc = 0.0219;
+  _guide_60_var._parameters.alpha = 0;
+  _guide_60_var._parameters.m = 0;
+  _guide_60_var._parameters.W = 0;
+  if("./OFF_files/try60.off" && strlen("./OFF_files/try60.off"))
+    stracpy(_guide_60_var._parameters.geometry, "./OFF_files/try60.off" ? "./OFF_files/try60.off" : "", 16384);
+  else 
+  _guide_60_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_60=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_60_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_59_var._rotation_absolute, tr1);
+    rot_mul(_guide_60_var._rotation_absolute, tr1, _guide_60_var._rotation_relative);
+    _guide_60_var._rotation_is_identity =  rot_test_identity(_guide_60_var._rotation_relative);
+    _guide_60_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_59_var._position_absolute, _guide_60_var._position_absolute);
+    _guide_60_var._position_relative = rot_apply(_guide_60_var._rotation_absolute, tc1);
+  } /* guide_60=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_60", _guide_60_var._position_absolute, _guide_60_var._rotation_absolute);
+  instrument->_position_absolute[66] = _guide_60_var._position_absolute;
+  instrument->_position_relative[66] = _guide_60_var._position_relative;
+    _guide_60_var._position_relative_is_zero =  coords_test_zero(_guide_60_var._position_relative);
+  instrument->counter_N[66]  = instrument->counter_P[66] = instrument->counter_P2[66] = 0;
+  instrument->counter_AbsorbProp[66]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0065_guide_60", _guide_60_var._position_absolute, _guide_60_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0065_guide_60", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0065_guide_60", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0065_guide_60", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0065_guide_60", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0065_guide_60", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0065_guide_60", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0065_guide_60", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0065_guide_60", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0065_guide_60", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0065_guide_60", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0065_guide_60", "geometry", 0, "./OFF_files/try60.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_60_setpos */
+
+/* component guide_61=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_61_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_61_setpos] component guide_61=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_61_var._name, "guide_61", 16384);
+  stracpy(_guide_61_var._type, "Guide_anyshape_r", 16384);
+  _guide_61_var._index=67;
+  int current_setpos_index = 67;
+  _guide_61_var._parameters.xwidth = 0;
+  _guide_61_var._parameters.yheight = 0;
+  _guide_61_var._parameters.zdepth = 0;
+  _guide_61_var._parameters.center = 0;
+  _guide_61_var._parameters.transmit = 0;
+  _guide_61_var._parameters.R0 = 0.99;
+  _guide_61_var._parameters.Qc = 0.0219;
+  _guide_61_var._parameters.alpha = 0;
+  _guide_61_var._parameters.m = 0;
+  _guide_61_var._parameters.W = 0;
+  if("./OFF_files/try61.off" && strlen("./OFF_files/try61.off"))
+    stracpy(_guide_61_var._parameters.geometry, "./OFF_files/try61.off" ? "./OFF_files/try61.off" : "", 16384);
+  else 
+  _guide_61_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_61=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_61_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_60_var._rotation_absolute, tr1);
+    rot_mul(_guide_61_var._rotation_absolute, tr1, _guide_61_var._rotation_relative);
+    _guide_61_var._rotation_is_identity =  rot_test_identity(_guide_61_var._rotation_relative);
+    _guide_61_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_60_var._position_absolute, _guide_61_var._position_absolute);
+    _guide_61_var._position_relative = rot_apply(_guide_61_var._rotation_absolute, tc1);
+  } /* guide_61=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_61", _guide_61_var._position_absolute, _guide_61_var._rotation_absolute);
+  instrument->_position_absolute[67] = _guide_61_var._position_absolute;
+  instrument->_position_relative[67] = _guide_61_var._position_relative;
+    _guide_61_var._position_relative_is_zero =  coords_test_zero(_guide_61_var._position_relative);
+  instrument->counter_N[67]  = instrument->counter_P[67] = instrument->counter_P2[67] = 0;
+  instrument->counter_AbsorbProp[67]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0066_guide_61", _guide_61_var._position_absolute, _guide_61_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0066_guide_61", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0066_guide_61", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0066_guide_61", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0066_guide_61", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0066_guide_61", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0066_guide_61", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0066_guide_61", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0066_guide_61", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0066_guide_61", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0066_guide_61", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0066_guide_61", "geometry", 0, "./OFF_files/try61.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_61_setpos */
+
+/* component guide_62=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_62_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_62_setpos] component guide_62=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_62_var._name, "guide_62", 16384);
+  stracpy(_guide_62_var._type, "Guide_anyshape_r", 16384);
+  _guide_62_var._index=68;
+  int current_setpos_index = 68;
+  _guide_62_var._parameters.xwidth = 0;
+  _guide_62_var._parameters.yheight = 0;
+  _guide_62_var._parameters.zdepth = 0;
+  _guide_62_var._parameters.center = 0;
+  _guide_62_var._parameters.transmit = 0;
+  _guide_62_var._parameters.R0 = 0.99;
+  _guide_62_var._parameters.Qc = 0.0219;
+  _guide_62_var._parameters.alpha = 0;
+  _guide_62_var._parameters.m = 0;
+  _guide_62_var._parameters.W = 0;
+  if("./OFF_files/try62.off" && strlen("./OFF_files/try62.off"))
+    stracpy(_guide_62_var._parameters.geometry, "./OFF_files/try62.off" ? "./OFF_files/try62.off" : "", 16384);
+  else 
+  _guide_62_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_62=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_62_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_61_var._rotation_absolute, tr1);
+    rot_mul(_guide_62_var._rotation_absolute, tr1, _guide_62_var._rotation_relative);
+    _guide_62_var._rotation_is_identity =  rot_test_identity(_guide_62_var._rotation_relative);
+    _guide_62_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_61_var._position_absolute, _guide_62_var._position_absolute);
+    _guide_62_var._position_relative = rot_apply(_guide_62_var._rotation_absolute, tc1);
+  } /* guide_62=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_62", _guide_62_var._position_absolute, _guide_62_var._rotation_absolute);
+  instrument->_position_absolute[68] = _guide_62_var._position_absolute;
+  instrument->_position_relative[68] = _guide_62_var._position_relative;
+    _guide_62_var._position_relative_is_zero =  coords_test_zero(_guide_62_var._position_relative);
+  instrument->counter_N[68]  = instrument->counter_P[68] = instrument->counter_P2[68] = 0;
+  instrument->counter_AbsorbProp[68]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0067_guide_62", _guide_62_var._position_absolute, _guide_62_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0067_guide_62", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0067_guide_62", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0067_guide_62", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0067_guide_62", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0067_guide_62", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0067_guide_62", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0067_guide_62", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0067_guide_62", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0067_guide_62", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0067_guide_62", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0067_guide_62", "geometry", 0, "./OFF_files/try62.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_62_setpos */
+
+/* component guide_63=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_63_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_63_setpos] component guide_63=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_63_var._name, "guide_63", 16384);
+  stracpy(_guide_63_var._type, "Guide_anyshape_r", 16384);
+  _guide_63_var._index=69;
+  int current_setpos_index = 69;
+  _guide_63_var._parameters.xwidth = 0;
+  _guide_63_var._parameters.yheight = 0;
+  _guide_63_var._parameters.zdepth = 0;
+  _guide_63_var._parameters.center = 0;
+  _guide_63_var._parameters.transmit = 0;
+  _guide_63_var._parameters.R0 = 0.99;
+  _guide_63_var._parameters.Qc = 0.0219;
+  _guide_63_var._parameters.alpha = 0;
+  _guide_63_var._parameters.m = 0;
+  _guide_63_var._parameters.W = 0;
+  if("./OFF_files/try63.off" && strlen("./OFF_files/try63.off"))
+    stracpy(_guide_63_var._parameters.geometry, "./OFF_files/try63.off" ? "./OFF_files/try63.off" : "", 16384);
+  else 
+  _guide_63_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_63=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_63_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_62_var._rotation_absolute, tr1);
+    rot_mul(_guide_63_var._rotation_absolute, tr1, _guide_63_var._rotation_relative);
+    _guide_63_var._rotation_is_identity =  rot_test_identity(_guide_63_var._rotation_relative);
+    _guide_63_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_62_var._position_absolute, _guide_63_var._position_absolute);
+    _guide_63_var._position_relative = rot_apply(_guide_63_var._rotation_absolute, tc1);
+  } /* guide_63=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_63", _guide_63_var._position_absolute, _guide_63_var._rotation_absolute);
+  instrument->_position_absolute[69] = _guide_63_var._position_absolute;
+  instrument->_position_relative[69] = _guide_63_var._position_relative;
+    _guide_63_var._position_relative_is_zero =  coords_test_zero(_guide_63_var._position_relative);
+  instrument->counter_N[69]  = instrument->counter_P[69] = instrument->counter_P2[69] = 0;
+  instrument->counter_AbsorbProp[69]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0068_guide_63", _guide_63_var._position_absolute, _guide_63_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0068_guide_63", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0068_guide_63", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0068_guide_63", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0068_guide_63", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0068_guide_63", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0068_guide_63", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0068_guide_63", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0068_guide_63", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0068_guide_63", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0068_guide_63", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0068_guide_63", "geometry", 0, "./OFF_files/try63.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_63_setpos */
+
+/* component guide_64=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_64_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_64_setpos] component guide_64=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_64_var._name, "guide_64", 16384);
+  stracpy(_guide_64_var._type, "Guide_anyshape_r", 16384);
+  _guide_64_var._index=70;
+  int current_setpos_index = 70;
+  _guide_64_var._parameters.xwidth = 0;
+  _guide_64_var._parameters.yheight = 0;
+  _guide_64_var._parameters.zdepth = 0;
+  _guide_64_var._parameters.center = 0;
+  _guide_64_var._parameters.transmit = 0;
+  _guide_64_var._parameters.R0 = 0.99;
+  _guide_64_var._parameters.Qc = 0.0219;
+  _guide_64_var._parameters.alpha = 0;
+  _guide_64_var._parameters.m = 0;
+  _guide_64_var._parameters.W = 0;
+  if("./OFF_files/try64.off" && strlen("./OFF_files/try64.off"))
+    stracpy(_guide_64_var._parameters.geometry, "./OFF_files/try64.off" ? "./OFF_files/try64.off" : "", 16384);
+  else 
+  _guide_64_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_64=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_64_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_63_var._rotation_absolute, tr1);
+    rot_mul(_guide_64_var._rotation_absolute, tr1, _guide_64_var._rotation_relative);
+    _guide_64_var._rotation_is_identity =  rot_test_identity(_guide_64_var._rotation_relative);
+    _guide_64_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_63_var._position_absolute, _guide_64_var._position_absolute);
+    _guide_64_var._position_relative = rot_apply(_guide_64_var._rotation_absolute, tc1);
+  } /* guide_64=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_64", _guide_64_var._position_absolute, _guide_64_var._rotation_absolute);
+  instrument->_position_absolute[70] = _guide_64_var._position_absolute;
+  instrument->_position_relative[70] = _guide_64_var._position_relative;
+    _guide_64_var._position_relative_is_zero =  coords_test_zero(_guide_64_var._position_relative);
+  instrument->counter_N[70]  = instrument->counter_P[70] = instrument->counter_P2[70] = 0;
+  instrument->counter_AbsorbProp[70]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0069_guide_64", _guide_64_var._position_absolute, _guide_64_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0069_guide_64", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0069_guide_64", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0069_guide_64", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0069_guide_64", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0069_guide_64", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0069_guide_64", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0069_guide_64", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0069_guide_64", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0069_guide_64", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0069_guide_64", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0069_guide_64", "geometry", 0, "./OFF_files/try64.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_64_setpos */
+
+/* component guide_65=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_65_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_65_setpos] component guide_65=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_65_var._name, "guide_65", 16384);
+  stracpy(_guide_65_var._type, "Guide_anyshape_r", 16384);
+  _guide_65_var._index=71;
+  int current_setpos_index = 71;
+  _guide_65_var._parameters.xwidth = 0;
+  _guide_65_var._parameters.yheight = 0;
+  _guide_65_var._parameters.zdepth = 0;
+  _guide_65_var._parameters.center = 0;
+  _guide_65_var._parameters.transmit = 0;
+  _guide_65_var._parameters.R0 = 0.99;
+  _guide_65_var._parameters.Qc = 0.0219;
+  _guide_65_var._parameters.alpha = 0;
+  _guide_65_var._parameters.m = 0;
+  _guide_65_var._parameters.W = 0;
+  if("./OFF_files/try65.off" && strlen("./OFF_files/try65.off"))
+    stracpy(_guide_65_var._parameters.geometry, "./OFF_files/try65.off" ? "./OFF_files/try65.off" : "", 16384);
+  else 
+  _guide_65_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_65=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_65_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_64_var._rotation_absolute, tr1);
+    rot_mul(_guide_65_var._rotation_absolute, tr1, _guide_65_var._rotation_relative);
+    _guide_65_var._rotation_is_identity =  rot_test_identity(_guide_65_var._rotation_relative);
+    _guide_65_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_64_var._position_absolute, _guide_65_var._position_absolute);
+    _guide_65_var._position_relative = rot_apply(_guide_65_var._rotation_absolute, tc1);
+  } /* guide_65=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_65", _guide_65_var._position_absolute, _guide_65_var._rotation_absolute);
+  instrument->_position_absolute[71] = _guide_65_var._position_absolute;
+  instrument->_position_relative[71] = _guide_65_var._position_relative;
+    _guide_65_var._position_relative_is_zero =  coords_test_zero(_guide_65_var._position_relative);
+  instrument->counter_N[71]  = instrument->counter_P[71] = instrument->counter_P2[71] = 0;
+  instrument->counter_AbsorbProp[71]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0070_guide_65", _guide_65_var._position_absolute, _guide_65_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0070_guide_65", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0070_guide_65", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0070_guide_65", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0070_guide_65", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0070_guide_65", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0070_guide_65", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0070_guide_65", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0070_guide_65", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0070_guide_65", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0070_guide_65", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0070_guide_65", "geometry", 0, "./OFF_files/try65.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_65_setpos */
+
+/* component guide_66=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_66_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_66_setpos] component guide_66=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_66_var._name, "guide_66", 16384);
+  stracpy(_guide_66_var._type, "Guide_anyshape_r", 16384);
+  _guide_66_var._index=72;
+  int current_setpos_index = 72;
+  _guide_66_var._parameters.xwidth = 0;
+  _guide_66_var._parameters.yheight = 0;
+  _guide_66_var._parameters.zdepth = 0;
+  _guide_66_var._parameters.center = 0;
+  _guide_66_var._parameters.transmit = 0;
+  _guide_66_var._parameters.R0 = 0.99;
+  _guide_66_var._parameters.Qc = 0.0219;
+  _guide_66_var._parameters.alpha = 0;
+  _guide_66_var._parameters.m = 0;
+  _guide_66_var._parameters.W = 0;
+  if("./OFF_files/try66.off" && strlen("./OFF_files/try66.off"))
+    stracpy(_guide_66_var._parameters.geometry, "./OFF_files/try66.off" ? "./OFF_files/try66.off" : "", 16384);
+  else 
+  _guide_66_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_66=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_66_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_65_var._rotation_absolute, tr1);
+    rot_mul(_guide_66_var._rotation_absolute, tr1, _guide_66_var._rotation_relative);
+    _guide_66_var._rotation_is_identity =  rot_test_identity(_guide_66_var._rotation_relative);
+    _guide_66_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_65_var._position_absolute, _guide_66_var._position_absolute);
+    _guide_66_var._position_relative = rot_apply(_guide_66_var._rotation_absolute, tc1);
+  } /* guide_66=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_66", _guide_66_var._position_absolute, _guide_66_var._rotation_absolute);
+  instrument->_position_absolute[72] = _guide_66_var._position_absolute;
+  instrument->_position_relative[72] = _guide_66_var._position_relative;
+    _guide_66_var._position_relative_is_zero =  coords_test_zero(_guide_66_var._position_relative);
+  instrument->counter_N[72]  = instrument->counter_P[72] = instrument->counter_P2[72] = 0;
+  instrument->counter_AbsorbProp[72]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0071_guide_66", _guide_66_var._position_absolute, _guide_66_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0071_guide_66", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0071_guide_66", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0071_guide_66", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0071_guide_66", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0071_guide_66", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0071_guide_66", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0071_guide_66", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0071_guide_66", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0071_guide_66", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0071_guide_66", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0071_guide_66", "geometry", 0, "./OFF_files/try66.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_66_setpos */
+
+/* component guide_67=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_67_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_67_setpos] component guide_67=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_67_var._name, "guide_67", 16384);
+  stracpy(_guide_67_var._type, "Guide_anyshape_r", 16384);
+  _guide_67_var._index=73;
+  int current_setpos_index = 73;
+  _guide_67_var._parameters.xwidth = 0;
+  _guide_67_var._parameters.yheight = 0;
+  _guide_67_var._parameters.zdepth = 0;
+  _guide_67_var._parameters.center = 0;
+  _guide_67_var._parameters.transmit = 0;
+  _guide_67_var._parameters.R0 = 0.99;
+  _guide_67_var._parameters.Qc = 0.0219;
+  _guide_67_var._parameters.alpha = 0;
+  _guide_67_var._parameters.m = 0;
+  _guide_67_var._parameters.W = 0;
+  if("./OFF_files/try67.off" && strlen("./OFF_files/try67.off"))
+    stracpy(_guide_67_var._parameters.geometry, "./OFF_files/try67.off" ? "./OFF_files/try67.off" : "", 16384);
+  else 
+  _guide_67_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_67=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_67_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_66_var._rotation_absolute, tr1);
+    rot_mul(_guide_67_var._rotation_absolute, tr1, _guide_67_var._rotation_relative);
+    _guide_67_var._rotation_is_identity =  rot_test_identity(_guide_67_var._rotation_relative);
+    _guide_67_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_66_var._position_absolute, _guide_67_var._position_absolute);
+    _guide_67_var._position_relative = rot_apply(_guide_67_var._rotation_absolute, tc1);
+  } /* guide_67=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_67", _guide_67_var._position_absolute, _guide_67_var._rotation_absolute);
+  instrument->_position_absolute[73] = _guide_67_var._position_absolute;
+  instrument->_position_relative[73] = _guide_67_var._position_relative;
+    _guide_67_var._position_relative_is_zero =  coords_test_zero(_guide_67_var._position_relative);
+  instrument->counter_N[73]  = instrument->counter_P[73] = instrument->counter_P2[73] = 0;
+  instrument->counter_AbsorbProp[73]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0072_guide_67", _guide_67_var._position_absolute, _guide_67_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0072_guide_67", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0072_guide_67", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0072_guide_67", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0072_guide_67", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0072_guide_67", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0072_guide_67", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0072_guide_67", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0072_guide_67", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0072_guide_67", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0072_guide_67", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0072_guide_67", "geometry", 0, "./OFF_files/try67.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_67_setpos */
+
+/* component guide_68=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_68_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_68_setpos] component guide_68=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_68_var._name, "guide_68", 16384);
+  stracpy(_guide_68_var._type, "Guide_anyshape_r", 16384);
+  _guide_68_var._index=74;
+  int current_setpos_index = 74;
+  _guide_68_var._parameters.xwidth = 0;
+  _guide_68_var._parameters.yheight = 0;
+  _guide_68_var._parameters.zdepth = 0;
+  _guide_68_var._parameters.center = 0;
+  _guide_68_var._parameters.transmit = 0;
+  _guide_68_var._parameters.R0 = 0.99;
+  _guide_68_var._parameters.Qc = 0.0219;
+  _guide_68_var._parameters.alpha = 0;
+  _guide_68_var._parameters.m = 0;
+  _guide_68_var._parameters.W = 0;
+  if("./OFF_files/try68.off" && strlen("./OFF_files/try68.off"))
+    stracpy(_guide_68_var._parameters.geometry, "./OFF_files/try68.off" ? "./OFF_files/try68.off" : "", 16384);
+  else 
+  _guide_68_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_68=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_68_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_67_var._rotation_absolute, tr1);
+    rot_mul(_guide_68_var._rotation_absolute, tr1, _guide_68_var._rotation_relative);
+    _guide_68_var._rotation_is_identity =  rot_test_identity(_guide_68_var._rotation_relative);
+    _guide_68_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_67_var._position_absolute, _guide_68_var._position_absolute);
+    _guide_68_var._position_relative = rot_apply(_guide_68_var._rotation_absolute, tc1);
+  } /* guide_68=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_68", _guide_68_var._position_absolute, _guide_68_var._rotation_absolute);
+  instrument->_position_absolute[74] = _guide_68_var._position_absolute;
+  instrument->_position_relative[74] = _guide_68_var._position_relative;
+    _guide_68_var._position_relative_is_zero =  coords_test_zero(_guide_68_var._position_relative);
+  instrument->counter_N[74]  = instrument->counter_P[74] = instrument->counter_P2[74] = 0;
+  instrument->counter_AbsorbProp[74]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0073_guide_68", _guide_68_var._position_absolute, _guide_68_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0073_guide_68", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0073_guide_68", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0073_guide_68", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0073_guide_68", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0073_guide_68", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0073_guide_68", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0073_guide_68", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0073_guide_68", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0073_guide_68", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0073_guide_68", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0073_guide_68", "geometry", 0, "./OFF_files/try68.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_68_setpos */
+
+/* component guide_69=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_69_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_69_setpos] component guide_69=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_69_var._name, "guide_69", 16384);
+  stracpy(_guide_69_var._type, "Guide_anyshape_r", 16384);
+  _guide_69_var._index=75;
+  int current_setpos_index = 75;
+  _guide_69_var._parameters.xwidth = 0;
+  _guide_69_var._parameters.yheight = 0;
+  _guide_69_var._parameters.zdepth = 0;
+  _guide_69_var._parameters.center = 0;
+  _guide_69_var._parameters.transmit = 0;
+  _guide_69_var._parameters.R0 = 0.99;
+  _guide_69_var._parameters.Qc = 0.0219;
+  _guide_69_var._parameters.alpha = 0;
+  _guide_69_var._parameters.m = 0;
+  _guide_69_var._parameters.W = 0;
+  if("./OFF_files/try69.off" && strlen("./OFF_files/try69.off"))
+    stracpy(_guide_69_var._parameters.geometry, "./OFF_files/try69.off" ? "./OFF_files/try69.off" : "", 16384);
+  else 
+  _guide_69_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_69=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_69_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_68_var._rotation_absolute, tr1);
+    rot_mul(_guide_69_var._rotation_absolute, tr1, _guide_69_var._rotation_relative);
+    _guide_69_var._rotation_is_identity =  rot_test_identity(_guide_69_var._rotation_relative);
+    _guide_69_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_68_var._position_absolute, _guide_69_var._position_absolute);
+    _guide_69_var._position_relative = rot_apply(_guide_69_var._rotation_absolute, tc1);
+  } /* guide_69=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_69", _guide_69_var._position_absolute, _guide_69_var._rotation_absolute);
+  instrument->_position_absolute[75] = _guide_69_var._position_absolute;
+  instrument->_position_relative[75] = _guide_69_var._position_relative;
+    _guide_69_var._position_relative_is_zero =  coords_test_zero(_guide_69_var._position_relative);
+  instrument->counter_N[75]  = instrument->counter_P[75] = instrument->counter_P2[75] = 0;
+  instrument->counter_AbsorbProp[75]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0074_guide_69", _guide_69_var._position_absolute, _guide_69_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0074_guide_69", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0074_guide_69", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0074_guide_69", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0074_guide_69", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0074_guide_69", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0074_guide_69", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0074_guide_69", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0074_guide_69", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0074_guide_69", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0074_guide_69", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0074_guide_69", "geometry", 0, "./OFF_files/try69.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_69_setpos */
+
+/* component guide_70=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_70_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_70_setpos] component guide_70=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_70_var._name, "guide_70", 16384);
+  stracpy(_guide_70_var._type, "Guide_anyshape_r", 16384);
+  _guide_70_var._index=76;
+  int current_setpos_index = 76;
+  _guide_70_var._parameters.xwidth = 0;
+  _guide_70_var._parameters.yheight = 0;
+  _guide_70_var._parameters.zdepth = 0;
+  _guide_70_var._parameters.center = 0;
+  _guide_70_var._parameters.transmit = 0;
+  _guide_70_var._parameters.R0 = 0.99;
+  _guide_70_var._parameters.Qc = 0.0219;
+  _guide_70_var._parameters.alpha = 0;
+  _guide_70_var._parameters.m = 0;
+  _guide_70_var._parameters.W = 0;
+  if("./OFF_files/try70.off" && strlen("./OFF_files/try70.off"))
+    stracpy(_guide_70_var._parameters.geometry, "./OFF_files/try70.off" ? "./OFF_files/try70.off" : "", 16384);
+  else 
+  _guide_70_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_70=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_70_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_69_var._rotation_absolute, tr1);
+    rot_mul(_guide_70_var._rotation_absolute, tr1, _guide_70_var._rotation_relative);
+    _guide_70_var._rotation_is_identity =  rot_test_identity(_guide_70_var._rotation_relative);
+    _guide_70_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_69_var._position_absolute, _guide_70_var._position_absolute);
+    _guide_70_var._position_relative = rot_apply(_guide_70_var._rotation_absolute, tc1);
+  } /* guide_70=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_70", _guide_70_var._position_absolute, _guide_70_var._rotation_absolute);
+  instrument->_position_absolute[76] = _guide_70_var._position_absolute;
+  instrument->_position_relative[76] = _guide_70_var._position_relative;
+    _guide_70_var._position_relative_is_zero =  coords_test_zero(_guide_70_var._position_relative);
+  instrument->counter_N[76]  = instrument->counter_P[76] = instrument->counter_P2[76] = 0;
+  instrument->counter_AbsorbProp[76]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0075_guide_70", _guide_70_var._position_absolute, _guide_70_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0075_guide_70", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0075_guide_70", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0075_guide_70", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0075_guide_70", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0075_guide_70", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0075_guide_70", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0075_guide_70", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0075_guide_70", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0075_guide_70", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0075_guide_70", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0075_guide_70", "geometry", 0, "./OFF_files/try70.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_70_setpos */
+
+/* component guide_71=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_71_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_71_setpos] component guide_71=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_71_var._name, "guide_71", 16384);
+  stracpy(_guide_71_var._type, "Guide_anyshape_r", 16384);
+  _guide_71_var._index=77;
+  int current_setpos_index = 77;
+  _guide_71_var._parameters.xwidth = 0;
+  _guide_71_var._parameters.yheight = 0;
+  _guide_71_var._parameters.zdepth = 0;
+  _guide_71_var._parameters.center = 0;
+  _guide_71_var._parameters.transmit = 0;
+  _guide_71_var._parameters.R0 = 0.99;
+  _guide_71_var._parameters.Qc = 0.0219;
+  _guide_71_var._parameters.alpha = 0;
+  _guide_71_var._parameters.m = 0;
+  _guide_71_var._parameters.W = 0;
+  if("./OFF_files/try71.off" && strlen("./OFF_files/try71.off"))
+    stracpy(_guide_71_var._parameters.geometry, "./OFF_files/try71.off" ? "./OFF_files/try71.off" : "", 16384);
+  else 
+  _guide_71_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_71=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_71_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_70_var._rotation_absolute, tr1);
+    rot_mul(_guide_71_var._rotation_absolute, tr1, _guide_71_var._rotation_relative);
+    _guide_71_var._rotation_is_identity =  rot_test_identity(_guide_71_var._rotation_relative);
+    _guide_71_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_70_var._position_absolute, _guide_71_var._position_absolute);
+    _guide_71_var._position_relative = rot_apply(_guide_71_var._rotation_absolute, tc1);
+  } /* guide_71=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_71", _guide_71_var._position_absolute, _guide_71_var._rotation_absolute);
+  instrument->_position_absolute[77] = _guide_71_var._position_absolute;
+  instrument->_position_relative[77] = _guide_71_var._position_relative;
+    _guide_71_var._position_relative_is_zero =  coords_test_zero(_guide_71_var._position_relative);
+  instrument->counter_N[77]  = instrument->counter_P[77] = instrument->counter_P2[77] = 0;
+  instrument->counter_AbsorbProp[77]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0076_guide_71", _guide_71_var._position_absolute, _guide_71_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0076_guide_71", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0076_guide_71", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0076_guide_71", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0076_guide_71", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0076_guide_71", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0076_guide_71", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0076_guide_71", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0076_guide_71", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0076_guide_71", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0076_guide_71", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0076_guide_71", "geometry", 0, "./OFF_files/try71.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_71_setpos */
+
+/* component guide_72=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_72_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_72_setpos] component guide_72=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_72_var._name, "guide_72", 16384);
+  stracpy(_guide_72_var._type, "Guide_anyshape_r", 16384);
+  _guide_72_var._index=78;
+  int current_setpos_index = 78;
+  _guide_72_var._parameters.xwidth = 0;
+  _guide_72_var._parameters.yheight = 0;
+  _guide_72_var._parameters.zdepth = 0;
+  _guide_72_var._parameters.center = 0;
+  _guide_72_var._parameters.transmit = 0;
+  _guide_72_var._parameters.R0 = 0.99;
+  _guide_72_var._parameters.Qc = 0.0219;
+  _guide_72_var._parameters.alpha = 0;
+  _guide_72_var._parameters.m = 0;
+  _guide_72_var._parameters.W = 0;
+  if("./OFF_files/try72.off" && strlen("./OFF_files/try72.off"))
+    stracpy(_guide_72_var._parameters.geometry, "./OFF_files/try72.off" ? "./OFF_files/try72.off" : "", 16384);
+  else 
+  _guide_72_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_72=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_72_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_71_var._rotation_absolute, tr1);
+    rot_mul(_guide_72_var._rotation_absolute, tr1, _guide_72_var._rotation_relative);
+    _guide_72_var._rotation_is_identity =  rot_test_identity(_guide_72_var._rotation_relative);
+    _guide_72_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_71_var._position_absolute, _guide_72_var._position_absolute);
+    _guide_72_var._position_relative = rot_apply(_guide_72_var._rotation_absolute, tc1);
+  } /* guide_72=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_72", _guide_72_var._position_absolute, _guide_72_var._rotation_absolute);
+  instrument->_position_absolute[78] = _guide_72_var._position_absolute;
+  instrument->_position_relative[78] = _guide_72_var._position_relative;
+    _guide_72_var._position_relative_is_zero =  coords_test_zero(_guide_72_var._position_relative);
+  instrument->counter_N[78]  = instrument->counter_P[78] = instrument->counter_P2[78] = 0;
+  instrument->counter_AbsorbProp[78]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0077_guide_72", _guide_72_var._position_absolute, _guide_72_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0077_guide_72", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0077_guide_72", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0077_guide_72", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0077_guide_72", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0077_guide_72", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0077_guide_72", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0077_guide_72", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0077_guide_72", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0077_guide_72", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0077_guide_72", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0077_guide_72", "geometry", 0, "./OFF_files/try72.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_72_setpos */
+
+/* component guide_73=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_73_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_73_setpos] component guide_73=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_73_var._name, "guide_73", 16384);
+  stracpy(_guide_73_var._type, "Guide_anyshape_r", 16384);
+  _guide_73_var._index=79;
+  int current_setpos_index = 79;
+  _guide_73_var._parameters.xwidth = 0;
+  _guide_73_var._parameters.yheight = 0;
+  _guide_73_var._parameters.zdepth = 0;
+  _guide_73_var._parameters.center = 0;
+  _guide_73_var._parameters.transmit = 0;
+  _guide_73_var._parameters.R0 = 0.99;
+  _guide_73_var._parameters.Qc = 0.0219;
+  _guide_73_var._parameters.alpha = 0;
+  _guide_73_var._parameters.m = 0;
+  _guide_73_var._parameters.W = 0;
+  if("./OFF_files/try73.off" && strlen("./OFF_files/try73.off"))
+    stracpy(_guide_73_var._parameters.geometry, "./OFF_files/try73.off" ? "./OFF_files/try73.off" : "", 16384);
+  else 
+  _guide_73_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_73=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_73_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_72_var._rotation_absolute, tr1);
+    rot_mul(_guide_73_var._rotation_absolute, tr1, _guide_73_var._rotation_relative);
+    _guide_73_var._rotation_is_identity =  rot_test_identity(_guide_73_var._rotation_relative);
+    _guide_73_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_72_var._position_absolute, _guide_73_var._position_absolute);
+    _guide_73_var._position_relative = rot_apply(_guide_73_var._rotation_absolute, tc1);
+  } /* guide_73=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_73", _guide_73_var._position_absolute, _guide_73_var._rotation_absolute);
+  instrument->_position_absolute[79] = _guide_73_var._position_absolute;
+  instrument->_position_relative[79] = _guide_73_var._position_relative;
+    _guide_73_var._position_relative_is_zero =  coords_test_zero(_guide_73_var._position_relative);
+  instrument->counter_N[79]  = instrument->counter_P[79] = instrument->counter_P2[79] = 0;
+  instrument->counter_AbsorbProp[79]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0078_guide_73", _guide_73_var._position_absolute, _guide_73_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0078_guide_73", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0078_guide_73", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0078_guide_73", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0078_guide_73", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0078_guide_73", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0078_guide_73", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0078_guide_73", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0078_guide_73", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0078_guide_73", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0078_guide_73", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0078_guide_73", "geometry", 0, "./OFF_files/try73.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_73_setpos */
+
+/* component guide_74=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_74_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_74_setpos] component guide_74=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_74_var._name, "guide_74", 16384);
+  stracpy(_guide_74_var._type, "Guide_anyshape_r", 16384);
+  _guide_74_var._index=80;
+  int current_setpos_index = 80;
+  _guide_74_var._parameters.xwidth = 0;
+  _guide_74_var._parameters.yheight = 0;
+  _guide_74_var._parameters.zdepth = 0;
+  _guide_74_var._parameters.center = 0;
+  _guide_74_var._parameters.transmit = 0;
+  _guide_74_var._parameters.R0 = 0.99;
+  _guide_74_var._parameters.Qc = 0.0219;
+  _guide_74_var._parameters.alpha = 0;
+  _guide_74_var._parameters.m = 0;
+  _guide_74_var._parameters.W = 0;
+  if("./OFF_files/try74.off" && strlen("./OFF_files/try74.off"))
+    stracpy(_guide_74_var._parameters.geometry, "./OFF_files/try74.off" ? "./OFF_files/try74.off" : "", 16384);
+  else 
+  _guide_74_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_74=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_74_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_73_var._rotation_absolute, tr1);
+    rot_mul(_guide_74_var._rotation_absolute, tr1, _guide_74_var._rotation_relative);
+    _guide_74_var._rotation_is_identity =  rot_test_identity(_guide_74_var._rotation_relative);
+    _guide_74_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_73_var._position_absolute, _guide_74_var._position_absolute);
+    _guide_74_var._position_relative = rot_apply(_guide_74_var._rotation_absolute, tc1);
+  } /* guide_74=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_74", _guide_74_var._position_absolute, _guide_74_var._rotation_absolute);
+  instrument->_position_absolute[80] = _guide_74_var._position_absolute;
+  instrument->_position_relative[80] = _guide_74_var._position_relative;
+    _guide_74_var._position_relative_is_zero =  coords_test_zero(_guide_74_var._position_relative);
+  instrument->counter_N[80]  = instrument->counter_P[80] = instrument->counter_P2[80] = 0;
+  instrument->counter_AbsorbProp[80]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0079_guide_74", _guide_74_var._position_absolute, _guide_74_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0079_guide_74", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0079_guide_74", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0079_guide_74", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0079_guide_74", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0079_guide_74", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0079_guide_74", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0079_guide_74", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0079_guide_74", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0079_guide_74", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0079_guide_74", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0079_guide_74", "geometry", 0, "./OFF_files/try74.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_74_setpos */
+
+/* component guide_75=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_75_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_75_setpos] component guide_75=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_75_var._name, "guide_75", 16384);
+  stracpy(_guide_75_var._type, "Guide_anyshape_r", 16384);
+  _guide_75_var._index=81;
+  int current_setpos_index = 81;
+  _guide_75_var._parameters.xwidth = 0;
+  _guide_75_var._parameters.yheight = 0;
+  _guide_75_var._parameters.zdepth = 0;
+  _guide_75_var._parameters.center = 0;
+  _guide_75_var._parameters.transmit = 0;
+  _guide_75_var._parameters.R0 = 0.99;
+  _guide_75_var._parameters.Qc = 0.0219;
+  _guide_75_var._parameters.alpha = 0;
+  _guide_75_var._parameters.m = 0;
+  _guide_75_var._parameters.W = 0;
+  if("./OFF_files/try75.off" && strlen("./OFF_files/try75.off"))
+    stracpy(_guide_75_var._parameters.geometry, "./OFF_files/try75.off" ? "./OFF_files/try75.off" : "", 16384);
+  else 
+  _guide_75_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_75=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_75_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_74_var._rotation_absolute, tr1);
+    rot_mul(_guide_75_var._rotation_absolute, tr1, _guide_75_var._rotation_relative);
+    _guide_75_var._rotation_is_identity =  rot_test_identity(_guide_75_var._rotation_relative);
+    _guide_75_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_74_var._position_absolute, _guide_75_var._position_absolute);
+    _guide_75_var._position_relative = rot_apply(_guide_75_var._rotation_absolute, tc1);
+  } /* guide_75=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_75", _guide_75_var._position_absolute, _guide_75_var._rotation_absolute);
+  instrument->_position_absolute[81] = _guide_75_var._position_absolute;
+  instrument->_position_relative[81] = _guide_75_var._position_relative;
+    _guide_75_var._position_relative_is_zero =  coords_test_zero(_guide_75_var._position_relative);
+  instrument->counter_N[81]  = instrument->counter_P[81] = instrument->counter_P2[81] = 0;
+  instrument->counter_AbsorbProp[81]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0080_guide_75", _guide_75_var._position_absolute, _guide_75_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0080_guide_75", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0080_guide_75", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0080_guide_75", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0080_guide_75", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0080_guide_75", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0080_guide_75", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0080_guide_75", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0080_guide_75", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0080_guide_75", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0080_guide_75", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0080_guide_75", "geometry", 0, "./OFF_files/try75.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_75_setpos */
+
+/* component guide_76=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_76_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_76_setpos] component guide_76=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_76_var._name, "guide_76", 16384);
+  stracpy(_guide_76_var._type, "Guide_anyshape_r", 16384);
+  _guide_76_var._index=82;
+  int current_setpos_index = 82;
+  _guide_76_var._parameters.xwidth = 0;
+  _guide_76_var._parameters.yheight = 0;
+  _guide_76_var._parameters.zdepth = 0;
+  _guide_76_var._parameters.center = 0;
+  _guide_76_var._parameters.transmit = 0;
+  _guide_76_var._parameters.R0 = 0.99;
+  _guide_76_var._parameters.Qc = 0.0219;
+  _guide_76_var._parameters.alpha = 0;
+  _guide_76_var._parameters.m = 0;
+  _guide_76_var._parameters.W = 0;
+  if("./OFF_files/try76.off" && strlen("./OFF_files/try76.off"))
+    stracpy(_guide_76_var._parameters.geometry, "./OFF_files/try76.off" ? "./OFF_files/try76.off" : "", 16384);
+  else 
+  _guide_76_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_76=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_76_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_75_var._rotation_absolute, tr1);
+    rot_mul(_guide_76_var._rotation_absolute, tr1, _guide_76_var._rotation_relative);
+    _guide_76_var._rotation_is_identity =  rot_test_identity(_guide_76_var._rotation_relative);
+    _guide_76_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_75_var._position_absolute, _guide_76_var._position_absolute);
+    _guide_76_var._position_relative = rot_apply(_guide_76_var._rotation_absolute, tc1);
+  } /* guide_76=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_76", _guide_76_var._position_absolute, _guide_76_var._rotation_absolute);
+  instrument->_position_absolute[82] = _guide_76_var._position_absolute;
+  instrument->_position_relative[82] = _guide_76_var._position_relative;
+    _guide_76_var._position_relative_is_zero =  coords_test_zero(_guide_76_var._position_relative);
+  instrument->counter_N[82]  = instrument->counter_P[82] = instrument->counter_P2[82] = 0;
+  instrument->counter_AbsorbProp[82]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0081_guide_76", _guide_76_var._position_absolute, _guide_76_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0081_guide_76", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0081_guide_76", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0081_guide_76", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0081_guide_76", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0081_guide_76", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0081_guide_76", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0081_guide_76", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0081_guide_76", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0081_guide_76", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0081_guide_76", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0081_guide_76", "geometry", 0, "./OFF_files/try76.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_76_setpos */
+
+/* component guide_77=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_77_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_77_setpos] component guide_77=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_77_var._name, "guide_77", 16384);
+  stracpy(_guide_77_var._type, "Guide_anyshape_r", 16384);
+  _guide_77_var._index=83;
+  int current_setpos_index = 83;
+  _guide_77_var._parameters.xwidth = 0;
+  _guide_77_var._parameters.yheight = 0;
+  _guide_77_var._parameters.zdepth = 0;
+  _guide_77_var._parameters.center = 0;
+  _guide_77_var._parameters.transmit = 0;
+  _guide_77_var._parameters.R0 = 0.99;
+  _guide_77_var._parameters.Qc = 0.0219;
+  _guide_77_var._parameters.alpha = 0;
+  _guide_77_var._parameters.m = 0;
+  _guide_77_var._parameters.W = 0;
+  if("./OFF_files/try77.off" && strlen("./OFF_files/try77.off"))
+    stracpy(_guide_77_var._parameters.geometry, "./OFF_files/try77.off" ? "./OFF_files/try77.off" : "", 16384);
+  else 
+  _guide_77_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_77=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_77_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_76_var._rotation_absolute, tr1);
+    rot_mul(_guide_77_var._rotation_absolute, tr1, _guide_77_var._rotation_relative);
+    _guide_77_var._rotation_is_identity =  rot_test_identity(_guide_77_var._rotation_relative);
+    _guide_77_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_76_var._position_absolute, _guide_77_var._position_absolute);
+    _guide_77_var._position_relative = rot_apply(_guide_77_var._rotation_absolute, tc1);
+  } /* guide_77=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_77", _guide_77_var._position_absolute, _guide_77_var._rotation_absolute);
+  instrument->_position_absolute[83] = _guide_77_var._position_absolute;
+  instrument->_position_relative[83] = _guide_77_var._position_relative;
+    _guide_77_var._position_relative_is_zero =  coords_test_zero(_guide_77_var._position_relative);
+  instrument->counter_N[83]  = instrument->counter_P[83] = instrument->counter_P2[83] = 0;
+  instrument->counter_AbsorbProp[83]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0082_guide_77", _guide_77_var._position_absolute, _guide_77_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0082_guide_77", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0082_guide_77", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0082_guide_77", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0082_guide_77", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0082_guide_77", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0082_guide_77", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0082_guide_77", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0082_guide_77", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0082_guide_77", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0082_guide_77", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0082_guide_77", "geometry", 0, "./OFF_files/try77.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_77_setpos */
+
+/* component guide_78=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_78_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_78_setpos] component guide_78=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_78_var._name, "guide_78", 16384);
+  stracpy(_guide_78_var._type, "Guide_anyshape_r", 16384);
+  _guide_78_var._index=84;
+  int current_setpos_index = 84;
+  _guide_78_var._parameters.xwidth = 0;
+  _guide_78_var._parameters.yheight = 0;
+  _guide_78_var._parameters.zdepth = 0;
+  _guide_78_var._parameters.center = 0;
+  _guide_78_var._parameters.transmit = 0;
+  _guide_78_var._parameters.R0 = 0.99;
+  _guide_78_var._parameters.Qc = 0.0219;
+  _guide_78_var._parameters.alpha = 0;
+  _guide_78_var._parameters.m = 0;
+  _guide_78_var._parameters.W = 0;
+  if("./OFF_files/try78.off" && strlen("./OFF_files/try78.off"))
+    stracpy(_guide_78_var._parameters.geometry, "./OFF_files/try78.off" ? "./OFF_files/try78.off" : "", 16384);
+  else 
+  _guide_78_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_78=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_78_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_77_var._rotation_absolute, tr1);
+    rot_mul(_guide_78_var._rotation_absolute, tr1, _guide_78_var._rotation_relative);
+    _guide_78_var._rotation_is_identity =  rot_test_identity(_guide_78_var._rotation_relative);
+    _guide_78_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_77_var._position_absolute, _guide_78_var._position_absolute);
+    _guide_78_var._position_relative = rot_apply(_guide_78_var._rotation_absolute, tc1);
+  } /* guide_78=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_78", _guide_78_var._position_absolute, _guide_78_var._rotation_absolute);
+  instrument->_position_absolute[84] = _guide_78_var._position_absolute;
+  instrument->_position_relative[84] = _guide_78_var._position_relative;
+    _guide_78_var._position_relative_is_zero =  coords_test_zero(_guide_78_var._position_relative);
+  instrument->counter_N[84]  = instrument->counter_P[84] = instrument->counter_P2[84] = 0;
+  instrument->counter_AbsorbProp[84]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0083_guide_78", _guide_78_var._position_absolute, _guide_78_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0083_guide_78", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0083_guide_78", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0083_guide_78", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0083_guide_78", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0083_guide_78", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0083_guide_78", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0083_guide_78", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0083_guide_78", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0083_guide_78", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0083_guide_78", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0083_guide_78", "geometry", 0, "./OFF_files/try78.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_78_setpos */
+
+/* component guide_79=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_79_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_79_setpos] component guide_79=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_79_var._name, "guide_79", 16384);
+  stracpy(_guide_79_var._type, "Guide_anyshape_r", 16384);
+  _guide_79_var._index=85;
+  int current_setpos_index = 85;
+  _guide_79_var._parameters.xwidth = 0;
+  _guide_79_var._parameters.yheight = 0;
+  _guide_79_var._parameters.zdepth = 0;
+  _guide_79_var._parameters.center = 0;
+  _guide_79_var._parameters.transmit = 0;
+  _guide_79_var._parameters.R0 = 0.99;
+  _guide_79_var._parameters.Qc = 0.0219;
+  _guide_79_var._parameters.alpha = 0;
+  _guide_79_var._parameters.m = 0;
+  _guide_79_var._parameters.W = 0;
+  if("./OFF_files/try79.off" && strlen("./OFF_files/try79.off"))
+    stracpy(_guide_79_var._parameters.geometry, "./OFF_files/try79.off" ? "./OFF_files/try79.off" : "", 16384);
+  else 
+  _guide_79_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_79=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_79_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_78_var._rotation_absolute, tr1);
+    rot_mul(_guide_79_var._rotation_absolute, tr1, _guide_79_var._rotation_relative);
+    _guide_79_var._rotation_is_identity =  rot_test_identity(_guide_79_var._rotation_relative);
+    _guide_79_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_78_var._position_absolute, _guide_79_var._position_absolute);
+    _guide_79_var._position_relative = rot_apply(_guide_79_var._rotation_absolute, tc1);
+  } /* guide_79=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_79", _guide_79_var._position_absolute, _guide_79_var._rotation_absolute);
+  instrument->_position_absolute[85] = _guide_79_var._position_absolute;
+  instrument->_position_relative[85] = _guide_79_var._position_relative;
+    _guide_79_var._position_relative_is_zero =  coords_test_zero(_guide_79_var._position_relative);
+  instrument->counter_N[85]  = instrument->counter_P[85] = instrument->counter_P2[85] = 0;
+  instrument->counter_AbsorbProp[85]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0084_guide_79", _guide_79_var._position_absolute, _guide_79_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0084_guide_79", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0084_guide_79", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0084_guide_79", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0084_guide_79", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0084_guide_79", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0084_guide_79", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0084_guide_79", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0084_guide_79", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0084_guide_79", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0084_guide_79", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0084_guide_79", "geometry", 0, "./OFF_files/try79.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_79_setpos */
+
+/* component guide_80=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_80_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_80_setpos] component guide_80=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_80_var._name, "guide_80", 16384);
+  stracpy(_guide_80_var._type, "Guide_anyshape_r", 16384);
+  _guide_80_var._index=86;
+  int current_setpos_index = 86;
+  _guide_80_var._parameters.xwidth = 0;
+  _guide_80_var._parameters.yheight = 0;
+  _guide_80_var._parameters.zdepth = 0;
+  _guide_80_var._parameters.center = 0;
+  _guide_80_var._parameters.transmit = 0;
+  _guide_80_var._parameters.R0 = 0.99;
+  _guide_80_var._parameters.Qc = 0.0219;
+  _guide_80_var._parameters.alpha = 0;
+  _guide_80_var._parameters.m = 0;
+  _guide_80_var._parameters.W = 0;
+  if("./OFF_files/try80.off" && strlen("./OFF_files/try80.off"))
+    stracpy(_guide_80_var._parameters.geometry, "./OFF_files/try80.off" ? "./OFF_files/try80.off" : "", 16384);
+  else 
+  _guide_80_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_80=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_80_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_79_var._rotation_absolute, tr1);
+    rot_mul(_guide_80_var._rotation_absolute, tr1, _guide_80_var._rotation_relative);
+    _guide_80_var._rotation_is_identity =  rot_test_identity(_guide_80_var._rotation_relative);
+    _guide_80_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_79_var._position_absolute, _guide_80_var._position_absolute);
+    _guide_80_var._position_relative = rot_apply(_guide_80_var._rotation_absolute, tc1);
+  } /* guide_80=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_80", _guide_80_var._position_absolute, _guide_80_var._rotation_absolute);
+  instrument->_position_absolute[86] = _guide_80_var._position_absolute;
+  instrument->_position_relative[86] = _guide_80_var._position_relative;
+    _guide_80_var._position_relative_is_zero =  coords_test_zero(_guide_80_var._position_relative);
+  instrument->counter_N[86]  = instrument->counter_P[86] = instrument->counter_P2[86] = 0;
+  instrument->counter_AbsorbProp[86]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0085_guide_80", _guide_80_var._position_absolute, _guide_80_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0085_guide_80", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0085_guide_80", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0085_guide_80", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0085_guide_80", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0085_guide_80", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0085_guide_80", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0085_guide_80", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0085_guide_80", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0085_guide_80", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0085_guide_80", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0085_guide_80", "geometry", 0, "./OFF_files/try80.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_80_setpos */
+
+/* component guide_81=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_81_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_81_setpos] component guide_81=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_81_var._name, "guide_81", 16384);
+  stracpy(_guide_81_var._type, "Guide_anyshape_r", 16384);
+  _guide_81_var._index=87;
+  int current_setpos_index = 87;
+  _guide_81_var._parameters.xwidth = 0;
+  _guide_81_var._parameters.yheight = 0;
+  _guide_81_var._parameters.zdepth = 0;
+  _guide_81_var._parameters.center = 0;
+  _guide_81_var._parameters.transmit = 0;
+  _guide_81_var._parameters.R0 = 0.99;
+  _guide_81_var._parameters.Qc = 0.0219;
+  _guide_81_var._parameters.alpha = 0;
+  _guide_81_var._parameters.m = 0;
+  _guide_81_var._parameters.W = 0;
+  if("./OFF_files/try81.off" && strlen("./OFF_files/try81.off"))
+    stracpy(_guide_81_var._parameters.geometry, "./OFF_files/try81.off" ? "./OFF_files/try81.off" : "", 16384);
+  else 
+  _guide_81_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_81=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_81_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_80_var._rotation_absolute, tr1);
+    rot_mul(_guide_81_var._rotation_absolute, tr1, _guide_81_var._rotation_relative);
+    _guide_81_var._rotation_is_identity =  rot_test_identity(_guide_81_var._rotation_relative);
+    _guide_81_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_80_var._position_absolute, _guide_81_var._position_absolute);
+    _guide_81_var._position_relative = rot_apply(_guide_81_var._rotation_absolute, tc1);
+  } /* guide_81=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_81", _guide_81_var._position_absolute, _guide_81_var._rotation_absolute);
+  instrument->_position_absolute[87] = _guide_81_var._position_absolute;
+  instrument->_position_relative[87] = _guide_81_var._position_relative;
+    _guide_81_var._position_relative_is_zero =  coords_test_zero(_guide_81_var._position_relative);
+  instrument->counter_N[87]  = instrument->counter_P[87] = instrument->counter_P2[87] = 0;
+  instrument->counter_AbsorbProp[87]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0086_guide_81", _guide_81_var._position_absolute, _guide_81_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0086_guide_81", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0086_guide_81", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0086_guide_81", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0086_guide_81", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0086_guide_81", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0086_guide_81", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0086_guide_81", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0086_guide_81", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0086_guide_81", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0086_guide_81", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0086_guide_81", "geometry", 0, "./OFF_files/try81.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_81_setpos */
+
+/* component guide_82=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_82_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_82_setpos] component guide_82=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_82_var._name, "guide_82", 16384);
+  stracpy(_guide_82_var._type, "Guide_anyshape_r", 16384);
+  _guide_82_var._index=88;
+  int current_setpos_index = 88;
+  _guide_82_var._parameters.xwidth = 0;
+  _guide_82_var._parameters.yheight = 0;
+  _guide_82_var._parameters.zdepth = 0;
+  _guide_82_var._parameters.center = 0;
+  _guide_82_var._parameters.transmit = 0;
+  _guide_82_var._parameters.R0 = 0.99;
+  _guide_82_var._parameters.Qc = 0.0219;
+  _guide_82_var._parameters.alpha = 0;
+  _guide_82_var._parameters.m = 0;
+  _guide_82_var._parameters.W = 0;
+  if("./OFF_files/try82.off" && strlen("./OFF_files/try82.off"))
+    stracpy(_guide_82_var._parameters.geometry, "./OFF_files/try82.off" ? "./OFF_files/try82.off" : "", 16384);
+  else 
+  _guide_82_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_82=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_82_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_81_var._rotation_absolute, tr1);
+    rot_mul(_guide_82_var._rotation_absolute, tr1, _guide_82_var._rotation_relative);
+    _guide_82_var._rotation_is_identity =  rot_test_identity(_guide_82_var._rotation_relative);
+    _guide_82_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_81_var._position_absolute, _guide_82_var._position_absolute);
+    _guide_82_var._position_relative = rot_apply(_guide_82_var._rotation_absolute, tc1);
+  } /* guide_82=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_82", _guide_82_var._position_absolute, _guide_82_var._rotation_absolute);
+  instrument->_position_absolute[88] = _guide_82_var._position_absolute;
+  instrument->_position_relative[88] = _guide_82_var._position_relative;
+    _guide_82_var._position_relative_is_zero =  coords_test_zero(_guide_82_var._position_relative);
+  instrument->counter_N[88]  = instrument->counter_P[88] = instrument->counter_P2[88] = 0;
+  instrument->counter_AbsorbProp[88]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0087_guide_82", _guide_82_var._position_absolute, _guide_82_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0087_guide_82", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0087_guide_82", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0087_guide_82", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0087_guide_82", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0087_guide_82", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0087_guide_82", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0087_guide_82", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0087_guide_82", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0087_guide_82", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0087_guide_82", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0087_guide_82", "geometry", 0, "./OFF_files/try82.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_82_setpos */
+
+/* component guide_83=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_83_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_83_setpos] component guide_83=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_83_var._name, "guide_83", 16384);
+  stracpy(_guide_83_var._type, "Guide_anyshape_r", 16384);
+  _guide_83_var._index=89;
+  int current_setpos_index = 89;
+  _guide_83_var._parameters.xwidth = 0;
+  _guide_83_var._parameters.yheight = 0;
+  _guide_83_var._parameters.zdepth = 0;
+  _guide_83_var._parameters.center = 0;
+  _guide_83_var._parameters.transmit = 0;
+  _guide_83_var._parameters.R0 = 0.99;
+  _guide_83_var._parameters.Qc = 0.0219;
+  _guide_83_var._parameters.alpha = 0;
+  _guide_83_var._parameters.m = 0;
+  _guide_83_var._parameters.W = 0;
+  if("./OFF_files/try83.off" && strlen("./OFF_files/try83.off"))
+    stracpy(_guide_83_var._parameters.geometry, "./OFF_files/try83.off" ? "./OFF_files/try83.off" : "", 16384);
+  else 
+  _guide_83_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_83=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_83_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_82_var._rotation_absolute, tr1);
+    rot_mul(_guide_83_var._rotation_absolute, tr1, _guide_83_var._rotation_relative);
+    _guide_83_var._rotation_is_identity =  rot_test_identity(_guide_83_var._rotation_relative);
+    _guide_83_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_82_var._position_absolute, _guide_83_var._position_absolute);
+    _guide_83_var._position_relative = rot_apply(_guide_83_var._rotation_absolute, tc1);
+  } /* guide_83=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_83", _guide_83_var._position_absolute, _guide_83_var._rotation_absolute);
+  instrument->_position_absolute[89] = _guide_83_var._position_absolute;
+  instrument->_position_relative[89] = _guide_83_var._position_relative;
+    _guide_83_var._position_relative_is_zero =  coords_test_zero(_guide_83_var._position_relative);
+  instrument->counter_N[89]  = instrument->counter_P[89] = instrument->counter_P2[89] = 0;
+  instrument->counter_AbsorbProp[89]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0088_guide_83", _guide_83_var._position_absolute, _guide_83_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0088_guide_83", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0088_guide_83", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0088_guide_83", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0088_guide_83", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0088_guide_83", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0088_guide_83", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0088_guide_83", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0088_guide_83", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0088_guide_83", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0088_guide_83", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0088_guide_83", "geometry", 0, "./OFF_files/try83.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_83_setpos */
+
+/* component guide_84=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_84_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_84_setpos] component guide_84=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_84_var._name, "guide_84", 16384);
+  stracpy(_guide_84_var._type, "Guide_anyshape_r", 16384);
+  _guide_84_var._index=90;
+  int current_setpos_index = 90;
+  _guide_84_var._parameters.xwidth = 0;
+  _guide_84_var._parameters.yheight = 0;
+  _guide_84_var._parameters.zdepth = 0;
+  _guide_84_var._parameters.center = 0;
+  _guide_84_var._parameters.transmit = 0;
+  _guide_84_var._parameters.R0 = 0.99;
+  _guide_84_var._parameters.Qc = 0.0219;
+  _guide_84_var._parameters.alpha = 0;
+  _guide_84_var._parameters.m = 0;
+  _guide_84_var._parameters.W = 0;
+  if("./OFF_files/try84.off" && strlen("./OFF_files/try84.off"))
+    stracpy(_guide_84_var._parameters.geometry, "./OFF_files/try84.off" ? "./OFF_files/try84.off" : "", 16384);
+  else 
+  _guide_84_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_84=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_84_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_83_var._rotation_absolute, tr1);
+    rot_mul(_guide_84_var._rotation_absolute, tr1, _guide_84_var._rotation_relative);
+    _guide_84_var._rotation_is_identity =  rot_test_identity(_guide_84_var._rotation_relative);
+    _guide_84_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_83_var._position_absolute, _guide_84_var._position_absolute);
+    _guide_84_var._position_relative = rot_apply(_guide_84_var._rotation_absolute, tc1);
+  } /* guide_84=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_84", _guide_84_var._position_absolute, _guide_84_var._rotation_absolute);
+  instrument->_position_absolute[90] = _guide_84_var._position_absolute;
+  instrument->_position_relative[90] = _guide_84_var._position_relative;
+    _guide_84_var._position_relative_is_zero =  coords_test_zero(_guide_84_var._position_relative);
+  instrument->counter_N[90]  = instrument->counter_P[90] = instrument->counter_P2[90] = 0;
+  instrument->counter_AbsorbProp[90]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0089_guide_84", _guide_84_var._position_absolute, _guide_84_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0089_guide_84", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0089_guide_84", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0089_guide_84", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0089_guide_84", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0089_guide_84", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0089_guide_84", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0089_guide_84", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0089_guide_84", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0089_guide_84", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0089_guide_84", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0089_guide_84", "geometry", 0, "./OFF_files/try84.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_84_setpos */
+
+/* component guide_85=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_85_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_85_setpos] component guide_85=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_85_var._name, "guide_85", 16384);
+  stracpy(_guide_85_var._type, "Guide_anyshape_r", 16384);
+  _guide_85_var._index=91;
+  int current_setpos_index = 91;
+  _guide_85_var._parameters.xwidth = 0;
+  _guide_85_var._parameters.yheight = 0;
+  _guide_85_var._parameters.zdepth = 0;
+  _guide_85_var._parameters.center = 0;
+  _guide_85_var._parameters.transmit = 0;
+  _guide_85_var._parameters.R0 = 0.99;
+  _guide_85_var._parameters.Qc = 0.0219;
+  _guide_85_var._parameters.alpha = 0;
+  _guide_85_var._parameters.m = 0;
+  _guide_85_var._parameters.W = 0;
+  if("./OFF_files/try85.off" && strlen("./OFF_files/try85.off"))
+    stracpy(_guide_85_var._parameters.geometry, "./OFF_files/try85.off" ? "./OFF_files/try85.off" : "", 16384);
+  else 
+  _guide_85_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_85=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_85_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_84_var._rotation_absolute, tr1);
+    rot_mul(_guide_85_var._rotation_absolute, tr1, _guide_85_var._rotation_relative);
+    _guide_85_var._rotation_is_identity =  rot_test_identity(_guide_85_var._rotation_relative);
+    _guide_85_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_84_var._position_absolute, _guide_85_var._position_absolute);
+    _guide_85_var._position_relative = rot_apply(_guide_85_var._rotation_absolute, tc1);
+  } /* guide_85=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_85", _guide_85_var._position_absolute, _guide_85_var._rotation_absolute);
+  instrument->_position_absolute[91] = _guide_85_var._position_absolute;
+  instrument->_position_relative[91] = _guide_85_var._position_relative;
+    _guide_85_var._position_relative_is_zero =  coords_test_zero(_guide_85_var._position_relative);
+  instrument->counter_N[91]  = instrument->counter_P[91] = instrument->counter_P2[91] = 0;
+  instrument->counter_AbsorbProp[91]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0090_guide_85", _guide_85_var._position_absolute, _guide_85_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0090_guide_85", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0090_guide_85", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0090_guide_85", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0090_guide_85", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0090_guide_85", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0090_guide_85", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0090_guide_85", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0090_guide_85", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0090_guide_85", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0090_guide_85", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0090_guide_85", "geometry", 0, "./OFF_files/try85.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_85_setpos */
+
+/* component guide_86=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_86_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_86_setpos] component guide_86=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_86_var._name, "guide_86", 16384);
+  stracpy(_guide_86_var._type, "Guide_anyshape_r", 16384);
+  _guide_86_var._index=92;
+  int current_setpos_index = 92;
+  _guide_86_var._parameters.xwidth = 0;
+  _guide_86_var._parameters.yheight = 0;
+  _guide_86_var._parameters.zdepth = 0;
+  _guide_86_var._parameters.center = 0;
+  _guide_86_var._parameters.transmit = 0;
+  _guide_86_var._parameters.R0 = 0.99;
+  _guide_86_var._parameters.Qc = 0.0219;
+  _guide_86_var._parameters.alpha = 0;
+  _guide_86_var._parameters.m = 0;
+  _guide_86_var._parameters.W = 0;
+  if("./OFF_files/try86.off" && strlen("./OFF_files/try86.off"))
+    stracpy(_guide_86_var._parameters.geometry, "./OFF_files/try86.off" ? "./OFF_files/try86.off" : "", 16384);
+  else 
+  _guide_86_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_86=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_86_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_85_var._rotation_absolute, tr1);
+    rot_mul(_guide_86_var._rotation_absolute, tr1, _guide_86_var._rotation_relative);
+    _guide_86_var._rotation_is_identity =  rot_test_identity(_guide_86_var._rotation_relative);
+    _guide_86_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_85_var._position_absolute, _guide_86_var._position_absolute);
+    _guide_86_var._position_relative = rot_apply(_guide_86_var._rotation_absolute, tc1);
+  } /* guide_86=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_86", _guide_86_var._position_absolute, _guide_86_var._rotation_absolute);
+  instrument->_position_absolute[92] = _guide_86_var._position_absolute;
+  instrument->_position_relative[92] = _guide_86_var._position_relative;
+    _guide_86_var._position_relative_is_zero =  coords_test_zero(_guide_86_var._position_relative);
+  instrument->counter_N[92]  = instrument->counter_P[92] = instrument->counter_P2[92] = 0;
+  instrument->counter_AbsorbProp[92]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0091_guide_86", _guide_86_var._position_absolute, _guide_86_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0091_guide_86", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0091_guide_86", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0091_guide_86", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0091_guide_86", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0091_guide_86", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0091_guide_86", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0091_guide_86", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0091_guide_86", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0091_guide_86", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0091_guide_86", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0091_guide_86", "geometry", 0, "./OFF_files/try86.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_86_setpos */
+
+/* component guide_87=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_87_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_87_setpos] component guide_87=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_87_var._name, "guide_87", 16384);
+  stracpy(_guide_87_var._type, "Guide_anyshape_r", 16384);
+  _guide_87_var._index=93;
+  int current_setpos_index = 93;
+  _guide_87_var._parameters.xwidth = 0;
+  _guide_87_var._parameters.yheight = 0;
+  _guide_87_var._parameters.zdepth = 0;
+  _guide_87_var._parameters.center = 0;
+  _guide_87_var._parameters.transmit = 0;
+  _guide_87_var._parameters.R0 = 0.99;
+  _guide_87_var._parameters.Qc = 0.0219;
+  _guide_87_var._parameters.alpha = 0;
+  _guide_87_var._parameters.m = 0;
+  _guide_87_var._parameters.W = 0;
+  if("./OFF_files/try87.off" && strlen("./OFF_files/try87.off"))
+    stracpy(_guide_87_var._parameters.geometry, "./OFF_files/try87.off" ? "./OFF_files/try87.off" : "", 16384);
+  else 
+  _guide_87_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_87=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_87_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_86_var._rotation_absolute, tr1);
+    rot_mul(_guide_87_var._rotation_absolute, tr1, _guide_87_var._rotation_relative);
+    _guide_87_var._rotation_is_identity =  rot_test_identity(_guide_87_var._rotation_relative);
+    _guide_87_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_86_var._position_absolute, _guide_87_var._position_absolute);
+    _guide_87_var._position_relative = rot_apply(_guide_87_var._rotation_absolute, tc1);
+  } /* guide_87=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_87", _guide_87_var._position_absolute, _guide_87_var._rotation_absolute);
+  instrument->_position_absolute[93] = _guide_87_var._position_absolute;
+  instrument->_position_relative[93] = _guide_87_var._position_relative;
+    _guide_87_var._position_relative_is_zero =  coords_test_zero(_guide_87_var._position_relative);
+  instrument->counter_N[93]  = instrument->counter_P[93] = instrument->counter_P2[93] = 0;
+  instrument->counter_AbsorbProp[93]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0092_guide_87", _guide_87_var._position_absolute, _guide_87_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0092_guide_87", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0092_guide_87", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0092_guide_87", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0092_guide_87", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0092_guide_87", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0092_guide_87", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0092_guide_87", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0092_guide_87", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0092_guide_87", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0092_guide_87", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0092_guide_87", "geometry", 0, "./OFF_files/try87.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_87_setpos */
+
+/* component guide_88=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_88_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_88_setpos] component guide_88=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_88_var._name, "guide_88", 16384);
+  stracpy(_guide_88_var._type, "Guide_anyshape_r", 16384);
+  _guide_88_var._index=94;
+  int current_setpos_index = 94;
+  _guide_88_var._parameters.xwidth = 0;
+  _guide_88_var._parameters.yheight = 0;
+  _guide_88_var._parameters.zdepth = 0;
+  _guide_88_var._parameters.center = 0;
+  _guide_88_var._parameters.transmit = 0;
+  _guide_88_var._parameters.R0 = 0.99;
+  _guide_88_var._parameters.Qc = 0.0219;
+  _guide_88_var._parameters.alpha = 0;
+  _guide_88_var._parameters.m = 0;
+  _guide_88_var._parameters.W = 0;
+  if("./OFF_files/try88.off" && strlen("./OFF_files/try88.off"))
+    stracpy(_guide_88_var._parameters.geometry, "./OFF_files/try88.off" ? "./OFF_files/try88.off" : "", 16384);
+  else 
+  _guide_88_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_88=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_88_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_87_var._rotation_absolute, tr1);
+    rot_mul(_guide_88_var._rotation_absolute, tr1, _guide_88_var._rotation_relative);
+    _guide_88_var._rotation_is_identity =  rot_test_identity(_guide_88_var._rotation_relative);
+    _guide_88_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_87_var._position_absolute, _guide_88_var._position_absolute);
+    _guide_88_var._position_relative = rot_apply(_guide_88_var._rotation_absolute, tc1);
+  } /* guide_88=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_88", _guide_88_var._position_absolute, _guide_88_var._rotation_absolute);
+  instrument->_position_absolute[94] = _guide_88_var._position_absolute;
+  instrument->_position_relative[94] = _guide_88_var._position_relative;
+    _guide_88_var._position_relative_is_zero =  coords_test_zero(_guide_88_var._position_relative);
+  instrument->counter_N[94]  = instrument->counter_P[94] = instrument->counter_P2[94] = 0;
+  instrument->counter_AbsorbProp[94]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0093_guide_88", _guide_88_var._position_absolute, _guide_88_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0093_guide_88", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0093_guide_88", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0093_guide_88", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0093_guide_88", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0093_guide_88", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0093_guide_88", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0093_guide_88", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0093_guide_88", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0093_guide_88", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0093_guide_88", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0093_guide_88", "geometry", 0, "./OFF_files/try88.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_88_setpos */
+
+/* component guide_89=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_89_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_89_setpos] component guide_89=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_89_var._name, "guide_89", 16384);
+  stracpy(_guide_89_var._type, "Guide_anyshape_r", 16384);
+  _guide_89_var._index=95;
+  int current_setpos_index = 95;
+  _guide_89_var._parameters.xwidth = 0;
+  _guide_89_var._parameters.yheight = 0;
+  _guide_89_var._parameters.zdepth = 0;
+  _guide_89_var._parameters.center = 0;
+  _guide_89_var._parameters.transmit = 0;
+  _guide_89_var._parameters.R0 = 0.99;
+  _guide_89_var._parameters.Qc = 0.0219;
+  _guide_89_var._parameters.alpha = 0;
+  _guide_89_var._parameters.m = 0;
+  _guide_89_var._parameters.W = 0;
+  if("./OFF_files/try89.off" && strlen("./OFF_files/try89.off"))
+    stracpy(_guide_89_var._parameters.geometry, "./OFF_files/try89.off" ? "./OFF_files/try89.off" : "", 16384);
+  else 
+  _guide_89_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_89=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_89_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_88_var._rotation_absolute, tr1);
+    rot_mul(_guide_89_var._rotation_absolute, tr1, _guide_89_var._rotation_relative);
+    _guide_89_var._rotation_is_identity =  rot_test_identity(_guide_89_var._rotation_relative);
+    _guide_89_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_88_var._position_absolute, _guide_89_var._position_absolute);
+    _guide_89_var._position_relative = rot_apply(_guide_89_var._rotation_absolute, tc1);
+  } /* guide_89=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_89", _guide_89_var._position_absolute, _guide_89_var._rotation_absolute);
+  instrument->_position_absolute[95] = _guide_89_var._position_absolute;
+  instrument->_position_relative[95] = _guide_89_var._position_relative;
+    _guide_89_var._position_relative_is_zero =  coords_test_zero(_guide_89_var._position_relative);
+  instrument->counter_N[95]  = instrument->counter_P[95] = instrument->counter_P2[95] = 0;
+  instrument->counter_AbsorbProp[95]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0094_guide_89", _guide_89_var._position_absolute, _guide_89_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0094_guide_89", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0094_guide_89", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0094_guide_89", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0094_guide_89", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0094_guide_89", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0094_guide_89", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0094_guide_89", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0094_guide_89", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0094_guide_89", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0094_guide_89", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0094_guide_89", "geometry", 0, "./OFF_files/try89.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_89_setpos */
+
+/* component guide_90=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_90_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_90_setpos] component guide_90=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_90_var._name, "guide_90", 16384);
+  stracpy(_guide_90_var._type, "Guide_anyshape_r", 16384);
+  _guide_90_var._index=96;
+  int current_setpos_index = 96;
+  _guide_90_var._parameters.xwidth = 0;
+  _guide_90_var._parameters.yheight = 0;
+  _guide_90_var._parameters.zdepth = 0;
+  _guide_90_var._parameters.center = 0;
+  _guide_90_var._parameters.transmit = 0;
+  _guide_90_var._parameters.R0 = 0.99;
+  _guide_90_var._parameters.Qc = 0.0219;
+  _guide_90_var._parameters.alpha = 0;
+  _guide_90_var._parameters.m = 0;
+  _guide_90_var._parameters.W = 0;
+  if("./OFF_files/try90.off" && strlen("./OFF_files/try90.off"))
+    stracpy(_guide_90_var._parameters.geometry, "./OFF_files/try90.off" ? "./OFF_files/try90.off" : "", 16384);
+  else 
+  _guide_90_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_90=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_90_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_89_var._rotation_absolute, tr1);
+    rot_mul(_guide_90_var._rotation_absolute, tr1, _guide_90_var._rotation_relative);
+    _guide_90_var._rotation_is_identity =  rot_test_identity(_guide_90_var._rotation_relative);
+    _guide_90_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_89_var._position_absolute, _guide_90_var._position_absolute);
+    _guide_90_var._position_relative = rot_apply(_guide_90_var._rotation_absolute, tc1);
+  } /* guide_90=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_90", _guide_90_var._position_absolute, _guide_90_var._rotation_absolute);
+  instrument->_position_absolute[96] = _guide_90_var._position_absolute;
+  instrument->_position_relative[96] = _guide_90_var._position_relative;
+    _guide_90_var._position_relative_is_zero =  coords_test_zero(_guide_90_var._position_relative);
+  instrument->counter_N[96]  = instrument->counter_P[96] = instrument->counter_P2[96] = 0;
+  instrument->counter_AbsorbProp[96]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0095_guide_90", _guide_90_var._position_absolute, _guide_90_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0095_guide_90", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0095_guide_90", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0095_guide_90", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0095_guide_90", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0095_guide_90", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0095_guide_90", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0095_guide_90", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0095_guide_90", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0095_guide_90", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0095_guide_90", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0095_guide_90", "geometry", 0, "./OFF_files/try90.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_90_setpos */
+
+/* component guide_91=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_91_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_91_setpos] component guide_91=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_91_var._name, "guide_91", 16384);
+  stracpy(_guide_91_var._type, "Guide_anyshape_r", 16384);
+  _guide_91_var._index=97;
+  int current_setpos_index = 97;
+  _guide_91_var._parameters.xwidth = 0;
+  _guide_91_var._parameters.yheight = 0;
+  _guide_91_var._parameters.zdepth = 0;
+  _guide_91_var._parameters.center = 0;
+  _guide_91_var._parameters.transmit = 0;
+  _guide_91_var._parameters.R0 = 0.99;
+  _guide_91_var._parameters.Qc = 0.0219;
+  _guide_91_var._parameters.alpha = 0;
+  _guide_91_var._parameters.m = 0;
+  _guide_91_var._parameters.W = 0;
+  if("./OFF_files/try91.off" && strlen("./OFF_files/try91.off"))
+    stracpy(_guide_91_var._parameters.geometry, "./OFF_files/try91.off" ? "./OFF_files/try91.off" : "", 16384);
+  else 
+  _guide_91_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_91=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_91_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_90_var._rotation_absolute, tr1);
+    rot_mul(_guide_91_var._rotation_absolute, tr1, _guide_91_var._rotation_relative);
+    _guide_91_var._rotation_is_identity =  rot_test_identity(_guide_91_var._rotation_relative);
+    _guide_91_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_90_var._position_absolute, _guide_91_var._position_absolute);
+    _guide_91_var._position_relative = rot_apply(_guide_91_var._rotation_absolute, tc1);
+  } /* guide_91=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_91", _guide_91_var._position_absolute, _guide_91_var._rotation_absolute);
+  instrument->_position_absolute[97] = _guide_91_var._position_absolute;
+  instrument->_position_relative[97] = _guide_91_var._position_relative;
+    _guide_91_var._position_relative_is_zero =  coords_test_zero(_guide_91_var._position_relative);
+  instrument->counter_N[97]  = instrument->counter_P[97] = instrument->counter_P2[97] = 0;
+  instrument->counter_AbsorbProp[97]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0096_guide_91", _guide_91_var._position_absolute, _guide_91_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0096_guide_91", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0096_guide_91", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0096_guide_91", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0096_guide_91", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0096_guide_91", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0096_guide_91", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0096_guide_91", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0096_guide_91", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0096_guide_91", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0096_guide_91", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0096_guide_91", "geometry", 0, "./OFF_files/try91.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_91_setpos */
+
+/* component guide_92=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_92_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_92_setpos] component guide_92=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_92_var._name, "guide_92", 16384);
+  stracpy(_guide_92_var._type, "Guide_anyshape_r", 16384);
+  _guide_92_var._index=98;
+  int current_setpos_index = 98;
+  _guide_92_var._parameters.xwidth = 0;
+  _guide_92_var._parameters.yheight = 0;
+  _guide_92_var._parameters.zdepth = 0;
+  _guide_92_var._parameters.center = 0;
+  _guide_92_var._parameters.transmit = 0;
+  _guide_92_var._parameters.R0 = 0.99;
+  _guide_92_var._parameters.Qc = 0.0219;
+  _guide_92_var._parameters.alpha = 0;
+  _guide_92_var._parameters.m = 0;
+  _guide_92_var._parameters.W = 0;
+  if("./OFF_files/try92.off" && strlen("./OFF_files/try92.off"))
+    stracpy(_guide_92_var._parameters.geometry, "./OFF_files/try92.off" ? "./OFF_files/try92.off" : "", 16384);
+  else 
+  _guide_92_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_92=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_92_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_91_var._rotation_absolute, tr1);
+    rot_mul(_guide_92_var._rotation_absolute, tr1, _guide_92_var._rotation_relative);
+    _guide_92_var._rotation_is_identity =  rot_test_identity(_guide_92_var._rotation_relative);
+    _guide_92_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_91_var._position_absolute, _guide_92_var._position_absolute);
+    _guide_92_var._position_relative = rot_apply(_guide_92_var._rotation_absolute, tc1);
+  } /* guide_92=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_92", _guide_92_var._position_absolute, _guide_92_var._rotation_absolute);
+  instrument->_position_absolute[98] = _guide_92_var._position_absolute;
+  instrument->_position_relative[98] = _guide_92_var._position_relative;
+    _guide_92_var._position_relative_is_zero =  coords_test_zero(_guide_92_var._position_relative);
+  instrument->counter_N[98]  = instrument->counter_P[98] = instrument->counter_P2[98] = 0;
+  instrument->counter_AbsorbProp[98]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0097_guide_92", _guide_92_var._position_absolute, _guide_92_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0097_guide_92", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0097_guide_92", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0097_guide_92", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0097_guide_92", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0097_guide_92", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0097_guide_92", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0097_guide_92", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0097_guide_92", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0097_guide_92", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0097_guide_92", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0097_guide_92", "geometry", 0, "./OFF_files/try92.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_92_setpos */
+
+/* component guide_93=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_93_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_93_setpos] component guide_93=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_93_var._name, "guide_93", 16384);
+  stracpy(_guide_93_var._type, "Guide_anyshape_r", 16384);
+  _guide_93_var._index=99;
+  int current_setpos_index = 99;
+  _guide_93_var._parameters.xwidth = 0;
+  _guide_93_var._parameters.yheight = 0;
+  _guide_93_var._parameters.zdepth = 0;
+  _guide_93_var._parameters.center = 0;
+  _guide_93_var._parameters.transmit = 0;
+  _guide_93_var._parameters.R0 = 0.99;
+  _guide_93_var._parameters.Qc = 0.0219;
+  _guide_93_var._parameters.alpha = 0;
+  _guide_93_var._parameters.m = 0;
+  _guide_93_var._parameters.W = 0;
+  if("./OFF_files/try93.off" && strlen("./OFF_files/try93.off"))
+    stracpy(_guide_93_var._parameters.geometry, "./OFF_files/try93.off" ? "./OFF_files/try93.off" : "", 16384);
+  else 
+  _guide_93_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_93=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_93_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_92_var._rotation_absolute, tr1);
+    rot_mul(_guide_93_var._rotation_absolute, tr1, _guide_93_var._rotation_relative);
+    _guide_93_var._rotation_is_identity =  rot_test_identity(_guide_93_var._rotation_relative);
+    _guide_93_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_92_var._position_absolute, _guide_93_var._position_absolute);
+    _guide_93_var._position_relative = rot_apply(_guide_93_var._rotation_absolute, tc1);
+  } /* guide_93=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_93", _guide_93_var._position_absolute, _guide_93_var._rotation_absolute);
+  instrument->_position_absolute[99] = _guide_93_var._position_absolute;
+  instrument->_position_relative[99] = _guide_93_var._position_relative;
+    _guide_93_var._position_relative_is_zero =  coords_test_zero(_guide_93_var._position_relative);
+  instrument->counter_N[99]  = instrument->counter_P[99] = instrument->counter_P2[99] = 0;
+  instrument->counter_AbsorbProp[99]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0098_guide_93", _guide_93_var._position_absolute, _guide_93_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0098_guide_93", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0098_guide_93", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0098_guide_93", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0098_guide_93", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0098_guide_93", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0098_guide_93", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0098_guide_93", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0098_guide_93", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0098_guide_93", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0098_guide_93", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0098_guide_93", "geometry", 0, "./OFF_files/try93.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_93_setpos */
+
+/* component guide_94=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_94_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_94_setpos] component guide_94=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_94_var._name, "guide_94", 16384);
+  stracpy(_guide_94_var._type, "Guide_anyshape_r", 16384);
+  _guide_94_var._index=100;
+  int current_setpos_index = 100;
+  _guide_94_var._parameters.xwidth = 0;
+  _guide_94_var._parameters.yheight = 0;
+  _guide_94_var._parameters.zdepth = 0;
+  _guide_94_var._parameters.center = 0;
+  _guide_94_var._parameters.transmit = 0;
+  _guide_94_var._parameters.R0 = 0.99;
+  _guide_94_var._parameters.Qc = 0.0219;
+  _guide_94_var._parameters.alpha = 0;
+  _guide_94_var._parameters.m = 0;
+  _guide_94_var._parameters.W = 0;
+  if("./OFF_files/try94.off" && strlen("./OFF_files/try94.off"))
+    stracpy(_guide_94_var._parameters.geometry, "./OFF_files/try94.off" ? "./OFF_files/try94.off" : "", 16384);
+  else 
+  _guide_94_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_94=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_94_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_93_var._rotation_absolute, tr1);
+    rot_mul(_guide_94_var._rotation_absolute, tr1, _guide_94_var._rotation_relative);
+    _guide_94_var._rotation_is_identity =  rot_test_identity(_guide_94_var._rotation_relative);
+    _guide_94_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_93_var._position_absolute, _guide_94_var._position_absolute);
+    _guide_94_var._position_relative = rot_apply(_guide_94_var._rotation_absolute, tc1);
+  } /* guide_94=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_94", _guide_94_var._position_absolute, _guide_94_var._rotation_absolute);
+  instrument->_position_absolute[100] = _guide_94_var._position_absolute;
+  instrument->_position_relative[100] = _guide_94_var._position_relative;
+    _guide_94_var._position_relative_is_zero =  coords_test_zero(_guide_94_var._position_relative);
+  instrument->counter_N[100]  = instrument->counter_P[100] = instrument->counter_P2[100] = 0;
+  instrument->counter_AbsorbProp[100]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0099_guide_94", _guide_94_var._position_absolute, _guide_94_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0099_guide_94", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0099_guide_94", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0099_guide_94", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0099_guide_94", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0099_guide_94", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0099_guide_94", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0099_guide_94", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0099_guide_94", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0099_guide_94", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0099_guide_94", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0099_guide_94", "geometry", 0, "./OFF_files/try94.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_94_setpos */
+
+/* component guide_95=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_95_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_95_setpos] component guide_95=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_95_var._name, "guide_95", 16384);
+  stracpy(_guide_95_var._type, "Guide_anyshape_r", 16384);
+  _guide_95_var._index=101;
+  int current_setpos_index = 101;
+  _guide_95_var._parameters.xwidth = 0;
+  _guide_95_var._parameters.yheight = 0;
+  _guide_95_var._parameters.zdepth = 0;
+  _guide_95_var._parameters.center = 0;
+  _guide_95_var._parameters.transmit = 0;
+  _guide_95_var._parameters.R0 = 0.99;
+  _guide_95_var._parameters.Qc = 0.0219;
+  _guide_95_var._parameters.alpha = 0;
+  _guide_95_var._parameters.m = 0;
+  _guide_95_var._parameters.W = 0;
+  if("./OFF_files/try95.off" && strlen("./OFF_files/try95.off"))
+    stracpy(_guide_95_var._parameters.geometry, "./OFF_files/try95.off" ? "./OFF_files/try95.off" : "", 16384);
+  else 
+  _guide_95_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_95=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_95_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_94_var._rotation_absolute, tr1);
+    rot_mul(_guide_95_var._rotation_absolute, tr1, _guide_95_var._rotation_relative);
+    _guide_95_var._rotation_is_identity =  rot_test_identity(_guide_95_var._rotation_relative);
+    _guide_95_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_94_var._position_absolute, _guide_95_var._position_absolute);
+    _guide_95_var._position_relative = rot_apply(_guide_95_var._rotation_absolute, tc1);
+  } /* guide_95=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_95", _guide_95_var._position_absolute, _guide_95_var._rotation_absolute);
+  instrument->_position_absolute[101] = _guide_95_var._position_absolute;
+  instrument->_position_relative[101] = _guide_95_var._position_relative;
+    _guide_95_var._position_relative_is_zero =  coords_test_zero(_guide_95_var._position_relative);
+  instrument->counter_N[101]  = instrument->counter_P[101] = instrument->counter_P2[101] = 0;
+  instrument->counter_AbsorbProp[101]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0100_guide_95", _guide_95_var._position_absolute, _guide_95_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0100_guide_95", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0100_guide_95", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0100_guide_95", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0100_guide_95", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0100_guide_95", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0100_guide_95", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0100_guide_95", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0100_guide_95", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0100_guide_95", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0100_guide_95", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0100_guide_95", "geometry", 0, "./OFF_files/try95.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_95_setpos */
+
+/* component guide_96=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_96_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_96_setpos] component guide_96=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_96_var._name, "guide_96", 16384);
+  stracpy(_guide_96_var._type, "Guide_anyshape_r", 16384);
+  _guide_96_var._index=102;
+  int current_setpos_index = 102;
+  _guide_96_var._parameters.xwidth = 0;
+  _guide_96_var._parameters.yheight = 0;
+  _guide_96_var._parameters.zdepth = 0;
+  _guide_96_var._parameters.center = 0;
+  _guide_96_var._parameters.transmit = 0;
+  _guide_96_var._parameters.R0 = 0.99;
+  _guide_96_var._parameters.Qc = 0.0219;
+  _guide_96_var._parameters.alpha = 0;
+  _guide_96_var._parameters.m = 0;
+  _guide_96_var._parameters.W = 0;
+  if("./OFF_files/try96.off" && strlen("./OFF_files/try96.off"))
+    stracpy(_guide_96_var._parameters.geometry, "./OFF_files/try96.off" ? "./OFF_files/try96.off" : "", 16384);
+  else 
+  _guide_96_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_96=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_96_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_95_var._rotation_absolute, tr1);
+    rot_mul(_guide_96_var._rotation_absolute, tr1, _guide_96_var._rotation_relative);
+    _guide_96_var._rotation_is_identity =  rot_test_identity(_guide_96_var._rotation_relative);
+    _guide_96_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_95_var._position_absolute, _guide_96_var._position_absolute);
+    _guide_96_var._position_relative = rot_apply(_guide_96_var._rotation_absolute, tc1);
+  } /* guide_96=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_96", _guide_96_var._position_absolute, _guide_96_var._rotation_absolute);
+  instrument->_position_absolute[102] = _guide_96_var._position_absolute;
+  instrument->_position_relative[102] = _guide_96_var._position_relative;
+    _guide_96_var._position_relative_is_zero =  coords_test_zero(_guide_96_var._position_relative);
+  instrument->counter_N[102]  = instrument->counter_P[102] = instrument->counter_P2[102] = 0;
+  instrument->counter_AbsorbProp[102]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0101_guide_96", _guide_96_var._position_absolute, _guide_96_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0101_guide_96", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0101_guide_96", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0101_guide_96", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0101_guide_96", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0101_guide_96", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0101_guide_96", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0101_guide_96", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0101_guide_96", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0101_guide_96", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0101_guide_96", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0101_guide_96", "geometry", 0, "./OFF_files/try96.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_96_setpos */
+
+/* component guide_97=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_97_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_97_setpos] component guide_97=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_97_var._name, "guide_97", 16384);
+  stracpy(_guide_97_var._type, "Guide_anyshape_r", 16384);
+  _guide_97_var._index=103;
+  int current_setpos_index = 103;
+  _guide_97_var._parameters.xwidth = 0;
+  _guide_97_var._parameters.yheight = 0;
+  _guide_97_var._parameters.zdepth = 0;
+  _guide_97_var._parameters.center = 0;
+  _guide_97_var._parameters.transmit = 0;
+  _guide_97_var._parameters.R0 = 0.99;
+  _guide_97_var._parameters.Qc = 0.0219;
+  _guide_97_var._parameters.alpha = 0;
+  _guide_97_var._parameters.m = 0;
+  _guide_97_var._parameters.W = 0;
+  if("./OFF_files/try97.off" && strlen("./OFF_files/try97.off"))
+    stracpy(_guide_97_var._parameters.geometry, "./OFF_files/try97.off" ? "./OFF_files/try97.off" : "", 16384);
+  else 
+  _guide_97_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_97=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_97_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_96_var._rotation_absolute, tr1);
+    rot_mul(_guide_97_var._rotation_absolute, tr1, _guide_97_var._rotation_relative);
+    _guide_97_var._rotation_is_identity =  rot_test_identity(_guide_97_var._rotation_relative);
+    _guide_97_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_96_var._position_absolute, _guide_97_var._position_absolute);
+    _guide_97_var._position_relative = rot_apply(_guide_97_var._rotation_absolute, tc1);
+  } /* guide_97=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_97", _guide_97_var._position_absolute, _guide_97_var._rotation_absolute);
+  instrument->_position_absolute[103] = _guide_97_var._position_absolute;
+  instrument->_position_relative[103] = _guide_97_var._position_relative;
+    _guide_97_var._position_relative_is_zero =  coords_test_zero(_guide_97_var._position_relative);
+  instrument->counter_N[103]  = instrument->counter_P[103] = instrument->counter_P2[103] = 0;
+  instrument->counter_AbsorbProp[103]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0102_guide_97", _guide_97_var._position_absolute, _guide_97_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0102_guide_97", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0102_guide_97", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0102_guide_97", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0102_guide_97", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0102_guide_97", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0102_guide_97", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0102_guide_97", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0102_guide_97", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0102_guide_97", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0102_guide_97", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0102_guide_97", "geometry", 0, "./OFF_files/try97.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_97_setpos */
+
+/* component guide_98=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_98_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_98_setpos] component guide_98=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_98_var._name, "guide_98", 16384);
+  stracpy(_guide_98_var._type, "Guide_anyshape_r", 16384);
+  _guide_98_var._index=104;
+  int current_setpos_index = 104;
+  _guide_98_var._parameters.xwidth = 0;
+  _guide_98_var._parameters.yheight = 0;
+  _guide_98_var._parameters.zdepth = 0;
+  _guide_98_var._parameters.center = 0;
+  _guide_98_var._parameters.transmit = 0;
+  _guide_98_var._parameters.R0 = 0.99;
+  _guide_98_var._parameters.Qc = 0.0219;
+  _guide_98_var._parameters.alpha = 0;
+  _guide_98_var._parameters.m = 0;
+  _guide_98_var._parameters.W = 0;
+  if("./OFF_files/try98.off" && strlen("./OFF_files/try98.off"))
+    stracpy(_guide_98_var._parameters.geometry, "./OFF_files/try98.off" ? "./OFF_files/try98.off" : "", 16384);
+  else 
+  _guide_98_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_98=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_98_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_97_var._rotation_absolute, tr1);
+    rot_mul(_guide_98_var._rotation_absolute, tr1, _guide_98_var._rotation_relative);
+    _guide_98_var._rotation_is_identity =  rot_test_identity(_guide_98_var._rotation_relative);
+    _guide_98_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_97_var._position_absolute, _guide_98_var._position_absolute);
+    _guide_98_var._position_relative = rot_apply(_guide_98_var._rotation_absolute, tc1);
+  } /* guide_98=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_98", _guide_98_var._position_absolute, _guide_98_var._rotation_absolute);
+  instrument->_position_absolute[104] = _guide_98_var._position_absolute;
+  instrument->_position_relative[104] = _guide_98_var._position_relative;
+    _guide_98_var._position_relative_is_zero =  coords_test_zero(_guide_98_var._position_relative);
+  instrument->counter_N[104]  = instrument->counter_P[104] = instrument->counter_P2[104] = 0;
+  instrument->counter_AbsorbProp[104]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0103_guide_98", _guide_98_var._position_absolute, _guide_98_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0103_guide_98", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0103_guide_98", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0103_guide_98", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0103_guide_98", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0103_guide_98", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0103_guide_98", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0103_guide_98", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0103_guide_98", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0103_guide_98", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0103_guide_98", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0103_guide_98", "geometry", 0, "./OFF_files/try98.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_98_setpos */
+
+/* component guide_99=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_99_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_99_setpos] component guide_99=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_99_var._name, "guide_99", 16384);
+  stracpy(_guide_99_var._type, "Guide_anyshape_r", 16384);
+  _guide_99_var._index=105;
+  int current_setpos_index = 105;
+  _guide_99_var._parameters.xwidth = 0;
+  _guide_99_var._parameters.yheight = 0;
+  _guide_99_var._parameters.zdepth = 0;
+  _guide_99_var._parameters.center = 0;
+  _guide_99_var._parameters.transmit = 0;
+  _guide_99_var._parameters.R0 = 0.99;
+  _guide_99_var._parameters.Qc = 0.0219;
+  _guide_99_var._parameters.alpha = 0;
+  _guide_99_var._parameters.m = 0;
+  _guide_99_var._parameters.W = 0;
+  if("./OFF_files/try99.off" && strlen("./OFF_files/try99.off"))
+    stracpy(_guide_99_var._parameters.geometry, "./OFF_files/try99.off" ? "./OFF_files/try99.off" : "", 16384);
+  else 
+  _guide_99_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_99=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_99_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_98_var._rotation_absolute, tr1);
+    rot_mul(_guide_99_var._rotation_absolute, tr1, _guide_99_var._rotation_relative);
+    _guide_99_var._rotation_is_identity =  rot_test_identity(_guide_99_var._rotation_relative);
+    _guide_99_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_98_var._position_absolute, _guide_99_var._position_absolute);
+    _guide_99_var._position_relative = rot_apply(_guide_99_var._rotation_absolute, tc1);
+  } /* guide_99=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_99", _guide_99_var._position_absolute, _guide_99_var._rotation_absolute);
+  instrument->_position_absolute[105] = _guide_99_var._position_absolute;
+  instrument->_position_relative[105] = _guide_99_var._position_relative;
+    _guide_99_var._position_relative_is_zero =  coords_test_zero(_guide_99_var._position_relative);
+  instrument->counter_N[105]  = instrument->counter_P[105] = instrument->counter_P2[105] = 0;
+  instrument->counter_AbsorbProp[105]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0104_guide_99", _guide_99_var._position_absolute, _guide_99_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0104_guide_99", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0104_guide_99", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0104_guide_99", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0104_guide_99", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0104_guide_99", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0104_guide_99", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0104_guide_99", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0104_guide_99", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0104_guide_99", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0104_guide_99", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0104_guide_99", "geometry", 0, "./OFF_files/try99.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_99_setpos */
+
+/* component guide_100=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_100_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_100_setpos] component guide_100=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_100_var._name, "guide_100", 16384);
+  stracpy(_guide_100_var._type, "Guide_anyshape_r", 16384);
+  _guide_100_var._index=106;
+  int current_setpos_index = 106;
+  _guide_100_var._parameters.xwidth = 0;
+  _guide_100_var._parameters.yheight = 0;
+  _guide_100_var._parameters.zdepth = 0;
+  _guide_100_var._parameters.center = 0;
+  _guide_100_var._parameters.transmit = 0;
+  _guide_100_var._parameters.R0 = 0.99;
+  _guide_100_var._parameters.Qc = 0.0219;
+  _guide_100_var._parameters.alpha = 0;
+  _guide_100_var._parameters.m = 0;
+  _guide_100_var._parameters.W = 0;
+  if("./OFF_files/try100.off" && strlen("./OFF_files/try100.off"))
+    stracpy(_guide_100_var._parameters.geometry, "./OFF_files/try100.off" ? "./OFF_files/try100.off" : "", 16384);
+  else 
+  _guide_100_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_100=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_100_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_99_var._rotation_absolute, tr1);
+    rot_mul(_guide_100_var._rotation_absolute, tr1, _guide_100_var._rotation_relative);
+    _guide_100_var._rotation_is_identity =  rot_test_identity(_guide_100_var._rotation_relative);
+    _guide_100_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_99_var._position_absolute, _guide_100_var._position_absolute);
+    _guide_100_var._position_relative = rot_apply(_guide_100_var._rotation_absolute, tc1);
+  } /* guide_100=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_100", _guide_100_var._position_absolute, _guide_100_var._rotation_absolute);
+  instrument->_position_absolute[106] = _guide_100_var._position_absolute;
+  instrument->_position_relative[106] = _guide_100_var._position_relative;
+    _guide_100_var._position_relative_is_zero =  coords_test_zero(_guide_100_var._position_relative);
+  instrument->counter_N[106]  = instrument->counter_P[106] = instrument->counter_P2[106] = 0;
+  instrument->counter_AbsorbProp[106]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0105_guide_100", _guide_100_var._position_absolute, _guide_100_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0105_guide_100", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0105_guide_100", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0105_guide_100", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0105_guide_100", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0105_guide_100", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0105_guide_100", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0105_guide_100", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0105_guide_100", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0105_guide_100", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0105_guide_100", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0105_guide_100", "geometry", 0, "./OFF_files/try100.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_100_setpos */
+
+/* component guide_101=Guide_anyshape_r() SETTING, POSITION/ROTATION */
+int _guide_101_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_guide_101_setpos] component guide_101=Guide_anyshape_r() SETTING [Guide_anyshape_r:0]");
+  stracpy(_guide_101_var._name, "guide_101", 16384);
+  stracpy(_guide_101_var._type, "Guide_anyshape_r", 16384);
+  _guide_101_var._index=107;
+  int current_setpos_index = 107;
+  _guide_101_var._parameters.xwidth = 0;
+  _guide_101_var._parameters.yheight = 0;
+  _guide_101_var._parameters.zdepth = 0;
+  _guide_101_var._parameters.center = 0;
+  _guide_101_var._parameters.transmit = 0;
+  _guide_101_var._parameters.R0 = 0.99;
+  _guide_101_var._parameters.Qc = 0.0219;
+  _guide_101_var._parameters.alpha = 0;
+  _guide_101_var._parameters.m = 0;
+  _guide_101_var._parameters.W = 0;
+  if("./OFF_files/try101.off" && strlen("./OFF_files/try101.off"))
+    stracpy(_guide_101_var._parameters.geometry, "./OFF_files/try101.off" ? "./OFF_files/try101.off" : "", 16384);
+  else 
+  _guide_101_var._parameters.geometry[0]='\0';
+
+
+  /* component guide_101=Guide_anyshape_r() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_guide_101_var._rotation_absolute,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_transpose(_guide_100_var._rotation_absolute, tr1);
+    rot_mul(_guide_101_var._rotation_absolute, tr1, _guide_101_var._rotation_relative);
+    _guide_101_var._rotation_is_identity =  rot_test_identity(_guide_101_var._rotation_relative);
+    _guide_101_var._position_absolute = coords_set(
+      0, 0, 0);
+    tc1 = coords_sub(_guide_100_var._position_absolute, _guide_101_var._position_absolute);
+    _guide_101_var._position_relative = rot_apply(_guide_101_var._rotation_absolute, tc1);
+  } /* guide_101=Guide_anyshape_r() AT ROTATED */
+  DEBUG_COMPONENT("guide_101", _guide_101_var._position_absolute, _guide_101_var._rotation_absolute);
+  instrument->_position_absolute[107] = _guide_101_var._position_absolute;
+  instrument->_position_relative[107] = _guide_101_var._position_relative;
+    _guide_101_var._position_relative_is_zero =  coords_test_zero(_guide_101_var._position_relative);
+  instrument->counter_N[107]  = instrument->counter_P[107] = instrument->counter_P2[107] = 0;
+  instrument->counter_AbsorbProp[107]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0106_guide_101", _guide_101_var._position_absolute, _guide_101_var._rotation_absolute, "Guide_anyshape_r");
+        mccomp_param_nexus(nxhandle,"0106_guide_101", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0106_guide_101", "yheight", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0106_guide_101", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0106_guide_101", "center", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0106_guide_101", "transmit", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0106_guide_101", "R0", "0.99", "0.99","MCNUM");
+        mccomp_param_nexus(nxhandle,"0106_guide_101", "Qc", "0.0219", "0.0219","MCNUM");
+        mccomp_param_nexus(nxhandle,"0106_guide_101", "alpha", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0106_guide_101", "m", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0106_guide_101", "W", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0106_guide_101", "geometry", 0, "./OFF_files/try101.off", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _guide_101_setpos */
+
 _class_ESS_butterfly *class_ESS_butterfly_init(_class_ESS_butterfly *_comp
 ) {
   #define sector (_comp->_parameters.sector)
@@ -23374,6 +28022,52 @@ _class_MultiDiskChopper *class_MultiDiskChopper_init(_class_MultiDiskChopper *_c
   return(_comp);
 } /* class_MultiDiskChopper_init */
 
+_class_Guide_anyshape *class_Guide_anyshape_init(_class_Guide_anyshape *_comp
+) {
+  #define xwidth (_comp->_parameters.xwidth)
+  #define yheight (_comp->_parameters.yheight)
+  #define zdepth (_comp->_parameters.zdepth)
+  #define center (_comp->_parameters.center)
+  #define transmit (_comp->_parameters.transmit)
+  #define R0 (_comp->_parameters.R0)
+  #define Qc (_comp->_parameters.Qc)
+  #define alpha (_comp->_parameters.alpha)
+  #define m (_comp->_parameters.m)
+  #define W (_comp->_parameters.W)
+  #define reflect (_comp->_parameters.reflect)
+  #define geometry (_comp->_parameters.geometry)
+  #define offdata (_comp->_parameters.offdata)
+  #define pTable (_comp->_parameters.pTable)
+  SIG_MESSAGE("[_guide_49_init] component guide_49=Guide_anyshape() INITIALISE [Guide_anyshape:0]");
+
+  /* initialize OFF object from the file(s) */
+  if (!off_init (geometry, xwidth, yheight, zdepth, !center, &offdata))
+    exit (-1);
+
+  /* optionally initialize reflectivity curves */
+  if (reflect && strlen (reflect) && strcmp (reflect, "NULL") && strcmp (reflect, "0")) {
+    if (Table_Read (&pTable, reflect, 1) <= 0) /* read 1st block data from file into pTable */
+      exit (fprintf (stderr, "Guide_anyshape: %s: can not read file %s. Aborting.\n", NAME_CURRENT_COMP, reflect));
+    else
+      Table_Rebin (&pTable); /* rebin as evenly, increasing array */
+  }
+  #undef xwidth
+  #undef yheight
+  #undef zdepth
+  #undef center
+  #undef transmit
+  #undef R0
+  #undef Qc
+  #undef alpha
+  #undef m
+  #undef W
+  #undef reflect
+  #undef geometry
+  #undef offdata
+  #undef pTable
+  return(_comp);
+} /* class_Guide_anyshape_init */
+
 
 
 int init(void) { /* called by mccode_main for TRex:INITIALISE */
@@ -23410,6 +28104,7 @@ printf("lamb_2: %g \n", lamb_2);
 
 // frequencies
 f_BW1 = f;
+f_BW2 = f;
 
 
 // characteristic wavelength 
@@ -23419,14 +28114,23 @@ v0 = 2*PI*K2V/L0;       // speed center neutron
 
 // time of flight and chopper phases
 tof_BW1 = T_offset + L_BW1/v0;
+tof_BW2 = T_offset + L_BW2/v0;
 
-// Chopper parameters
+/* Chopper parameters */
 
 // BW1 Chopper
 radius_BW1 = 0.35;
 delta_y_BW1 = -0.3075;
-delay_BW1 = tof_BW1; //time delay
+delay_BW1 = tof_BW1; // time delay
 nslits_BW1 = 1;
+
+// BW2 Chopper
+radius_BW2 = 0.35;
+delta_y_BW2 = delta_y_BW1;
+delay_BW2 = tof_BW2; // time delay
+nslits_BW2 = 1;
+
+
 
 }
   #undef L0
@@ -23485,6 +28189,62 @@ nslits_BW1 = 1;
   _B1_monitor_xy_setpos(); /* type Monitor_nD */
   _B1_monitor_lam_setpos(); /* type Monitor_nD */
   _BW1_monitor_ToF_setpos(); /* type Monitor_nD */
+  _guide_49_setpos(); /* type Guide_anyshape */
+  _guide_50_setpos(); /* type Guide_anyshape */
+  _guide_51_setpos(); /* type Guide_anyshape */
+  _guide_52_setpos(); /* type Guide_anyshape */
+  _guide_53_setpos(); /* type Guide_anyshape */
+  _guide_54_setpos(); /* type Guide_anyshape */
+  _guide_55_setpos(); /* type Guide_anyshape */
+  _BW_Chopper_2_setpos(); /* type MultiDiskChopper */
+  _B2_monitor_xy_setpos(); /* type Monitor_nD */
+  _B2_monitor_lam_setpos(); /* type Monitor_nD */
+  _BW2_monitor_ToF_setpos(); /* type Monitor_nD */
+  _guide_57_setpos(); /* type Guide_anyshape_r */
+  _guide_58_setpos(); /* type Guide_anyshape_r */
+  _guide_59_setpos(); /* type Guide_anyshape_r */
+  _guide_60_setpos(); /* type Guide_anyshape_r */
+  _guide_61_setpos(); /* type Guide_anyshape_r */
+  _guide_62_setpos(); /* type Guide_anyshape_r */
+  _guide_63_setpos(); /* type Guide_anyshape_r */
+  _guide_64_setpos(); /* type Guide_anyshape_r */
+  _guide_65_setpos(); /* type Guide_anyshape_r */
+  _guide_66_setpos(); /* type Guide_anyshape_r */
+  _guide_67_setpos(); /* type Guide_anyshape_r */
+  _guide_68_setpos(); /* type Guide_anyshape_r */
+  _guide_69_setpos(); /* type Guide_anyshape_r */
+  _guide_70_setpos(); /* type Guide_anyshape_r */
+  _guide_71_setpos(); /* type Guide_anyshape_r */
+  _guide_72_setpos(); /* type Guide_anyshape_r */
+  _guide_73_setpos(); /* type Guide_anyshape_r */
+  _guide_74_setpos(); /* type Guide_anyshape_r */
+  _guide_75_setpos(); /* type Guide_anyshape_r */
+  _guide_76_setpos(); /* type Guide_anyshape_r */
+  _guide_77_setpos(); /* type Guide_anyshape_r */
+  _guide_78_setpos(); /* type Guide_anyshape_r */
+  _guide_79_setpos(); /* type Guide_anyshape_r */
+  _guide_80_setpos(); /* type Guide_anyshape_r */
+  _guide_81_setpos(); /* type Guide_anyshape_r */
+  _guide_82_setpos(); /* type Guide_anyshape_r */
+  _guide_83_setpos(); /* type Guide_anyshape_r */
+  _guide_84_setpos(); /* type Guide_anyshape_r */
+  _guide_85_setpos(); /* type Guide_anyshape_r */
+  _guide_86_setpos(); /* type Guide_anyshape_r */
+  _guide_87_setpos(); /* type Guide_anyshape_r */
+  _guide_88_setpos(); /* type Guide_anyshape_r */
+  _guide_89_setpos(); /* type Guide_anyshape_r */
+  _guide_90_setpos(); /* type Guide_anyshape_r */
+  _guide_91_setpos(); /* type Guide_anyshape_r */
+  _guide_92_setpos(); /* type Guide_anyshape_r */
+  _guide_93_setpos(); /* type Guide_anyshape_r */
+  _guide_94_setpos(); /* type Guide_anyshape_r */
+  _guide_95_setpos(); /* type Guide_anyshape_r */
+  _guide_96_setpos(); /* type Guide_anyshape_r */
+  _guide_97_setpos(); /* type Guide_anyshape_r */
+  _guide_98_setpos(); /* type Guide_anyshape_r */
+  _guide_99_setpos(); /* type Guide_anyshape_r */
+  _guide_100_setpos(); /* type Guide_anyshape_r */
+  _guide_101_setpos(); /* type Guide_anyshape_r */
 
   /* call iteratively all components INITIALISE */
   class_ESS_butterfly_init(&_source_var);
@@ -23589,6 +28349,118 @@ nslits_BW1 = 1;
 
   class_Monitor_nD_init(&_BW1_monitor_ToF_var);
 
+  class_Guide_anyshape_init(&_guide_49_var);
+
+  class_Guide_anyshape_init(&_guide_50_var);
+
+  class_Guide_anyshape_init(&_guide_51_var);
+
+  class_Guide_anyshape_init(&_guide_52_var);
+
+  class_Guide_anyshape_init(&_guide_53_var);
+
+  class_Guide_anyshape_init(&_guide_54_var);
+
+  class_Guide_anyshape_init(&_guide_55_var);
+
+  class_MultiDiskChopper_init(&_BW_Chopper_2_var);
+
+  class_Monitor_nD_init(&_B2_monitor_xy_var);
+
+  class_Monitor_nD_init(&_B2_monitor_lam_var);
+
+  class_Monitor_nD_init(&_BW2_monitor_ToF_var);
+
+  class_Guide_anyshape_r_init(&_guide_57_var);
+
+  class_Guide_anyshape_r_init(&_guide_58_var);
+
+  class_Guide_anyshape_r_init(&_guide_59_var);
+
+  class_Guide_anyshape_r_init(&_guide_60_var);
+
+  class_Guide_anyshape_r_init(&_guide_61_var);
+
+  class_Guide_anyshape_r_init(&_guide_62_var);
+
+  class_Guide_anyshape_r_init(&_guide_63_var);
+
+  class_Guide_anyshape_r_init(&_guide_64_var);
+
+  class_Guide_anyshape_r_init(&_guide_65_var);
+
+  class_Guide_anyshape_r_init(&_guide_66_var);
+
+  class_Guide_anyshape_r_init(&_guide_67_var);
+
+  class_Guide_anyshape_r_init(&_guide_68_var);
+
+  class_Guide_anyshape_r_init(&_guide_69_var);
+
+  class_Guide_anyshape_r_init(&_guide_70_var);
+
+  class_Guide_anyshape_r_init(&_guide_71_var);
+
+  class_Guide_anyshape_r_init(&_guide_72_var);
+
+  class_Guide_anyshape_r_init(&_guide_73_var);
+
+  class_Guide_anyshape_r_init(&_guide_74_var);
+
+  class_Guide_anyshape_r_init(&_guide_75_var);
+
+  class_Guide_anyshape_r_init(&_guide_76_var);
+
+  class_Guide_anyshape_r_init(&_guide_77_var);
+
+  class_Guide_anyshape_r_init(&_guide_78_var);
+
+  class_Guide_anyshape_r_init(&_guide_79_var);
+
+  class_Guide_anyshape_r_init(&_guide_80_var);
+
+  class_Guide_anyshape_r_init(&_guide_81_var);
+
+  class_Guide_anyshape_r_init(&_guide_82_var);
+
+  class_Guide_anyshape_r_init(&_guide_83_var);
+
+  class_Guide_anyshape_r_init(&_guide_84_var);
+
+  class_Guide_anyshape_r_init(&_guide_85_var);
+
+  class_Guide_anyshape_r_init(&_guide_86_var);
+
+  class_Guide_anyshape_r_init(&_guide_87_var);
+
+  class_Guide_anyshape_r_init(&_guide_88_var);
+
+  class_Guide_anyshape_r_init(&_guide_89_var);
+
+  class_Guide_anyshape_r_init(&_guide_90_var);
+
+  class_Guide_anyshape_r_init(&_guide_91_var);
+
+  class_Guide_anyshape_r_init(&_guide_92_var);
+
+  class_Guide_anyshape_r_init(&_guide_93_var);
+
+  class_Guide_anyshape_r_init(&_guide_94_var);
+
+  class_Guide_anyshape_r_init(&_guide_95_var);
+
+  class_Guide_anyshape_r_init(&_guide_96_var);
+
+  class_Guide_anyshape_r_init(&_guide_97_var);
+
+  class_Guide_anyshape_r_init(&_guide_98_var);
+
+  class_Guide_anyshape_r_init(&_guide_99_var);
+
+  class_Guide_anyshape_r_init(&_guide_100_var);
+
+  class_Guide_anyshape_r_init(&_guide_101_var);
+
   if (mcdotrace) display();
   DEBUG_INSTR_END();
 
@@ -23645,6 +28517,62 @@ nslits_BW1 = 1;
 #pragma acc update device(_B1_monitor_xy_var)
 #pragma acc update device(_B1_monitor_lam_var)
 #pragma acc update device(_BW1_monitor_ToF_var)
+#pragma acc update device(_guide_49_var)
+#pragma acc update device(_guide_50_var)
+#pragma acc update device(_guide_51_var)
+#pragma acc update device(_guide_52_var)
+#pragma acc update device(_guide_53_var)
+#pragma acc update device(_guide_54_var)
+#pragma acc update device(_guide_55_var)
+#pragma acc update device(_BW_Chopper_2_var)
+#pragma acc update device(_B2_monitor_xy_var)
+#pragma acc update device(_B2_monitor_lam_var)
+#pragma acc update device(_BW2_monitor_ToF_var)
+#pragma acc update device(_guide_57_var)
+#pragma acc update device(_guide_58_var)
+#pragma acc update device(_guide_59_var)
+#pragma acc update device(_guide_60_var)
+#pragma acc update device(_guide_61_var)
+#pragma acc update device(_guide_62_var)
+#pragma acc update device(_guide_63_var)
+#pragma acc update device(_guide_64_var)
+#pragma acc update device(_guide_65_var)
+#pragma acc update device(_guide_66_var)
+#pragma acc update device(_guide_67_var)
+#pragma acc update device(_guide_68_var)
+#pragma acc update device(_guide_69_var)
+#pragma acc update device(_guide_70_var)
+#pragma acc update device(_guide_71_var)
+#pragma acc update device(_guide_72_var)
+#pragma acc update device(_guide_73_var)
+#pragma acc update device(_guide_74_var)
+#pragma acc update device(_guide_75_var)
+#pragma acc update device(_guide_76_var)
+#pragma acc update device(_guide_77_var)
+#pragma acc update device(_guide_78_var)
+#pragma acc update device(_guide_79_var)
+#pragma acc update device(_guide_80_var)
+#pragma acc update device(_guide_81_var)
+#pragma acc update device(_guide_82_var)
+#pragma acc update device(_guide_83_var)
+#pragma acc update device(_guide_84_var)
+#pragma acc update device(_guide_85_var)
+#pragma acc update device(_guide_86_var)
+#pragma acc update device(_guide_87_var)
+#pragma acc update device(_guide_88_var)
+#pragma acc update device(_guide_89_var)
+#pragma acc update device(_guide_90_var)
+#pragma acc update device(_guide_91_var)
+#pragma acc update device(_guide_92_var)
+#pragma acc update device(_guide_93_var)
+#pragma acc update device(_guide_94_var)
+#pragma acc update device(_guide_95_var)
+#pragma acc update device(_guide_96_var)
+#pragma acc update device(_guide_97_var)
+#pragma acc update device(_guide_98_var)
+#pragma acc update device(_guide_99_var)
+#pragma acc update device(_guide_100_var)
+#pragma acc update device(_guide_101_var)
 #pragma acc update device(_instrument_var)
 #endif
 
@@ -24932,6 +29860,146 @@ void class_MultiDiskChopper_trace(_class_MultiDiskChopper *_comp
   return;
 } /* class_MultiDiskChopper_trace */
 
+#pragma acc routine
+void class_Guide_anyshape_trace(_class_Guide_anyshape *_comp
+  , _class_particle *_particle) {
+  ABSORBED=SCATTERED=RESTORE=0;
+  #define xwidth (_comp->_parameters.xwidth)
+  #define yheight (_comp->_parameters.yheight)
+  #define zdepth (_comp->_parameters.zdepth)
+  #define center (_comp->_parameters.center)
+  #define transmit (_comp->_parameters.transmit)
+  #define R0 (_comp->_parameters.R0)
+  #define Qc (_comp->_parameters.Qc)
+  #define alpha (_comp->_parameters.alpha)
+  #define m (_comp->_parameters.m)
+  #define W (_comp->_parameters.W)
+  #define reflect (_comp->_parameters.reflect)
+  #define geometry (_comp->_parameters.geometry)
+  #define offdata (_comp->_parameters.offdata)
+  #define pTable (_comp->_parameters.pTable)
+  SIG_MESSAGE("[_guide_49_trace] component guide_49=Guide_anyshape() TRACE [Guide_anyshape:0]");
+
+  int intersect = 0;
+  int counter = 0;
+  /* main loop for multiple reflections */
+  #ifdef OPENACC
+  off_struct thread_offdata = offdata;
+  #else
+  #define thread_offdata offdata
+  #endif
+  do {
+    double t0 = 0, t3 = 0, dt = 0;
+    Coords n0, n3, n = { 0, 0, 0 };
+    /* determine intersections with object */
+
+    double mc_gx = 0.0, mc_gy = 0.0, mc_gz = 0.0;
+    if (mcgravitation) {
+      Coords locgrav;
+      locgrav = rot_apply (_comp->_rotation_absolute, coords_set (0, -GRAVITY, 0));
+      coords_get (locgrav, &mc_gx, &mc_gy, &mc_gz);
+    }
+
+    intersect = off_intersect (&t0, &t3, &n0, &n3, x, y, z, vx, vy, vz, mc_gx, mc_gy, mc_gz, thread_offdata);
+
+    /* get the smallest positive */
+    if (t0 > 0) {
+      dt = t0;
+      n = n0;
+    }
+    if (intersect > 1 && dt <= 0 && t3 > dt) {
+      dt = t3;
+      n = n3;
+    }
+
+    /* exit loop when no intersection forward */
+    if (dt <= 0 || !intersect)
+      break;
+
+    double nx, ny, nz;
+    coords_get (n, &nx, &ny, &nz);
+
+    /* propagate neutron to reflection point, must be before n_dot_v with gravity */
+    PROP_DT (dt);
+
+    /* test if the angle is large in case the object has an internal coating */
+    double n2 = nx * nx + ny * ny + nz * nz;
+    double n_dot_v = scalar_prod (vx, vy, vz, nx, ny, nz);
+    double q = 2 * fabs (n_dot_v) * V2K / sqrt (n2);
+
+    /* handle surface intersection */
+    double R = 0;
+    /* Reflectivity (see component Guide). */
+    if (reflect && strlen (reflect) && strcmp (reflect, "NULL") && strcmp (reflect, "0"))
+      TableReflecFunc (q, &pTable, &R);
+    else {
+      double par[] = { R0, Qc, alpha, m, W };
+      StdReflecFunc (q, par, &R);
+    }
+
+    if (R > 1) {
+      fprintf (stderr, "Guide_anyshape: %s: Warning: Reflectivity R=%g > 1 lowered to R=1.\n", NAME_CURRENT_COMP, R);
+      R = 1;
+    }
+    /* now handle either probability when transmit or reflect */
+    if (R > 0) {
+      /* when allowing transmission, we should check if indeed we reflect */
+      if (!transmit || (transmit && rand01 () < R)) {
+        /* reflect velocity: -q -> -2*n*n.v/|n|^2 */
+        if (!transmit)
+          p *= R;
+        n_dot_v *= 2 / n2;
+        vx -= nx * n_dot_v;
+        vy -= ny * n_dot_v;
+        vz -= nz * n_dot_v;
+        SCATTER;
+      } else {
+        if (transmit) {
+          p *= (1 - R); /* transmitted beam has non reflected weight */
+        } else
+          ABSORB;
+      }
+    } else {
+      /* R=0: no reflection: absorb or transmit through when allowed */
+      if (!transmit)
+        ABSORB;
+    }
+
+    /* leave surface by a small amount so that next intersection is not the same one */
+    PROP_DT (1e-9);
+  } while (intersect && counter++ < CHAR_BUF_LENGTH);
+  /* end of main loop */
+#ifndef NOABSORB_INF_NAN
+  /* Check for nan or inf particle parms */ 
+  if(isnan(p + t + vx + vy + vz + x + y + z)) ABSORB;
+  if(isinf(fabs(p) + fabs(t) + fabs(vx) + fabs(vy) + fabs(vz) + fabs(x) + fabs(y) + fabs(z))) ABSORB;
+#else
+  if(isnan(p)  ||  isinf(p)) printf("NAN or INF found in p,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(t)  ||  isinf(t)) printf("NAN or INF found in t,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(vx) || isinf(vx)) printf("NAN or INF found in vx, %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(vy) || isinf(vy)) printf("NAN or INF found in vy, %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(vz) || isinf(vz)) printf("NAN or INF found in vz, %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(x)  ||  isinf(x)) printf("NAN or INF found in x,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(y)  ||  isinf(y)) printf("NAN or INF found in y,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
+  if(isnan(z)  ||  isinf(z)) printf("NAN or INF found in z,  %s (particle %lld)\n",_comp->_name,_particle->_uid);
+#endif
+  #undef xwidth
+  #undef yheight
+  #undef zdepth
+  #undef center
+  #undef transmit
+  #undef R0
+  #undef Qc
+  #undef alpha
+  #undef m
+  #undef W
+  #undef reflect
+  #undef geometry
+  #undef offdata
+  #undef pTable
+  return;
+} /* class_Guide_anyshape_trace */
+
 /* *****************************************************************************
 * instrument 'TRex' TRACE
 ***************************************************************************** */
@@ -26025,7 +31093,1183 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       _particle->_index++;
       if (!ABSORBED) { DEBUG_STATE(); }
     } /* end component BW1_monitor_ToF [51] */
-    if (_particle->_index > 51)
+    /* begin component guide_49=Guide_anyshape() [52] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_49_var._rotation_is_identity) {
+        if(!_guide_49_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_49_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_49_var._position_relative, _guide_49_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 52) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_49_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_trace(&_guide_49_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_49 [52] */
+    /* begin component guide_50=Guide_anyshape() [53] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_50_var._rotation_is_identity) {
+        if(!_guide_50_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_50_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_50_var._position_relative, _guide_50_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 53) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_50_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_trace(&_guide_50_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_50 [53] */
+    /* begin component guide_51=Guide_anyshape() [54] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_51_var._rotation_is_identity) {
+        if(!_guide_51_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_51_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_51_var._position_relative, _guide_51_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 54) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_51_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_trace(&_guide_51_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_51 [54] */
+    /* begin component guide_52=Guide_anyshape() [55] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_52_var._rotation_is_identity) {
+        if(!_guide_52_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_52_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_52_var._position_relative, _guide_52_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 55) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_52_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_trace(&_guide_52_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_52 [55] */
+    /* begin component guide_53=Guide_anyshape() [56] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_53_var._rotation_is_identity) {
+        if(!_guide_53_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_53_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_53_var._position_relative, _guide_53_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 56) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_53_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_trace(&_guide_53_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_53 [56] */
+    /* begin component guide_54=Guide_anyshape() [57] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_54_var._rotation_is_identity) {
+        if(!_guide_54_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_54_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_54_var._position_relative, _guide_54_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 57) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_54_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_trace(&_guide_54_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_54 [57] */
+    /* begin component guide_55=Guide_anyshape() [58] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_55_var._rotation_is_identity) {
+        if(!_guide_55_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_55_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_55_var._position_relative, _guide_55_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 58) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_55_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_trace(&_guide_55_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_55 [58] */
+    /* begin component BW_Chopper_2=MultiDiskChopper() [59] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_BW_Chopper_2_var._rotation_is_identity) {
+        if(!_BW_Chopper_2_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _BW_Chopper_2_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_BW_Chopper_2_var._position_relative, _BW_Chopper_2_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 59) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_BW_Chopper_2_var._name);
+      DEBUG_STATE();
+      class_MultiDiskChopper_trace(&_BW_Chopper_2_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component BW_Chopper_2 [59] */
+    /* begin component B2_monitor_xy=Monitor_nD() [60] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_B2_monitor_xy_var._rotation_is_identity) {
+        if(!_B2_monitor_xy_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _B2_monitor_xy_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_B2_monitor_xy_var._position_relative, _B2_monitor_xy_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 60) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_B2_monitor_xy_var._name);
+      DEBUG_STATE();
+      class_Monitor_nD_trace(&_B2_monitor_xy_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component B2_monitor_xy [60] */
+    /* begin component B2_monitor_lam=Monitor_nD() [61] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_B2_monitor_lam_var._rotation_is_identity) {
+        if(!_B2_monitor_lam_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _B2_monitor_lam_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_B2_monitor_lam_var._position_relative, _B2_monitor_lam_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 61) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_B2_monitor_lam_var._name);
+      DEBUG_STATE();
+      class_Monitor_nD_trace(&_B2_monitor_lam_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component B2_monitor_lam [61] */
+    /* begin component BW2_monitor_ToF=Monitor_nD() [62] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_BW2_monitor_ToF_var._rotation_is_identity) {
+        if(!_BW2_monitor_ToF_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _BW2_monitor_ToF_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_BW2_monitor_ToF_var._position_relative, _BW2_monitor_ToF_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 62) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_BW2_monitor_ToF_var._name);
+      DEBUG_STATE();
+      class_Monitor_nD_trace(&_BW2_monitor_ToF_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component BW2_monitor_ToF [62] */
+    /* begin component guide_57=Guide_anyshape_r() [63] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_57_var._rotation_is_identity) {
+        if(!_guide_57_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_57_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_57_var._position_relative, _guide_57_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 63) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_57_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_57_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_57 [63] */
+    /* begin component guide_58=Guide_anyshape_r() [64] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_58_var._rotation_is_identity) {
+        if(!_guide_58_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_58_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_58_var._position_relative, _guide_58_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 64) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_58_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_58_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_58 [64] */
+    /* begin component guide_59=Guide_anyshape_r() [65] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_59_var._rotation_is_identity) {
+        if(!_guide_59_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_59_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_59_var._position_relative, _guide_59_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 65) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_59_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_59_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_59 [65] */
+    /* begin component guide_60=Guide_anyshape_r() [66] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_60_var._rotation_is_identity) {
+        if(!_guide_60_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_60_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_60_var._position_relative, _guide_60_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 66) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_60_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_60_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_60 [66] */
+    /* begin component guide_61=Guide_anyshape_r() [67] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_61_var._rotation_is_identity) {
+        if(!_guide_61_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_61_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_61_var._position_relative, _guide_61_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 67) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_61_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_61_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_61 [67] */
+    /* begin component guide_62=Guide_anyshape_r() [68] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_62_var._rotation_is_identity) {
+        if(!_guide_62_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_62_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_62_var._position_relative, _guide_62_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 68) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_62_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_62_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_62 [68] */
+    /* begin component guide_63=Guide_anyshape_r() [69] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_63_var._rotation_is_identity) {
+        if(!_guide_63_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_63_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_63_var._position_relative, _guide_63_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 69) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_63_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_63_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_63 [69] */
+    /* begin component guide_64=Guide_anyshape_r() [70] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_64_var._rotation_is_identity) {
+        if(!_guide_64_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_64_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_64_var._position_relative, _guide_64_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 70) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_64_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_64_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_64 [70] */
+    /* begin component guide_65=Guide_anyshape_r() [71] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_65_var._rotation_is_identity) {
+        if(!_guide_65_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_65_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_65_var._position_relative, _guide_65_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 71) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_65_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_65_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_65 [71] */
+    /* begin component guide_66=Guide_anyshape_r() [72] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_66_var._rotation_is_identity) {
+        if(!_guide_66_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_66_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_66_var._position_relative, _guide_66_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 72) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_66_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_66_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_66 [72] */
+    /* begin component guide_67=Guide_anyshape_r() [73] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_67_var._rotation_is_identity) {
+        if(!_guide_67_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_67_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_67_var._position_relative, _guide_67_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 73) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_67_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_67_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_67 [73] */
+    /* begin component guide_68=Guide_anyshape_r() [74] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_68_var._rotation_is_identity) {
+        if(!_guide_68_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_68_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_68_var._position_relative, _guide_68_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 74) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_68_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_68_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_68 [74] */
+    /* begin component guide_69=Guide_anyshape_r() [75] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_69_var._rotation_is_identity) {
+        if(!_guide_69_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_69_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_69_var._position_relative, _guide_69_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 75) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_69_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_69_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_69 [75] */
+    /* begin component guide_70=Guide_anyshape_r() [76] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_70_var._rotation_is_identity) {
+        if(!_guide_70_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_70_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_70_var._position_relative, _guide_70_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 76) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_70_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_70_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_70 [76] */
+    /* begin component guide_71=Guide_anyshape_r() [77] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_71_var._rotation_is_identity) {
+        if(!_guide_71_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_71_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_71_var._position_relative, _guide_71_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 77) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_71_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_71_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_71 [77] */
+    /* begin component guide_72=Guide_anyshape_r() [78] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_72_var._rotation_is_identity) {
+        if(!_guide_72_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_72_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_72_var._position_relative, _guide_72_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 78) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_72_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_72_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_72 [78] */
+    /* begin component guide_73=Guide_anyshape_r() [79] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_73_var._rotation_is_identity) {
+        if(!_guide_73_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_73_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_73_var._position_relative, _guide_73_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 79) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_73_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_73_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_73 [79] */
+    /* begin component guide_74=Guide_anyshape_r() [80] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_74_var._rotation_is_identity) {
+        if(!_guide_74_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_74_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_74_var._position_relative, _guide_74_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 80) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_74_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_74_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_74 [80] */
+    /* begin component guide_75=Guide_anyshape_r() [81] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_75_var._rotation_is_identity) {
+        if(!_guide_75_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_75_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_75_var._position_relative, _guide_75_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 81) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_75_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_75_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_75 [81] */
+    /* begin component guide_76=Guide_anyshape_r() [82] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_76_var._rotation_is_identity) {
+        if(!_guide_76_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_76_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_76_var._position_relative, _guide_76_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 82) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_76_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_76_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_76 [82] */
+    /* begin component guide_77=Guide_anyshape_r() [83] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_77_var._rotation_is_identity) {
+        if(!_guide_77_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_77_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_77_var._position_relative, _guide_77_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 83) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_77_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_77_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_77 [83] */
+    /* begin component guide_78=Guide_anyshape_r() [84] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_78_var._rotation_is_identity) {
+        if(!_guide_78_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_78_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_78_var._position_relative, _guide_78_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 84) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_78_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_78_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_78 [84] */
+    /* begin component guide_79=Guide_anyshape_r() [85] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_79_var._rotation_is_identity) {
+        if(!_guide_79_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_79_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_79_var._position_relative, _guide_79_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 85) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_79_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_79_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_79 [85] */
+    /* begin component guide_80=Guide_anyshape_r() [86] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_80_var._rotation_is_identity) {
+        if(!_guide_80_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_80_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_80_var._position_relative, _guide_80_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 86) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_80_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_80_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_80 [86] */
+    /* begin component guide_81=Guide_anyshape_r() [87] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_81_var._rotation_is_identity) {
+        if(!_guide_81_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_81_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_81_var._position_relative, _guide_81_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 87) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_81_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_81_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_81 [87] */
+    /* begin component guide_82=Guide_anyshape_r() [88] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_82_var._rotation_is_identity) {
+        if(!_guide_82_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_82_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_82_var._position_relative, _guide_82_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 88) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_82_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_82_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_82 [88] */
+    /* begin component guide_83=Guide_anyshape_r() [89] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_83_var._rotation_is_identity) {
+        if(!_guide_83_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_83_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_83_var._position_relative, _guide_83_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 89) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_83_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_83_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_83 [89] */
+    /* begin component guide_84=Guide_anyshape_r() [90] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_84_var._rotation_is_identity) {
+        if(!_guide_84_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_84_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_84_var._position_relative, _guide_84_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 90) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_84_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_84_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_84 [90] */
+    /* begin component guide_85=Guide_anyshape_r() [91] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_85_var._rotation_is_identity) {
+        if(!_guide_85_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_85_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_85_var._position_relative, _guide_85_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 91) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_85_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_85_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_85 [91] */
+    /* begin component guide_86=Guide_anyshape_r() [92] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_86_var._rotation_is_identity) {
+        if(!_guide_86_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_86_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_86_var._position_relative, _guide_86_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 92) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_86_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_86_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_86 [92] */
+    /* begin component guide_87=Guide_anyshape_r() [93] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_87_var._rotation_is_identity) {
+        if(!_guide_87_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_87_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_87_var._position_relative, _guide_87_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 93) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_87_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_87_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_87 [93] */
+    /* begin component guide_88=Guide_anyshape_r() [94] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_88_var._rotation_is_identity) {
+        if(!_guide_88_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_88_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_88_var._position_relative, _guide_88_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 94) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_88_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_88_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_88 [94] */
+    /* begin component guide_89=Guide_anyshape_r() [95] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_89_var._rotation_is_identity) {
+        if(!_guide_89_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_89_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_89_var._position_relative, _guide_89_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 95) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_89_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_89_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_89 [95] */
+    /* begin component guide_90=Guide_anyshape_r() [96] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_90_var._rotation_is_identity) {
+        if(!_guide_90_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_90_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_90_var._position_relative, _guide_90_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 96) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_90_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_90_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_90 [96] */
+    /* begin component guide_91=Guide_anyshape_r() [97] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_91_var._rotation_is_identity) {
+        if(!_guide_91_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_91_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_91_var._position_relative, _guide_91_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 97) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_91_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_91_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_91 [97] */
+    /* begin component guide_92=Guide_anyshape_r() [98] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_92_var._rotation_is_identity) {
+        if(!_guide_92_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_92_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_92_var._position_relative, _guide_92_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 98) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_92_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_92_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_92 [98] */
+    /* begin component guide_93=Guide_anyshape_r() [99] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_93_var._rotation_is_identity) {
+        if(!_guide_93_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_93_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_93_var._position_relative, _guide_93_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 99) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_93_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_93_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_93 [99] */
+    /* begin component guide_94=Guide_anyshape_r() [100] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_94_var._rotation_is_identity) {
+        if(!_guide_94_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_94_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_94_var._position_relative, _guide_94_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 100) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_94_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_94_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_94 [100] */
+    /* begin component guide_95=Guide_anyshape_r() [101] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_95_var._rotation_is_identity) {
+        if(!_guide_95_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_95_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_95_var._position_relative, _guide_95_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 101) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_95_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_95_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_95 [101] */
+    /* begin component guide_96=Guide_anyshape_r() [102] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_96_var._rotation_is_identity) {
+        if(!_guide_96_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_96_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_96_var._position_relative, _guide_96_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 102) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_96_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_96_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_96 [102] */
+    /* begin component guide_97=Guide_anyshape_r() [103] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_97_var._rotation_is_identity) {
+        if(!_guide_97_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_97_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_97_var._position_relative, _guide_97_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 103) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_97_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_97_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_97 [103] */
+    /* begin component guide_98=Guide_anyshape_r() [104] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_98_var._rotation_is_identity) {
+        if(!_guide_98_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_98_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_98_var._position_relative, _guide_98_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 104) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_98_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_98_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_98 [104] */
+    /* begin component guide_99=Guide_anyshape_r() [105] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_99_var._rotation_is_identity) {
+        if(!_guide_99_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_99_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_99_var._position_relative, _guide_99_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 105) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_99_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_99_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_99 [105] */
+    /* begin component guide_100=Guide_anyshape_r() [106] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_100_var._rotation_is_identity) {
+        if(!_guide_100_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_100_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_100_var._position_relative, _guide_100_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 106) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_100_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_100_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_100 [106] */
+    /* begin component guide_101=Guide_anyshape_r() [107] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_guide_101_var._rotation_is_identity) {
+        if(!_guide_101_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _guide_101_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_guide_101_var._position_relative, _guide_101_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 107) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_guide_101_var._name);
+      DEBUG_STATE();
+      class_Guide_anyshape_r_trace(&_guide_101_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component guide_101 [107] */
+    if (_particle->_index > 107)
       ABSORBED++; /* absorbed when passed all components */
   } /* while !ABSORBED */
 
@@ -26956,6 +33200,846 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         _particle->_index++;
       }
 
+      // guide_49
+    if (!ABSORBED && _particle->_index == 52) {
+#ifndef MULTICORE
+        if (_guide_49_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_49_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_49_var._position_relative, _guide_49_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_trace(&_guide_49_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_50
+    if (!ABSORBED && _particle->_index == 53) {
+#ifndef MULTICORE
+        if (_guide_50_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_50_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_50_var._position_relative, _guide_50_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_trace(&_guide_50_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_51
+    if (!ABSORBED && _particle->_index == 54) {
+#ifndef MULTICORE
+        if (_guide_51_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_51_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_51_var._position_relative, _guide_51_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_trace(&_guide_51_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_52
+    if (!ABSORBED && _particle->_index == 55) {
+#ifndef MULTICORE
+        if (_guide_52_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_52_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_52_var._position_relative, _guide_52_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_trace(&_guide_52_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_53
+    if (!ABSORBED && _particle->_index == 56) {
+#ifndef MULTICORE
+        if (_guide_53_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_53_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_53_var._position_relative, _guide_53_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_trace(&_guide_53_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_54
+    if (!ABSORBED && _particle->_index == 57) {
+#ifndef MULTICORE
+        if (_guide_54_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_54_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_54_var._position_relative, _guide_54_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_trace(&_guide_54_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_55
+    if (!ABSORBED && _particle->_index == 58) {
+#ifndef MULTICORE
+        if (_guide_55_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_55_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_55_var._position_relative, _guide_55_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_trace(&_guide_55_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // BW_Chopper_2
+    if (!ABSORBED && _particle->_index == 59) {
+#ifndef MULTICORE
+        if (_BW_Chopper_2_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _BW_Chopper_2_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_BW_Chopper_2_var._position_relative, _BW_Chopper_2_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_MultiDiskChopper_trace(&_BW_Chopper_2_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // B2_monitor_xy
+    if (!ABSORBED && _particle->_index == 60) {
+#ifndef MULTICORE
+        if (_B2_monitor_xy_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _B2_monitor_xy_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_B2_monitor_xy_var._position_relative, _B2_monitor_xy_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Monitor_nD_trace(&_B2_monitor_xy_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // B2_monitor_lam
+    if (!ABSORBED && _particle->_index == 61) {
+#ifndef MULTICORE
+        if (_B2_monitor_lam_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _B2_monitor_lam_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_B2_monitor_lam_var._position_relative, _B2_monitor_lam_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Monitor_nD_trace(&_B2_monitor_lam_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // BW2_monitor_ToF
+    if (!ABSORBED && _particle->_index == 62) {
+#ifndef MULTICORE
+        if (_BW2_monitor_ToF_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _BW2_monitor_ToF_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_BW2_monitor_ToF_var._position_relative, _BW2_monitor_ToF_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Monitor_nD_trace(&_BW2_monitor_ToF_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_57
+    if (!ABSORBED && _particle->_index == 63) {
+#ifndef MULTICORE
+        if (_guide_57_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_57_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_57_var._position_relative, _guide_57_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_57_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_58
+    if (!ABSORBED && _particle->_index == 64) {
+#ifndef MULTICORE
+        if (_guide_58_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_58_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_58_var._position_relative, _guide_58_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_58_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_59
+    if (!ABSORBED && _particle->_index == 65) {
+#ifndef MULTICORE
+        if (_guide_59_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_59_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_59_var._position_relative, _guide_59_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_59_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_60
+    if (!ABSORBED && _particle->_index == 66) {
+#ifndef MULTICORE
+        if (_guide_60_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_60_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_60_var._position_relative, _guide_60_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_60_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_61
+    if (!ABSORBED && _particle->_index == 67) {
+#ifndef MULTICORE
+        if (_guide_61_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_61_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_61_var._position_relative, _guide_61_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_61_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_62
+    if (!ABSORBED && _particle->_index == 68) {
+#ifndef MULTICORE
+        if (_guide_62_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_62_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_62_var._position_relative, _guide_62_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_62_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_63
+    if (!ABSORBED && _particle->_index == 69) {
+#ifndef MULTICORE
+        if (_guide_63_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_63_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_63_var._position_relative, _guide_63_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_63_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_64
+    if (!ABSORBED && _particle->_index == 70) {
+#ifndef MULTICORE
+        if (_guide_64_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_64_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_64_var._position_relative, _guide_64_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_64_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_65
+    if (!ABSORBED && _particle->_index == 71) {
+#ifndef MULTICORE
+        if (_guide_65_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_65_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_65_var._position_relative, _guide_65_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_65_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_66
+    if (!ABSORBED && _particle->_index == 72) {
+#ifndef MULTICORE
+        if (_guide_66_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_66_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_66_var._position_relative, _guide_66_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_66_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_67
+    if (!ABSORBED && _particle->_index == 73) {
+#ifndef MULTICORE
+        if (_guide_67_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_67_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_67_var._position_relative, _guide_67_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_67_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_68
+    if (!ABSORBED && _particle->_index == 74) {
+#ifndef MULTICORE
+        if (_guide_68_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_68_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_68_var._position_relative, _guide_68_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_68_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_69
+    if (!ABSORBED && _particle->_index == 75) {
+#ifndef MULTICORE
+        if (_guide_69_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_69_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_69_var._position_relative, _guide_69_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_69_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_70
+    if (!ABSORBED && _particle->_index == 76) {
+#ifndef MULTICORE
+        if (_guide_70_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_70_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_70_var._position_relative, _guide_70_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_70_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_71
+    if (!ABSORBED && _particle->_index == 77) {
+#ifndef MULTICORE
+        if (_guide_71_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_71_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_71_var._position_relative, _guide_71_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_71_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_72
+    if (!ABSORBED && _particle->_index == 78) {
+#ifndef MULTICORE
+        if (_guide_72_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_72_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_72_var._position_relative, _guide_72_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_72_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_73
+    if (!ABSORBED && _particle->_index == 79) {
+#ifndef MULTICORE
+        if (_guide_73_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_73_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_73_var._position_relative, _guide_73_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_73_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_74
+    if (!ABSORBED && _particle->_index == 80) {
+#ifndef MULTICORE
+        if (_guide_74_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_74_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_74_var._position_relative, _guide_74_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_74_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_75
+    if (!ABSORBED && _particle->_index == 81) {
+#ifndef MULTICORE
+        if (_guide_75_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_75_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_75_var._position_relative, _guide_75_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_75_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_76
+    if (!ABSORBED && _particle->_index == 82) {
+#ifndef MULTICORE
+        if (_guide_76_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_76_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_76_var._position_relative, _guide_76_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_76_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_77
+    if (!ABSORBED && _particle->_index == 83) {
+#ifndef MULTICORE
+        if (_guide_77_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_77_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_77_var._position_relative, _guide_77_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_77_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_78
+    if (!ABSORBED && _particle->_index == 84) {
+#ifndef MULTICORE
+        if (_guide_78_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_78_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_78_var._position_relative, _guide_78_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_78_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_79
+    if (!ABSORBED && _particle->_index == 85) {
+#ifndef MULTICORE
+        if (_guide_79_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_79_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_79_var._position_relative, _guide_79_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_79_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_80
+    if (!ABSORBED && _particle->_index == 86) {
+#ifndef MULTICORE
+        if (_guide_80_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_80_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_80_var._position_relative, _guide_80_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_80_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_81
+    if (!ABSORBED && _particle->_index == 87) {
+#ifndef MULTICORE
+        if (_guide_81_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_81_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_81_var._position_relative, _guide_81_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_81_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_82
+    if (!ABSORBED && _particle->_index == 88) {
+#ifndef MULTICORE
+        if (_guide_82_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_82_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_82_var._position_relative, _guide_82_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_82_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_83
+    if (!ABSORBED && _particle->_index == 89) {
+#ifndef MULTICORE
+        if (_guide_83_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_83_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_83_var._position_relative, _guide_83_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_83_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_84
+    if (!ABSORBED && _particle->_index == 90) {
+#ifndef MULTICORE
+        if (_guide_84_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_84_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_84_var._position_relative, _guide_84_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_84_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_85
+    if (!ABSORBED && _particle->_index == 91) {
+#ifndef MULTICORE
+        if (_guide_85_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_85_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_85_var._position_relative, _guide_85_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_85_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_86
+    if (!ABSORBED && _particle->_index == 92) {
+#ifndef MULTICORE
+        if (_guide_86_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_86_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_86_var._position_relative, _guide_86_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_86_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_87
+    if (!ABSORBED && _particle->_index == 93) {
+#ifndef MULTICORE
+        if (_guide_87_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_87_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_87_var._position_relative, _guide_87_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_87_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_88
+    if (!ABSORBED && _particle->_index == 94) {
+#ifndef MULTICORE
+        if (_guide_88_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_88_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_88_var._position_relative, _guide_88_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_88_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_89
+    if (!ABSORBED && _particle->_index == 95) {
+#ifndef MULTICORE
+        if (_guide_89_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_89_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_89_var._position_relative, _guide_89_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_89_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_90
+    if (!ABSORBED && _particle->_index == 96) {
+#ifndef MULTICORE
+        if (_guide_90_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_90_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_90_var._position_relative, _guide_90_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_90_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_91
+    if (!ABSORBED && _particle->_index == 97) {
+#ifndef MULTICORE
+        if (_guide_91_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_91_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_91_var._position_relative, _guide_91_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_91_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_92
+    if (!ABSORBED && _particle->_index == 98) {
+#ifndef MULTICORE
+        if (_guide_92_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_92_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_92_var._position_relative, _guide_92_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_92_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_93
+    if (!ABSORBED && _particle->_index == 99) {
+#ifndef MULTICORE
+        if (_guide_93_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_93_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_93_var._position_relative, _guide_93_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_93_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_94
+    if (!ABSORBED && _particle->_index == 100) {
+#ifndef MULTICORE
+        if (_guide_94_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_94_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_94_var._position_relative, _guide_94_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_94_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_95
+    if (!ABSORBED && _particle->_index == 101) {
+#ifndef MULTICORE
+        if (_guide_95_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_95_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_95_var._position_relative, _guide_95_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_95_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_96
+    if (!ABSORBED && _particle->_index == 102) {
+#ifndef MULTICORE
+        if (_guide_96_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_96_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_96_var._position_relative, _guide_96_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_96_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_97
+    if (!ABSORBED && _particle->_index == 103) {
+#ifndef MULTICORE
+        if (_guide_97_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_97_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_97_var._position_relative, _guide_97_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_97_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_98
+    if (!ABSORBED && _particle->_index == 104) {
+#ifndef MULTICORE
+        if (_guide_98_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_98_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_98_var._position_relative, _guide_98_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_98_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_99
+    if (!ABSORBED && _particle->_index == 105) {
+#ifndef MULTICORE
+        if (_guide_99_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_99_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_99_var._position_relative, _guide_99_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_99_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_100
+    if (!ABSORBED && _particle->_index == 106) {
+#ifndef MULTICORE
+        if (_guide_100_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_100_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_100_var._position_relative, _guide_100_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_100_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // guide_101
+    if (!ABSORBED && _particle->_index == 107) {
+#ifndef MULTICORE
+        if (_guide_101_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _guide_101_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_guide_101_var._position_relative, _guide_101_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Guide_anyshape_r_trace(&_guide_101_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
     }
 
     // jump to next viable seed
@@ -27172,6 +34256,65 @@ int save(FILE *handle) { /* called by mccode_main for TRex:SAVE */
   class_Monitor_nD_save(&_B1_monitor_lam_var);
 
   class_Monitor_nD_save(&_BW1_monitor_ToF_var);
+
+
+
+
+
+
+
+
+
+  class_Monitor_nD_save(&_B2_monitor_xy_var);
+
+  class_Monitor_nD_save(&_B2_monitor_lam_var);
+
+  class_Monitor_nD_save(&_BW2_monitor_ToF_var);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   if (!handle) siminfo_close(); 
 
@@ -27394,6 +34537,62 @@ int finally(void) { /* called by mccode_main for TRex:FINALLY */
 #pragma acc update host(_B1_monitor_xy_var)
 #pragma acc update host(_B1_monitor_lam_var)
 #pragma acc update host(_BW1_monitor_ToF_var)
+#pragma acc update host(_guide_49_var)
+#pragma acc update host(_guide_50_var)
+#pragma acc update host(_guide_51_var)
+#pragma acc update host(_guide_52_var)
+#pragma acc update host(_guide_53_var)
+#pragma acc update host(_guide_54_var)
+#pragma acc update host(_guide_55_var)
+#pragma acc update host(_BW_Chopper_2_var)
+#pragma acc update host(_B2_monitor_xy_var)
+#pragma acc update host(_B2_monitor_lam_var)
+#pragma acc update host(_BW2_monitor_ToF_var)
+#pragma acc update host(_guide_57_var)
+#pragma acc update host(_guide_58_var)
+#pragma acc update host(_guide_59_var)
+#pragma acc update host(_guide_60_var)
+#pragma acc update host(_guide_61_var)
+#pragma acc update host(_guide_62_var)
+#pragma acc update host(_guide_63_var)
+#pragma acc update host(_guide_64_var)
+#pragma acc update host(_guide_65_var)
+#pragma acc update host(_guide_66_var)
+#pragma acc update host(_guide_67_var)
+#pragma acc update host(_guide_68_var)
+#pragma acc update host(_guide_69_var)
+#pragma acc update host(_guide_70_var)
+#pragma acc update host(_guide_71_var)
+#pragma acc update host(_guide_72_var)
+#pragma acc update host(_guide_73_var)
+#pragma acc update host(_guide_74_var)
+#pragma acc update host(_guide_75_var)
+#pragma acc update host(_guide_76_var)
+#pragma acc update host(_guide_77_var)
+#pragma acc update host(_guide_78_var)
+#pragma acc update host(_guide_79_var)
+#pragma acc update host(_guide_80_var)
+#pragma acc update host(_guide_81_var)
+#pragma acc update host(_guide_82_var)
+#pragma acc update host(_guide_83_var)
+#pragma acc update host(_guide_84_var)
+#pragma acc update host(_guide_85_var)
+#pragma acc update host(_guide_86_var)
+#pragma acc update host(_guide_87_var)
+#pragma acc update host(_guide_88_var)
+#pragma acc update host(_guide_89_var)
+#pragma acc update host(_guide_90_var)
+#pragma acc update host(_guide_91_var)
+#pragma acc update host(_guide_92_var)
+#pragma acc update host(_guide_93_var)
+#pragma acc update host(_guide_94_var)
+#pragma acc update host(_guide_95_var)
+#pragma acc update host(_guide_96_var)
+#pragma acc update host(_guide_97_var)
+#pragma acc update host(_guide_98_var)
+#pragma acc update host(_guide_99_var)
+#pragma acc update host(_guide_100_var)
+#pragma acc update host(_guide_101_var)
 #pragma acc update host(_instrument_var)
 
   siminfo_init(NULL);
@@ -27476,6 +34675,66 @@ int finally(void) { /* called by mccode_main for TRex:FINALLY */
   class_Monitor_nD_finally(&_B1_monitor_lam_var);
 
   class_Monitor_nD_finally(&_BW1_monitor_ToF_var);
+
+
+
+
+
+
+
+
+  class_MultiDiskChopper_finally(&_BW_Chopper_2_var);
+
+  class_Monitor_nD_finally(&_B2_monitor_xy_var);
+
+  class_Monitor_nD_finally(&_B2_monitor_lam_var);
+
+  class_Monitor_nD_finally(&_BW2_monitor_ToF_var);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   siminfo_close(); 
 
@@ -28074,6 +35333,44 @@ _class_MultiDiskChopper *class_MultiDiskChopper_display(_class_MultiDiskChopper 
   return(_comp);
 } /* class_MultiDiskChopper_display */
 
+_class_Guide_anyshape *class_Guide_anyshape_display(_class_Guide_anyshape *_comp
+) {
+  #define xwidth (_comp->_parameters.xwidth)
+  #define yheight (_comp->_parameters.yheight)
+  #define zdepth (_comp->_parameters.zdepth)
+  #define center (_comp->_parameters.center)
+  #define transmit (_comp->_parameters.transmit)
+  #define R0 (_comp->_parameters.R0)
+  #define Qc (_comp->_parameters.Qc)
+  #define alpha (_comp->_parameters.alpha)
+  #define m (_comp->_parameters.m)
+  #define W (_comp->_parameters.W)
+  #define reflect (_comp->_parameters.reflect)
+  #define geometry (_comp->_parameters.geometry)
+  #define offdata (_comp->_parameters.offdata)
+  #define pTable (_comp->_parameters.pTable)
+  SIG_MESSAGE("[_guide_49_display] component guide_49=Guide_anyshape() DISPLAY [Guide_anyshape:0]");
+
+  printf("MCDISPLAY: component %s\n", _comp->_name);
+  /* display the object */
+  off_display (offdata);
+  #undef xwidth
+  #undef yheight
+  #undef zdepth
+  #undef center
+  #undef transmit
+  #undef R0
+  #undef Qc
+  #undef alpha
+  #undef m
+  #undef W
+  #undef reflect
+  #undef geometry
+  #undef offdata
+  #undef pTable
+  return(_comp);
+} /* class_Guide_anyshape_display */
+
 
   #undef magnify
   #undef line
@@ -28191,6 +35488,118 @@ int display(void) { /* called by mccode_main for TRex:DISPLAY */
 
   class_Monitor_nD_display(&_BW1_monitor_ToF_var);
 
+  class_Guide_anyshape_display(&_guide_49_var);
+
+  class_Guide_anyshape_display(&_guide_50_var);
+
+  class_Guide_anyshape_display(&_guide_51_var);
+
+  class_Guide_anyshape_display(&_guide_52_var);
+
+  class_Guide_anyshape_display(&_guide_53_var);
+
+  class_Guide_anyshape_display(&_guide_54_var);
+
+  class_Guide_anyshape_display(&_guide_55_var);
+
+  class_MultiDiskChopper_display(&_BW_Chopper_2_var);
+
+  class_Monitor_nD_display(&_B2_monitor_xy_var);
+
+  class_Monitor_nD_display(&_B2_monitor_lam_var);
+
+  class_Monitor_nD_display(&_BW2_monitor_ToF_var);
+
+  class_Guide_anyshape_r_display(&_guide_57_var);
+
+  class_Guide_anyshape_r_display(&_guide_58_var);
+
+  class_Guide_anyshape_r_display(&_guide_59_var);
+
+  class_Guide_anyshape_r_display(&_guide_60_var);
+
+  class_Guide_anyshape_r_display(&_guide_61_var);
+
+  class_Guide_anyshape_r_display(&_guide_62_var);
+
+  class_Guide_anyshape_r_display(&_guide_63_var);
+
+  class_Guide_anyshape_r_display(&_guide_64_var);
+
+  class_Guide_anyshape_r_display(&_guide_65_var);
+
+  class_Guide_anyshape_r_display(&_guide_66_var);
+
+  class_Guide_anyshape_r_display(&_guide_67_var);
+
+  class_Guide_anyshape_r_display(&_guide_68_var);
+
+  class_Guide_anyshape_r_display(&_guide_69_var);
+
+  class_Guide_anyshape_r_display(&_guide_70_var);
+
+  class_Guide_anyshape_r_display(&_guide_71_var);
+
+  class_Guide_anyshape_r_display(&_guide_72_var);
+
+  class_Guide_anyshape_r_display(&_guide_73_var);
+
+  class_Guide_anyshape_r_display(&_guide_74_var);
+
+  class_Guide_anyshape_r_display(&_guide_75_var);
+
+  class_Guide_anyshape_r_display(&_guide_76_var);
+
+  class_Guide_anyshape_r_display(&_guide_77_var);
+
+  class_Guide_anyshape_r_display(&_guide_78_var);
+
+  class_Guide_anyshape_r_display(&_guide_79_var);
+
+  class_Guide_anyshape_r_display(&_guide_80_var);
+
+  class_Guide_anyshape_r_display(&_guide_81_var);
+
+  class_Guide_anyshape_r_display(&_guide_82_var);
+
+  class_Guide_anyshape_r_display(&_guide_83_var);
+
+  class_Guide_anyshape_r_display(&_guide_84_var);
+
+  class_Guide_anyshape_r_display(&_guide_85_var);
+
+  class_Guide_anyshape_r_display(&_guide_86_var);
+
+  class_Guide_anyshape_r_display(&_guide_87_var);
+
+  class_Guide_anyshape_r_display(&_guide_88_var);
+
+  class_Guide_anyshape_r_display(&_guide_89_var);
+
+  class_Guide_anyshape_r_display(&_guide_90_var);
+
+  class_Guide_anyshape_r_display(&_guide_91_var);
+
+  class_Guide_anyshape_r_display(&_guide_92_var);
+
+  class_Guide_anyshape_r_display(&_guide_93_var);
+
+  class_Guide_anyshape_r_display(&_guide_94_var);
+
+  class_Guide_anyshape_r_display(&_guide_95_var);
+
+  class_Guide_anyshape_r_display(&_guide_96_var);
+
+  class_Guide_anyshape_r_display(&_guide_97_var);
+
+  class_Guide_anyshape_r_display(&_guide_98_var);
+
+  class_Guide_anyshape_r_display(&_guide_99_var);
+
+  class_Guide_anyshape_r_display(&_guide_100_var);
+
+  class_Guide_anyshape_r_display(&_guide_101_var);
+
   printf("MCDISPLAY: end\n");
 
   return(0);
@@ -28253,6 +35662,62 @@ void* _getvar_parameters(char* compname)
   if (!strcmp(compname, "B1_monitor_xy")) return (void *) &(_B1_monitor_xy_var._parameters);
   if (!strcmp(compname, "B1_monitor_lam")) return (void *) &(_B1_monitor_lam_var._parameters);
   if (!strcmp(compname, "BW1_monitor_ToF")) return (void *) &(_BW1_monitor_ToF_var._parameters);
+  if (!strcmp(compname, "guide_49")) return (void *) &(_guide_49_var._parameters);
+  if (!strcmp(compname, "guide_50")) return (void *) &(_guide_50_var._parameters);
+  if (!strcmp(compname, "guide_51")) return (void *) &(_guide_51_var._parameters);
+  if (!strcmp(compname, "guide_52")) return (void *) &(_guide_52_var._parameters);
+  if (!strcmp(compname, "guide_53")) return (void *) &(_guide_53_var._parameters);
+  if (!strcmp(compname, "guide_54")) return (void *) &(_guide_54_var._parameters);
+  if (!strcmp(compname, "guide_55")) return (void *) &(_guide_55_var._parameters);
+  if (!strcmp(compname, "BW_Chopper_2")) return (void *) &(_BW_Chopper_2_var._parameters);
+  if (!strcmp(compname, "B2_monitor_xy")) return (void *) &(_B2_monitor_xy_var._parameters);
+  if (!strcmp(compname, "B2_monitor_lam")) return (void *) &(_B2_monitor_lam_var._parameters);
+  if (!strcmp(compname, "BW2_monitor_ToF")) return (void *) &(_BW2_monitor_ToF_var._parameters);
+  if (!strcmp(compname, "guide_57")) return (void *) &(_guide_57_var._parameters);
+  if (!strcmp(compname, "guide_58")) return (void *) &(_guide_58_var._parameters);
+  if (!strcmp(compname, "guide_59")) return (void *) &(_guide_59_var._parameters);
+  if (!strcmp(compname, "guide_60")) return (void *) &(_guide_60_var._parameters);
+  if (!strcmp(compname, "guide_61")) return (void *) &(_guide_61_var._parameters);
+  if (!strcmp(compname, "guide_62")) return (void *) &(_guide_62_var._parameters);
+  if (!strcmp(compname, "guide_63")) return (void *) &(_guide_63_var._parameters);
+  if (!strcmp(compname, "guide_64")) return (void *) &(_guide_64_var._parameters);
+  if (!strcmp(compname, "guide_65")) return (void *) &(_guide_65_var._parameters);
+  if (!strcmp(compname, "guide_66")) return (void *) &(_guide_66_var._parameters);
+  if (!strcmp(compname, "guide_67")) return (void *) &(_guide_67_var._parameters);
+  if (!strcmp(compname, "guide_68")) return (void *) &(_guide_68_var._parameters);
+  if (!strcmp(compname, "guide_69")) return (void *) &(_guide_69_var._parameters);
+  if (!strcmp(compname, "guide_70")) return (void *) &(_guide_70_var._parameters);
+  if (!strcmp(compname, "guide_71")) return (void *) &(_guide_71_var._parameters);
+  if (!strcmp(compname, "guide_72")) return (void *) &(_guide_72_var._parameters);
+  if (!strcmp(compname, "guide_73")) return (void *) &(_guide_73_var._parameters);
+  if (!strcmp(compname, "guide_74")) return (void *) &(_guide_74_var._parameters);
+  if (!strcmp(compname, "guide_75")) return (void *) &(_guide_75_var._parameters);
+  if (!strcmp(compname, "guide_76")) return (void *) &(_guide_76_var._parameters);
+  if (!strcmp(compname, "guide_77")) return (void *) &(_guide_77_var._parameters);
+  if (!strcmp(compname, "guide_78")) return (void *) &(_guide_78_var._parameters);
+  if (!strcmp(compname, "guide_79")) return (void *) &(_guide_79_var._parameters);
+  if (!strcmp(compname, "guide_80")) return (void *) &(_guide_80_var._parameters);
+  if (!strcmp(compname, "guide_81")) return (void *) &(_guide_81_var._parameters);
+  if (!strcmp(compname, "guide_82")) return (void *) &(_guide_82_var._parameters);
+  if (!strcmp(compname, "guide_83")) return (void *) &(_guide_83_var._parameters);
+  if (!strcmp(compname, "guide_84")) return (void *) &(_guide_84_var._parameters);
+  if (!strcmp(compname, "guide_85")) return (void *) &(_guide_85_var._parameters);
+  if (!strcmp(compname, "guide_86")) return (void *) &(_guide_86_var._parameters);
+  if (!strcmp(compname, "guide_87")) return (void *) &(_guide_87_var._parameters);
+  if (!strcmp(compname, "guide_88")) return (void *) &(_guide_88_var._parameters);
+  if (!strcmp(compname, "guide_89")) return (void *) &(_guide_89_var._parameters);
+  if (!strcmp(compname, "guide_90")) return (void *) &(_guide_90_var._parameters);
+  if (!strcmp(compname, "guide_91")) return (void *) &(_guide_91_var._parameters);
+  if (!strcmp(compname, "guide_92")) return (void *) &(_guide_92_var._parameters);
+  if (!strcmp(compname, "guide_93")) return (void *) &(_guide_93_var._parameters);
+  if (!strcmp(compname, "guide_94")) return (void *) &(_guide_94_var._parameters);
+  if (!strcmp(compname, "guide_95")) return (void *) &(_guide_95_var._parameters);
+  if (!strcmp(compname, "guide_96")) return (void *) &(_guide_96_var._parameters);
+  if (!strcmp(compname, "guide_97")) return (void *) &(_guide_97_var._parameters);
+  if (!strcmp(compname, "guide_98")) return (void *) &(_guide_98_var._parameters);
+  if (!strcmp(compname, "guide_99")) return (void *) &(_guide_99_var._parameters);
+  if (!strcmp(compname, "guide_100")) return (void *) &(_guide_100_var._parameters);
+  if (!strcmp(compname, "guide_101")) return (void *) &(_guide_101_var._parameters);
   return 0;
 }
 
@@ -28317,6 +35782,62 @@ int _getcomp_index(char* compname)
   if (!strcmp(compname, "B1_monitor_xy")) return 49;
   if (!strcmp(compname, "B1_monitor_lam")) return 50;
   if (!strcmp(compname, "BW1_monitor_ToF")) return 51;
+  if (!strcmp(compname, "guide_49")) return 52;
+  if (!strcmp(compname, "guide_50")) return 53;
+  if (!strcmp(compname, "guide_51")) return 54;
+  if (!strcmp(compname, "guide_52")) return 55;
+  if (!strcmp(compname, "guide_53")) return 56;
+  if (!strcmp(compname, "guide_54")) return 57;
+  if (!strcmp(compname, "guide_55")) return 58;
+  if (!strcmp(compname, "BW_Chopper_2")) return 59;
+  if (!strcmp(compname, "B2_monitor_xy")) return 60;
+  if (!strcmp(compname, "B2_monitor_lam")) return 61;
+  if (!strcmp(compname, "BW2_monitor_ToF")) return 62;
+  if (!strcmp(compname, "guide_57")) return 63;
+  if (!strcmp(compname, "guide_58")) return 64;
+  if (!strcmp(compname, "guide_59")) return 65;
+  if (!strcmp(compname, "guide_60")) return 66;
+  if (!strcmp(compname, "guide_61")) return 67;
+  if (!strcmp(compname, "guide_62")) return 68;
+  if (!strcmp(compname, "guide_63")) return 69;
+  if (!strcmp(compname, "guide_64")) return 70;
+  if (!strcmp(compname, "guide_65")) return 71;
+  if (!strcmp(compname, "guide_66")) return 72;
+  if (!strcmp(compname, "guide_67")) return 73;
+  if (!strcmp(compname, "guide_68")) return 74;
+  if (!strcmp(compname, "guide_69")) return 75;
+  if (!strcmp(compname, "guide_70")) return 76;
+  if (!strcmp(compname, "guide_71")) return 77;
+  if (!strcmp(compname, "guide_72")) return 78;
+  if (!strcmp(compname, "guide_73")) return 79;
+  if (!strcmp(compname, "guide_74")) return 80;
+  if (!strcmp(compname, "guide_75")) return 81;
+  if (!strcmp(compname, "guide_76")) return 82;
+  if (!strcmp(compname, "guide_77")) return 83;
+  if (!strcmp(compname, "guide_78")) return 84;
+  if (!strcmp(compname, "guide_79")) return 85;
+  if (!strcmp(compname, "guide_80")) return 86;
+  if (!strcmp(compname, "guide_81")) return 87;
+  if (!strcmp(compname, "guide_82")) return 88;
+  if (!strcmp(compname, "guide_83")) return 89;
+  if (!strcmp(compname, "guide_84")) return 90;
+  if (!strcmp(compname, "guide_85")) return 91;
+  if (!strcmp(compname, "guide_86")) return 92;
+  if (!strcmp(compname, "guide_87")) return 93;
+  if (!strcmp(compname, "guide_88")) return 94;
+  if (!strcmp(compname, "guide_89")) return 95;
+  if (!strcmp(compname, "guide_90")) return 96;
+  if (!strcmp(compname, "guide_91")) return 97;
+  if (!strcmp(compname, "guide_92")) return 98;
+  if (!strcmp(compname, "guide_93")) return 99;
+  if (!strcmp(compname, "guide_94")) return 100;
+  if (!strcmp(compname, "guide_95")) return 101;
+  if (!strcmp(compname, "guide_96")) return 102;
+  if (!strcmp(compname, "guide_97")) return 103;
+  if (!strcmp(compname, "guide_98")) return 104;
+  if (!strcmp(compname, "guide_99")) return 105;
+  if (!strcmp(compname, "guide_100")) return 106;
+  if (!strcmp(compname, "guide_101")) return 107;
   return -1;
 }
 

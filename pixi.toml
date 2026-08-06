@@ -1,21 +1,16 @@
 [workspace]
 authors = ["bingli <bing.li@ess.eu>"]
 channels = ["conda-forge"]
-name = "let"
-platforms = ["osx-arm64", "linux-64"]
+name = "mdnorm"
+platforms = ["osx-arm64"]
 version = "0.1.0"
-#preview = ["pixi-build"]
 
 [tasks]
 
 [dependencies]
-python = ">=3.14"
-scipp = ">=25"
-mcstas = ">=3.7"
+python = ">=3.14.6,<3.15"
+scipp = ">=25.12.0,<26"
+scippneutron = ">=26.7.0,<27"
+mcstas = ">=3.7.17,<4"
 mcstasscript = ">=0.0.90"
 mcstastox = ">=0.0.12"
-scippneutron = ">=26"
-pytest = ">=9.1.1,<10"
-# pip = ">=26.1.2,<27"
-# pixi run pip install git+https://github.com/scipp/scippneutron.git@single-crystal-norm
-# pixi run pip install graphviz

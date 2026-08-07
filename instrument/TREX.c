@@ -1,8 +1,8 @@
 /* Automatically generated file. Do not edit. 
  * Format:     ANSI C source code
  * Creator:    McStas <http://www.mcstas.org>
- * Instrument: /Users/bingli/Documents/GitHub/mdnorm/instrument/TRex.instr (TRex)
- * Date:       Thu Aug  6 17:32:48 2026
+ * Instrument: TRex.instr (TRex)
+ * Date:       Fri Aug  7 17:13:16 2026
  * File:       ./TRex.c
  * CFLAGS=  -DUSE_OFF 
  */
@@ -6985,9 +6985,9 @@ int traceenabled = 0;
 #define MCSTAS "/Users/bingli/Documents/GitHub/mdnorm/.pixi/envs/default/share/mcstas/resources/"
 int   defaultmain         = 1;
 char  instrument_name[]   = "TRex";
-char  instrument_source[] = "/Users/bingli/Documents/GitHub/mdnorm/instrument/TRex.instr";
+char  instrument_source[] = "TRex.instr";
 char *instrument_exe      = NULL; /* will be set to argv[0] in main */
-char  instrument_code[]   = "Instrument TRex source code /Users/bingli/Documents/GitHub/mdnorm/instrument/TRex.instr is not embedded in this executable.\n  Use --source option when running mcstas.\n";
+char  instrument_code[]   = "Instrument TRex source code TRex.instr is not embedded in this executable.\n  Use --source option when running mcstas.\n";
 
 int main(int argc, char *argv[]){return mccode_main(argc, argv);}
 
@@ -7011,18 +7011,19 @@ typedef struct _struct_instrument_parameters _class_instrument_parameters;
 
 /* instrument SPLIT and GROUP control logic */
 struct instrument_logic_struct {
+  long Group_PulseShapingChopper2; /* equals index of scattering comp when in group */
   long Group_PulseShapingChopper1; /* equals index of scattering comp when in group */
 };
 
 struct _instrument_struct {
   char   _name[256]; /* the name of this instrument e.g. 'TRex' */
 /* Counters per component instance */
-  double counter_AbsorbProp[114]; /* absorbed events in PROP routines */
-  double counter_N[114], counter_P[114], counter_P2[114]; /* event counters after each component instance */
-  _class_particle _trajectory[114]; /* current trajectory for STORE/RESTORE */
+  double counter_AbsorbProp[116]; /* absorbed events in PROP routines */
+  double counter_N[116], counter_P[116], counter_P2[116]; /* event counters after each component instance */
+  _class_particle _trajectory[116]; /* current trajectory for STORE/RESTORE */
 /* Components position table (absolute and relative coords) */
-  Coords _position_relative[114]; /* positions of all components */
-  Coords _position_absolute[114];
+  Coords _position_relative[116]; /* positions of all components */
+  Coords _position_absolute[116];
   _class_instrument_parameters _parameters; /* instrument parameters */
   struct instrument_logic_struct logic; /* instrument logic */
 } _instrument_var;
@@ -17301,7 +17302,7 @@ _class_Guide_anyshape_r _guide_100_var;
 _class_Guide_anyshape_r _guide_101_var;
 #pragma acc declare create ( _guide_101_var )
 
-/* component PulseShapingChopper1_HR=DiskChopper() [108] DECLARE */
+/* component PulseShapingChopper2_HR=DiskChopper() [108] DECLARE */
 /* Parameter definition for component type 'DiskChopper' */
 struct _struct_DiskChopper_parameters {
   /* Component type 'DiskChopper' setting parameters */
@@ -17329,7 +17330,7 @@ typedef struct _struct_DiskChopper_parameters _class_DiskChopper_parameters;
 
 /* Parameters for component type 'DiskChopper' */
 struct _struct_DiskChopper {
-  char     _name[256]; /* e.g. PulseShapingChopper1_HR */
+  char     _name[256]; /* e.g. PulseShapingChopper2_HR */
   char     _type[256]; /* DiskChopper */
   long     _index; /* e.g. 2 index in TRACE list */
   Coords   _position_absolute;
@@ -17341,14 +17342,17 @@ struct _struct_DiskChopper {
   _class_DiskChopper_parameters _parameters;
 };
 typedef struct _struct_DiskChopper _class_DiskChopper;
+_class_DiskChopper _PulseShapingChopper2_HR_var;
+#pragma acc declare create ( _PulseShapingChopper2_HR_var )
+
+_class_DiskChopper _PulseShapingChopper2_HF_var;
+#pragma acc declare create ( _PulseShapingChopper2_HF_var )
+
 _class_DiskChopper _PulseShapingChopper1_HR_var;
 #pragma acc declare create ( _PulseShapingChopper1_HR_var )
 
 _class_DiskChopper _PulseShapingChopper1_HF_var;
 #pragma acc declare create ( _PulseShapingChopper1_HF_var )
-
-_class_MultiDiskChopper _PulseShapingChopper2_var;
-#pragma acc declare create ( _PulseShapingChopper2_var )
 
 _class_Monitor_nD _P_monitor_ToF_var;
 #pragma acc declare create ( _P_monitor_ToF_var )
@@ -17356,7 +17360,10 @@ _class_Monitor_nD _P_monitor_ToF_var;
 _class_Monitor_nD _P_monitor_lam_var;
 #pragma acc declare create ( _P_monitor_lam_var )
 
-int mcNUMCOMP = 112;
+_class_Monitor_nD _P_monitor_ToF_lam_var;
+#pragma acc declare create ( _P_monitor_ToF_lam_var )
+
+int mcNUMCOMP = 114;
 
 /* User declarations from instrument definition. Can define functions. */
 double frac; // Used in the Source component. Defines the statistical fraction of eventsemitted from the cold part of the moderator, the value is determined later in the file depending on the moderator type that was chosen
@@ -17373,13 +17380,14 @@ double tof_BW1, tof_BW2, tof_P1, tof_P2;
 // characteristic wavelength
 double v0;
 
-
-
 // distances
 double L_BW1 = 32;
 double L_BW2 = 40;
 double L_P1 = 107.95;
 double L_P2 = 108.05;
+
+
+
 
 // BW1 Chopper
 double f_BW1;
@@ -17410,6 +17418,12 @@ double delay_P1; //time delay
 double nslits_P1;
 double phase_P1;// angular delay
 
+double theta_pos_P1_HR = 0;
+double theta_pos_P1_HF = -55;
+double theta_width_P1_HR = 20;
+double theta_width_P1_HF = 35;
+double delay_P1_HR; //time delay
+double delay_P1_HF; //time delay
 
 // P2 Chopper
 double f_P2;
@@ -17420,6 +17434,13 @@ double delta_y_P2;
 double delay_P2; //time delay
 double nslits_P2;
 double phase_P2;// angular delay
+
+double theta_pos_P2_HR = 0;
+double theta_pos_P2_HF = -55;
+double theta_width_P2_HR = 20;
+double theta_width_P2_HF = 35;
+double delay_P2_HR; //time delay
+double delay_P2_HF; //time delay
 
 
 
@@ -26897,21 +26918,167 @@ int _guide_101_setpos(void)
   return(0);
 } /* _guide_101_setpos */
 
+/* component PulseShapingChopper2_HR=DiskChopper() SETTING, POSITION/ROTATION */
+int _PulseShapingChopper2_HR_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_PulseShapingChopper2_HR_setpos] component PulseShapingChopper2_HR=DiskChopper() SETTING [DiskChopper:0]");
+  stracpy(_PulseShapingChopper2_HR_var._name, "PulseShapingChopper2_HR", 16384);
+  stracpy(_PulseShapingChopper2_HR_var._type, "DiskChopper", 16384);
+  _PulseShapingChopper2_HR_var._index=108;
+  int current_setpos_index = 108;
+  _PulseShapingChopper2_HR_var._parameters.theta_0 = theta_width_P2_HR;
+  _PulseShapingChopper2_HR_var._parameters.radius = radius_P2;
+  _PulseShapingChopper2_HR_var._parameters.yheight = 0.095;
+  _PulseShapingChopper2_HR_var._parameters.nu = f_P2;
+  _PulseShapingChopper2_HR_var._parameters.nslit = 2;
+  _PulseShapingChopper2_HR_var._parameters.jitter = 0;
+  _PulseShapingChopper2_HR_var._parameters.delay = delay_P2_HR;
+  _PulseShapingChopper2_HR_var._parameters.isfirst = 0;
+  _PulseShapingChopper2_HR_var._parameters.n_pulse = 1;
+  _PulseShapingChopper2_HR_var._parameters.abs_out = 1;
+  _PulseShapingChopper2_HR_var._parameters.phase = 0;
+  _PulseShapingChopper2_HR_var._parameters.xwidth = 0;
+  _PulseShapingChopper2_HR_var._parameters.verbose = 0;
+
+
+  /* component PulseShapingChopper2_HR=DiskChopper() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_PulseShapingChopper2_HR_var._rotation_absolute,
+      (0)*DEG2RAD, (0.430122381481144)*DEG2RAD, (180)*DEG2RAD);
+    rot_transpose(_guide_101_var._rotation_absolute, tr1);
+    rot_mul(_PulseShapingChopper2_HR_var._rotation_absolute, tr1, _PulseShapingChopper2_HR_var._rotation_relative);
+    _PulseShapingChopper2_HR_var._rotation_is_identity =  rot_test_identity(_PulseShapingChopper2_HR_var._rotation_relative);
+    _PulseShapingChopper2_HR_var._position_absolute = coords_set(
+      0.41159673083080733, 0.0, 108.055);
+    tc1 = coords_sub(_guide_101_var._position_absolute, _PulseShapingChopper2_HR_var._position_absolute);
+    _PulseShapingChopper2_HR_var._position_relative = rot_apply(_PulseShapingChopper2_HR_var._rotation_absolute, tc1);
+  } /* PulseShapingChopper2_HR=DiskChopper() AT ROTATED */
+  DEBUG_COMPONENT("PulseShapingChopper2_HR", _PulseShapingChopper2_HR_var._position_absolute, _PulseShapingChopper2_HR_var._rotation_absolute);
+  instrument->_position_absolute[108] = _PulseShapingChopper2_HR_var._position_absolute;
+  instrument->_position_relative[108] = _PulseShapingChopper2_HR_var._position_relative;
+    _PulseShapingChopper2_HR_var._position_relative_is_zero =  coords_test_zero(_PulseShapingChopper2_HR_var._position_relative);
+  instrument->counter_N[108]  = instrument->counter_P[108] = instrument->counter_P2[108] = 0;
+  instrument->counter_AbsorbProp[108]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0107_PulseShapingChopper2_HR", _PulseShapingChopper2_HR_var._position_absolute, _PulseShapingChopper2_HR_var._rotation_absolute, "DiskChopper");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper2_HR", "theta_0", "0", "theta_width_P2_HR","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper2_HR", "radius", "0.5", "radius_P2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper2_HR", "yheight", "NONE", "0.095","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper2_HR", "nu", "NONE", "f_P2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper2_HR", "nslit", "3", "2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper2_HR", "jitter", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper2_HR", "delay", "0", "delay_P2_HR","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper2_HR", "isfirst", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper2_HR", "n_pulse", "1", "1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper2_HR", "abs_out", "1", "1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper2_HR", "phase", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper2_HR", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper2_HR", "verbose", "0", "0","MCNUM");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _PulseShapingChopper2_HR_setpos */
+
+/* component PulseShapingChopper2_HF=DiskChopper() SETTING, POSITION/ROTATION */
+int _PulseShapingChopper2_HF_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_PulseShapingChopper2_HF_setpos] component PulseShapingChopper2_HF=DiskChopper() SETTING [DiskChopper:0]");
+  stracpy(_PulseShapingChopper2_HF_var._name, "PulseShapingChopper2_HF", 16384);
+  stracpy(_PulseShapingChopper2_HF_var._type, "DiskChopper", 16384);
+  _PulseShapingChopper2_HF_var._index=109;
+  int current_setpos_index = 109;
+  _PulseShapingChopper2_HF_var._parameters.theta_0 = theta_width_P2_HF;
+  _PulseShapingChopper2_HF_var._parameters.radius = radius_P2;
+  _PulseShapingChopper2_HF_var._parameters.yheight = 0.095;
+  _PulseShapingChopper2_HF_var._parameters.nu = f_P2;
+  _PulseShapingChopper2_HF_var._parameters.nslit = 2;
+  _PulseShapingChopper2_HF_var._parameters.jitter = 0;
+  _PulseShapingChopper2_HF_var._parameters.delay = delay_P2_HF;
+  _PulseShapingChopper2_HF_var._parameters.isfirst = 0;
+  _PulseShapingChopper2_HF_var._parameters.n_pulse = 1;
+  _PulseShapingChopper2_HF_var._parameters.abs_out = 1;
+  _PulseShapingChopper2_HF_var._parameters.phase = 0;
+  _PulseShapingChopper2_HF_var._parameters.xwidth = 0;
+  _PulseShapingChopper2_HF_var._parameters.verbose = 0;
+
+
+  /* component PulseShapingChopper2_HF=DiskChopper() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(_PulseShapingChopper2_HF_var._rotation_absolute,
+      (0)*DEG2RAD, (0.430122381481144)*DEG2RAD, (180)*DEG2RAD);
+    rot_transpose(_PulseShapingChopper2_HR_var._rotation_absolute, tr1);
+    rot_mul(_PulseShapingChopper2_HF_var._rotation_absolute, tr1, _PulseShapingChopper2_HF_var._rotation_relative);
+    _PulseShapingChopper2_HF_var._rotation_is_identity =  rot_test_identity(_PulseShapingChopper2_HF_var._rotation_relative);
+    _PulseShapingChopper2_HF_var._position_absolute = coords_set(
+      0.41159673083080733, 0.0, 108.055);
+    tc1 = coords_sub(_PulseShapingChopper2_HR_var._position_absolute, _PulseShapingChopper2_HF_var._position_absolute);
+    _PulseShapingChopper2_HF_var._position_relative = rot_apply(_PulseShapingChopper2_HF_var._rotation_absolute, tc1);
+  } /* PulseShapingChopper2_HF=DiskChopper() AT ROTATED */
+  DEBUG_COMPONENT("PulseShapingChopper2_HF", _PulseShapingChopper2_HF_var._position_absolute, _PulseShapingChopper2_HF_var._rotation_absolute);
+  instrument->_position_absolute[109] = _PulseShapingChopper2_HF_var._position_absolute;
+  instrument->_position_relative[109] = _PulseShapingChopper2_HF_var._position_relative;
+    _PulseShapingChopper2_HF_var._position_relative_is_zero =  coords_test_zero(_PulseShapingChopper2_HF_var._position_relative);
+  instrument->counter_N[109]  = instrument->counter_P[109] = instrument->counter_P2[109] = 0;
+  instrument->counter_AbsorbProp[109]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0108_PulseShapingChopper2_HF", _PulseShapingChopper2_HF_var._position_absolute, _PulseShapingChopper2_HF_var._rotation_absolute, "DiskChopper");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper2_HF", "theta_0", "0", "theta_width_P2_HF","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper2_HF", "radius", "0.5", "radius_P2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper2_HF", "yheight", "NONE", "0.095","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper2_HF", "nu", "NONE", "f_P2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper2_HF", "nslit", "3", "2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper2_HF", "jitter", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper2_HF", "delay", "0", "delay_P2_HF","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper2_HF", "isfirst", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper2_HF", "n_pulse", "1", "1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper2_HF", "abs_out", "1", "1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper2_HF", "phase", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper2_HF", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper2_HF", "verbose", "0", "0","MCNUM");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _PulseShapingChopper2_HF_setpos */
+
 /* component PulseShapingChopper1_HR=DiskChopper() SETTING, POSITION/ROTATION */
 int _PulseShapingChopper1_HR_setpos(void)
 { /* sets initial component parameters, position and rotation */
   SIG_MESSAGE("[_PulseShapingChopper1_HR_setpos] component PulseShapingChopper1_HR=DiskChopper() SETTING [DiskChopper:0]");
   stracpy(_PulseShapingChopper1_HR_var._name, "PulseShapingChopper1_HR", 16384);
   stracpy(_PulseShapingChopper1_HR_var._type, "DiskChopper", 16384);
-  _PulseShapingChopper1_HR_var._index=108;
-  int current_setpos_index = 108;
-  _PulseShapingChopper1_HR_var._parameters.theta_0 = 2;
+  _PulseShapingChopper1_HR_var._index=110;
+  int current_setpos_index = 110;
+  _PulseShapingChopper1_HR_var._parameters.theta_0 = theta_width_P1_HR;
   _PulseShapingChopper1_HR_var._parameters.radius = radius_P1;
   _PulseShapingChopper1_HR_var._parameters.yheight = 0.095;
   _PulseShapingChopper1_HR_var._parameters.nu = f_P1;
   _PulseShapingChopper1_HR_var._parameters.nslit = 2;
   _PulseShapingChopper1_HR_var._parameters.jitter = 0;
-  _PulseShapingChopper1_HR_var._parameters.delay = delay_P1;
+  _PulseShapingChopper1_HR_var._parameters.delay = delay_P1_HR;
   _PulseShapingChopper1_HR_var._parameters.isfirst = 0;
   _PulseShapingChopper1_HR_var._parameters.n_pulse = 1;
   _PulseShapingChopper1_HR_var._parameters.abs_out = 1;
@@ -26929,38 +27096,38 @@ int _PulseShapingChopper1_HR_setpos(void)
     rot_set_rotation(tr1,0,0,0);
     rot_set_rotation(_PulseShapingChopper1_HR_var._rotation_absolute,
       (0)*DEG2RAD, (0.430122381481144)*DEG2RAD, (180)*DEG2RAD);
-    rot_transpose(_guide_101_var._rotation_absolute, tr1);
+    rot_transpose(_PulseShapingChopper2_HF_var._rotation_absolute, tr1);
     rot_mul(_PulseShapingChopper1_HR_var._rotation_absolute, tr1, _PulseShapingChopper1_HR_var._rotation_relative);
     _PulseShapingChopper1_HR_var._rotation_is_identity =  rot_test_identity(_PulseShapingChopper1_HR_var._rotation_relative);
     _PulseShapingChopper1_HR_var._position_absolute = coords_set(
       0.4108460115539497, 0.0, 107.95);
-    tc1 = coords_sub(_guide_101_var._position_absolute, _PulseShapingChopper1_HR_var._position_absolute);
+    tc1 = coords_sub(_PulseShapingChopper2_HF_var._position_absolute, _PulseShapingChopper1_HR_var._position_absolute);
     _PulseShapingChopper1_HR_var._position_relative = rot_apply(_PulseShapingChopper1_HR_var._rotation_absolute, tc1);
   } /* PulseShapingChopper1_HR=DiskChopper() AT ROTATED */
   DEBUG_COMPONENT("PulseShapingChopper1_HR", _PulseShapingChopper1_HR_var._position_absolute, _PulseShapingChopper1_HR_var._rotation_absolute);
-  instrument->_position_absolute[108] = _PulseShapingChopper1_HR_var._position_absolute;
-  instrument->_position_relative[108] = _PulseShapingChopper1_HR_var._position_relative;
+  instrument->_position_absolute[110] = _PulseShapingChopper1_HR_var._position_absolute;
+  instrument->_position_relative[110] = _PulseShapingChopper1_HR_var._position_relative;
     _PulseShapingChopper1_HR_var._position_relative_is_zero =  coords_test_zero(_PulseShapingChopper1_HR_var._position_relative);
-  instrument->counter_N[108]  = instrument->counter_P[108] = instrument->counter_P2[108] = 0;
-  instrument->counter_AbsorbProp[108]= 0;
+  instrument->counter_N[110]  = instrument->counter_P[110] = instrument->counter_P2[110] = 0;
+  instrument->counter_AbsorbProp[110]= 0;
   #ifdef USE_NEXUS
   if(nxhandle) {
     if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
     MPI_MASTER(
-        mccomp_placement_type_nexus(nxhandle,"0107_PulseShapingChopper1_HR", _PulseShapingChopper1_HR_var._position_absolute, _PulseShapingChopper1_HR_var._rotation_absolute, "DiskChopper");
-        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "theta_0", "0", "2","MCNUM");
-        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "radius", "0.5", "radius_P1","MCNUM");
-        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "yheight", "NONE", "0.095","MCNUM");
-        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "nu", "NONE", "f_P1","MCNUM");
-        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "nslit", "3", "2","MCNUM");
-        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "jitter", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "delay", "0", "delay_P1","MCNUM");
-        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "isfirst", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "n_pulse", "1", "1","MCNUM");
-        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "abs_out", "1", "1","MCNUM");
-        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "phase", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "xwidth", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0107_PulseShapingChopper1_HR", "verbose", "0", "0","MCNUM");
+        mccomp_placement_type_nexus(nxhandle,"0109_PulseShapingChopper1_HR", _PulseShapingChopper1_HR_var._position_absolute, _PulseShapingChopper1_HR_var._rotation_absolute, "DiskChopper");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper1_HR", "theta_0", "0", "theta_width_P1_HR","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper1_HR", "radius", "0.5", "radius_P1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper1_HR", "yheight", "NONE", "0.095","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper1_HR", "nu", "NONE", "f_P1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper1_HR", "nslit", "3", "2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper1_HR", "jitter", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper1_HR", "delay", "0", "delay_P1_HR","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper1_HR", "isfirst", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper1_HR", "n_pulse", "1", "1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper1_HR", "abs_out", "1", "1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper1_HR", "phase", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper1_HR", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper1_HR", "verbose", "0", "0","MCNUM");
       );
     }
   } else {
@@ -26976,15 +27143,15 @@ int _PulseShapingChopper1_HF_setpos(void)
   SIG_MESSAGE("[_PulseShapingChopper1_HF_setpos] component PulseShapingChopper1_HF=DiskChopper() SETTING [DiskChopper:0]");
   stracpy(_PulseShapingChopper1_HF_var._name, "PulseShapingChopper1_HF", 16384);
   stracpy(_PulseShapingChopper1_HF_var._type, "DiskChopper", 16384);
-  _PulseShapingChopper1_HF_var._index=109;
-  int current_setpos_index = 109;
-  _PulseShapingChopper1_HF_var._parameters.theta_0 = 35;
+  _PulseShapingChopper1_HF_var._index=111;
+  int current_setpos_index = 111;
+  _PulseShapingChopper1_HF_var._parameters.theta_0 = theta_width_P1_HF;
   _PulseShapingChopper1_HF_var._parameters.radius = radius_P1;
   _PulseShapingChopper1_HF_var._parameters.yheight = 0.095;
   _PulseShapingChopper1_HF_var._parameters.nu = f_P1;
   _PulseShapingChopper1_HF_var._parameters.nslit = 2;
   _PulseShapingChopper1_HF_var._parameters.jitter = 0;
-  _PulseShapingChopper1_HF_var._parameters.delay = delay_P1;
+  _PulseShapingChopper1_HF_var._parameters.delay = delay_P1_HF;
   _PulseShapingChopper1_HF_var._parameters.isfirst = 0;
   _PulseShapingChopper1_HF_var._parameters.n_pulse = 1;
   _PulseShapingChopper1_HF_var._parameters.abs_out = 1;
@@ -27011,29 +27178,29 @@ int _PulseShapingChopper1_HF_setpos(void)
     _PulseShapingChopper1_HF_var._position_relative = rot_apply(_PulseShapingChopper1_HF_var._rotation_absolute, tc1);
   } /* PulseShapingChopper1_HF=DiskChopper() AT ROTATED */
   DEBUG_COMPONENT("PulseShapingChopper1_HF", _PulseShapingChopper1_HF_var._position_absolute, _PulseShapingChopper1_HF_var._rotation_absolute);
-  instrument->_position_absolute[109] = _PulseShapingChopper1_HF_var._position_absolute;
-  instrument->_position_relative[109] = _PulseShapingChopper1_HF_var._position_relative;
+  instrument->_position_absolute[111] = _PulseShapingChopper1_HF_var._position_absolute;
+  instrument->_position_relative[111] = _PulseShapingChopper1_HF_var._position_relative;
     _PulseShapingChopper1_HF_var._position_relative_is_zero =  coords_test_zero(_PulseShapingChopper1_HF_var._position_relative);
-  instrument->counter_N[109]  = instrument->counter_P[109] = instrument->counter_P2[109] = 0;
-  instrument->counter_AbsorbProp[109]= 0;
+  instrument->counter_N[111]  = instrument->counter_P[111] = instrument->counter_P2[111] = 0;
+  instrument->counter_AbsorbProp[111]= 0;
   #ifdef USE_NEXUS
   if(nxhandle) {
     if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
     MPI_MASTER(
-        mccomp_placement_type_nexus(nxhandle,"0108_PulseShapingChopper1_HF", _PulseShapingChopper1_HF_var._position_absolute, _PulseShapingChopper1_HF_var._rotation_absolute, "DiskChopper");
-        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "theta_0", "0", "35","MCNUM");
-        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "radius", "0.5", "radius_P1","MCNUM");
-        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "yheight", "NONE", "0.095","MCNUM");
-        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "nu", "NONE", "f_P1","MCNUM");
-        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "nslit", "3", "2","MCNUM");
-        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "jitter", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "delay", "0", "delay_P1","MCNUM");
-        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "isfirst", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "n_pulse", "1", "1","MCNUM");
-        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "abs_out", "1", "1","MCNUM");
-        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "phase", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "xwidth", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0108_PulseShapingChopper1_HF", "verbose", "0", "0","MCNUM");
+        mccomp_placement_type_nexus(nxhandle,"0110_PulseShapingChopper1_HF", _PulseShapingChopper1_HF_var._position_absolute, _PulseShapingChopper1_HF_var._rotation_absolute, "DiskChopper");
+        mccomp_param_nexus(nxhandle,"0110_PulseShapingChopper1_HF", "theta_0", "0", "theta_width_P1_HF","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_PulseShapingChopper1_HF", "radius", "0.5", "radius_P1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_PulseShapingChopper1_HF", "yheight", "NONE", "0.095","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_PulseShapingChopper1_HF", "nu", "NONE", "f_P1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_PulseShapingChopper1_HF", "nslit", "3", "2","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_PulseShapingChopper1_HF", "jitter", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_PulseShapingChopper1_HF", "delay", "0", "delay_P1_HF","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_PulseShapingChopper1_HF", "isfirst", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_PulseShapingChopper1_HF", "n_pulse", "1", "1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_PulseShapingChopper1_HF", "abs_out", "1", "1","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_PulseShapingChopper1_HF", "phase", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_PulseShapingChopper1_HF", "xwidth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0110_PulseShapingChopper1_HF", "verbose", "0", "0","MCNUM");
       );
     }
   } else {
@@ -27043,97 +27210,14 @@ int _PulseShapingChopper1_HF_setpos(void)
   return(0);
 } /* _PulseShapingChopper1_HF_setpos */
 
-/* component PulseShapingChopper2=MultiDiskChopper() SETTING, POSITION/ROTATION */
-int _PulseShapingChopper2_setpos(void)
-{ /* sets initial component parameters, position and rotation */
-  SIG_MESSAGE("[_PulseShapingChopper2_setpos] component PulseShapingChopper2=MultiDiskChopper() SETTING [MultiDiskChopper:0]");
-  stracpy(_PulseShapingChopper2_var._name, "PulseShapingChopper2", 16384);
-  stracpy(_PulseShapingChopper2_var._type, "MultiDiskChopper", 16384);
-  _PulseShapingChopper2_var._index=110;
-  int current_setpos_index = 110;
-  if(theta_pos_P2 && strlen(theta_pos_P2))
-    stracpy(_PulseShapingChopper2_var._parameters.slit_center, theta_pos_P2 ? theta_pos_P2 : "", 16384);
-  else 
-  _PulseShapingChopper2_var._parameters.slit_center[0]='\0';
-  if(theta_width_P2 && strlen(theta_width_P2))
-    stracpy(_PulseShapingChopper2_var._parameters.slit_width, theta_width_P2 ? theta_width_P2 : "", 16384);
-  else 
-  _PulseShapingChopper2_var._parameters.slit_width[0]='\0';
-  _PulseShapingChopper2_var._parameters.nslits = nslits_P2;
-  _PulseShapingChopper2_var._parameters.delta_y = delta_y_P2;
-  _PulseShapingChopper2_var._parameters.nu = f_P2;
-  _PulseShapingChopper2_var._parameters.nrev = 0;
-  _PulseShapingChopper2_var._parameters.ratio = 1;
-  _PulseShapingChopper2_var._parameters.jitter = 0;
-  _PulseShapingChopper2_var._parameters.delay = delay_P2;
-  _PulseShapingChopper2_var._parameters.isfirst = 0;
-  _PulseShapingChopper2_var._parameters.phase = 0;
-  _PulseShapingChopper2_var._parameters.radius = radius_P2;
-  _PulseShapingChopper2_var._parameters.equal = 0;
-  _PulseShapingChopper2_var._parameters.abs_out = 0;
-  _PulseShapingChopper2_var._parameters.verbose = 0;
-
-
-  /* component PulseShapingChopper2=MultiDiskChopper() AT ROTATED */
-  {
-    Coords tc1, tc2;
-    tc1 = coords_set(0,0,0);
-    tc2 = coords_set(0,0,0);
-    Rotation tr1;
-    rot_set_rotation(tr1,0,0,0);
-    rot_set_rotation(_PulseShapingChopper2_var._rotation_absolute,
-      (0)*DEG2RAD, (0.430122381481144)*DEG2RAD, (0)*DEG2RAD);
-    rot_transpose(_PulseShapingChopper1_HF_var._rotation_absolute, tr1);
-    rot_mul(_PulseShapingChopper2_var._rotation_absolute, tr1, _PulseShapingChopper2_var._rotation_relative);
-    _PulseShapingChopper2_var._rotation_is_identity =  rot_test_identity(_PulseShapingChopper2_var._rotation_relative);
-    _PulseShapingChopper2_var._position_absolute = coords_set(
-      0.41159673083080733, 0.0, 108.055);
-    tc1 = coords_sub(_PulseShapingChopper1_HF_var._position_absolute, _PulseShapingChopper2_var._position_absolute);
-    _PulseShapingChopper2_var._position_relative = rot_apply(_PulseShapingChopper2_var._rotation_absolute, tc1);
-  } /* PulseShapingChopper2=MultiDiskChopper() AT ROTATED */
-  DEBUG_COMPONENT("PulseShapingChopper2", _PulseShapingChopper2_var._position_absolute, _PulseShapingChopper2_var._rotation_absolute);
-  instrument->_position_absolute[110] = _PulseShapingChopper2_var._position_absolute;
-  instrument->_position_relative[110] = _PulseShapingChopper2_var._position_relative;
-    _PulseShapingChopper2_var._position_relative_is_zero =  coords_test_zero(_PulseShapingChopper2_var._position_relative);
-  instrument->counter_N[110]  = instrument->counter_P[110] = instrument->counter_P2[110] = 0;
-  instrument->counter_AbsorbProp[110]= 0;
-  #ifdef USE_NEXUS
-  if(nxhandle) {
-    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
-    MPI_MASTER(
-        mccomp_placement_type_nexus(nxhandle,"0109_PulseShapingChopper2", _PulseShapingChopper2_var._position_absolute, _PulseShapingChopper2_var._rotation_absolute, "MultiDiskChopper");
-        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "slit_center", "0 180", theta_pos_P2, "char*");
-        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "slit_width", "10 20", theta_width_P2, "char*");
-        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "nslits", "2", "nslits_P2","MCNUM");
-        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "delta_y", "-0.3", "delta_y_P2","MCNUM");
-        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "nu", "0", "f_P2","MCNUM");
-        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "nrev", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "ratio", "1", "1","MCNUM");
-        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "jitter", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "delay", "0", "delay_P2","MCNUM");
-        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "isfirst", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "phase", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "radius", "0.375", "radius_P2","MCNUM");
-        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "equal", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "abs_out", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0109_PulseShapingChopper2", "verbose", "0", "0","MCNUM");
-      );
-    }
-  } else {
-    // fprintf(stderr,"NO NEXUS FILE");
-  }
-  #endif
-  return(0);
-} /* _PulseShapingChopper2_setpos */
-
 /* component P_monitor_ToF=Monitor_nD() SETTING, POSITION/ROTATION */
 int _P_monitor_ToF_setpos(void)
 { /* sets initial component parameters, position and rotation */
   SIG_MESSAGE("[_P_monitor_ToF_setpos] component P_monitor_ToF=Monitor_nD() SETTING [Monitor_nD:0]");
   stracpy(_P_monitor_ToF_var._name, "P_monitor_ToF", 16384);
   stracpy(_P_monitor_ToF_var._type, "Monitor_nD", 16384);
-  _P_monitor_ToF_var._index=111;
-  int current_setpos_index = 111;
+  _P_monitor_ToF_var._index=112;
+  int current_setpos_index = 112;
   if("" && strlen(""))
     stracpy(_P_monitor_ToF_var._parameters.user0, "" ? "" : "", 16384);
   else 
@@ -27253,68 +27337,68 @@ int _P_monitor_ToF_setpos(void)
     rot_set_rotation(tr1,0,0,0);
     rot_set_rotation(tr1,
       (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
-    rot_mul(tr1, _PulseShapingChopper2_var._rotation_absolute, _P_monitor_ToF_var._rotation_absolute);
-    rot_transpose(_PulseShapingChopper2_var._rotation_absolute, tr1);
+    rot_mul(tr1, _PulseShapingChopper1_HF_var._rotation_absolute, _P_monitor_ToF_var._rotation_absolute);
+    rot_transpose(_PulseShapingChopper1_HF_var._rotation_absolute, tr1);
     rot_mul(_P_monitor_ToF_var._rotation_absolute, tr1, _P_monitor_ToF_var._rotation_relative);
     _P_monitor_ToF_var._rotation_is_identity =  rot_test_identity(_P_monitor_ToF_var._rotation_relative);
     tc1 = coords_set(
       0, 0, 0.0001);
-    rot_transpose(_PulseShapingChopper2_var._rotation_absolute, tr1);
+    rot_transpose(_PulseShapingChopper1_HF_var._rotation_absolute, tr1);
     tc2 = rot_apply(tr1, tc1);
-    _P_monitor_ToF_var._position_absolute = coords_add(_PulseShapingChopper2_var._position_absolute, tc2);
-    tc1 = coords_sub(_PulseShapingChopper2_var._position_absolute, _P_monitor_ToF_var._position_absolute);
+    _P_monitor_ToF_var._position_absolute = coords_add(_PulseShapingChopper1_HF_var._position_absolute, tc2);
+    tc1 = coords_sub(_PulseShapingChopper1_HF_var._position_absolute, _P_monitor_ToF_var._position_absolute);
     _P_monitor_ToF_var._position_relative = rot_apply(_P_monitor_ToF_var._rotation_absolute, tc1);
   } /* P_monitor_ToF=Monitor_nD() AT ROTATED */
   DEBUG_COMPONENT("P_monitor_ToF", _P_monitor_ToF_var._position_absolute, _P_monitor_ToF_var._rotation_absolute);
-  instrument->_position_absolute[111] = _P_monitor_ToF_var._position_absolute;
-  instrument->_position_relative[111] = _P_monitor_ToF_var._position_relative;
+  instrument->_position_absolute[112] = _P_monitor_ToF_var._position_absolute;
+  instrument->_position_relative[112] = _P_monitor_ToF_var._position_relative;
     _P_monitor_ToF_var._position_relative_is_zero =  coords_test_zero(_P_monitor_ToF_var._position_relative);
-  instrument->counter_N[111]  = instrument->counter_P[111] = instrument->counter_P2[111] = 0;
-  instrument->counter_AbsorbProp[111]= 0;
+  instrument->counter_N[112]  = instrument->counter_P[112] = instrument->counter_P2[112] = 0;
+  instrument->counter_AbsorbProp[112]= 0;
   #ifdef USE_NEXUS
   if(nxhandle) {
     if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
     MPI_MASTER(
-        mccomp_placement_type_nexus(nxhandle,"0110_P_monitor_ToF", _P_monitor_ToF_var._position_absolute, _P_monitor_ToF_var._rotation_absolute, "Monitor_nD");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "user0", "", "", "char*");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "user1", "", "", "char*");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "user2", "", "", "char*");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "user3", "", "", "char*");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "user4", "", "", "char*");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "user5", "", "", "char*");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "user6", "", "", "char*");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "user7", "", "", "char*");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "user8", "", "", "char*");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "user9", "", "", "char*");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "xwidth", "0", "0.06","MCNUM");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "yheight", "0", "0.084","MCNUM");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "zdepth", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "xmin", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "xmax", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "ymin", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "ymax", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "zmin", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "zmax", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "bins", "0", "0","int");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "min", "-1e40", "-1e40","MCNUM");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "max", "1e40", "1e40","MCNUM");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "restore_neutron", "0", "1","int");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "radius", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "options", "NULL", "t limits [0.04:0.100] bins = 20000", "char*");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "filename", "NULL", "P_monitor_tof.dat", "char*");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "geometry", "NULL", "NULL", "char*");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "nowritefile", "0", "0","int");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "nexus_bins", "0", "0","int");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "username0", "NULL", "NULL", "char*");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "username1", "NULL", "NULL", "char*");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "username2", "NULL", "NULL", "char*");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "username3", "NULL", "NULL", "char*");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "username4", "NULL", "NULL", "char*");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "username5", "NULL", "NULL", "char*");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "username6", "NULL", "NULL", "char*");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "username7", "NULL", "NULL", "char*");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "username8", "NULL", "NULL", "char*");
-        mccomp_param_nexus(nxhandle,"0110_P_monitor_ToF", "username9", "NULL", "NULL", "char*");
+        mccomp_placement_type_nexus(nxhandle,"0111_P_monitor_ToF", _P_monitor_ToF_var._position_absolute, _P_monitor_ToF_var._rotation_absolute, "Monitor_nD");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "user0", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "user1", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "user2", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "user3", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "user4", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "user5", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "user6", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "user7", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "user8", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "user9", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "xwidth", "0", "0.06","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "yheight", "0", "0.084","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "xmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "xmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "ymin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "ymax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "zmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "zmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "min", "-1e40", "-1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "max", "1e40", "1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "restore_neutron", "0", "1","int");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "radius", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "options", "NULL", "t limits [0.04:0.100] bins = 20000", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "filename", "NULL", "P_monitor_tof.dat", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "geometry", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "nowritefile", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "nexus_bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "username0", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "username1", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "username2", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "username3", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "username4", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "username5", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "username6", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "username7", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "username8", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0111_P_monitor_ToF", "username9", "NULL", "NULL", "char*");
       );
     }
   } else {
@@ -27330,8 +27414,8 @@ int _P_monitor_lam_setpos(void)
   SIG_MESSAGE("[_P_monitor_lam_setpos] component P_monitor_lam=Monitor_nD() SETTING [Monitor_nD:0]");
   stracpy(_P_monitor_lam_var._name, "P_monitor_lam", 16384);
   stracpy(_P_monitor_lam_var._type, "Monitor_nD", 16384);
-  _P_monitor_lam_var._index=112;
-  int current_setpos_index = 112;
+  _P_monitor_lam_var._index=113;
+  int current_setpos_index = 113;
   if("" && strlen(""))
     stracpy(_P_monitor_lam_var._parameters.user0, "" ? "" : "", 16384);
   else 
@@ -27464,55 +27548,55 @@ int _P_monitor_lam_setpos(void)
     _P_monitor_lam_var._position_relative = rot_apply(_P_monitor_lam_var._rotation_absolute, tc1);
   } /* P_monitor_lam=Monitor_nD() AT ROTATED */
   DEBUG_COMPONENT("P_monitor_lam", _P_monitor_lam_var._position_absolute, _P_monitor_lam_var._rotation_absolute);
-  instrument->_position_absolute[112] = _P_monitor_lam_var._position_absolute;
-  instrument->_position_relative[112] = _P_monitor_lam_var._position_relative;
+  instrument->_position_absolute[113] = _P_monitor_lam_var._position_absolute;
+  instrument->_position_relative[113] = _P_monitor_lam_var._position_relative;
     _P_monitor_lam_var._position_relative_is_zero =  coords_test_zero(_P_monitor_lam_var._position_relative);
-  instrument->counter_N[112]  = instrument->counter_P[112] = instrument->counter_P2[112] = 0;
-  instrument->counter_AbsorbProp[112]= 0;
+  instrument->counter_N[113]  = instrument->counter_P[113] = instrument->counter_P2[113] = 0;
+  instrument->counter_AbsorbProp[113]= 0;
   #ifdef USE_NEXUS
   if(nxhandle) {
     if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
     MPI_MASTER(
-        mccomp_placement_type_nexus(nxhandle,"0111_P_monitor_lam", _P_monitor_lam_var._position_absolute, _P_monitor_lam_var._rotation_absolute, "Monitor_nD");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "user0", "", "", "char*");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "user1", "", "", "char*");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "user2", "", "", "char*");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "user3", "", "", "char*");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "user4", "", "", "char*");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "user5", "", "", "char*");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "user6", "", "", "char*");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "user7", "", "", "char*");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "user8", "", "", "char*");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "user9", "", "", "char*");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "xwidth", "0", "0.06","MCNUM");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "yheight", "0", "0.085","MCNUM");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "zdepth", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "xmin", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "xmax", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "ymin", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "ymax", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "zmin", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "zmax", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "bins", "0", "0","int");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "min", "-1e40", "-1e40","MCNUM");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "max", "1e40", "1e40","MCNUM");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "restore_neutron", "0", "1","int");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "radius", "0", "0","MCNUM");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "options", "NULL", "lambda limits [0.5:10.0] bins = 130", "char*");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "filename", "NULL", "P_monitor_lam.dat", "char*");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "geometry", "NULL", "NULL", "char*");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "nowritefile", "0", "0","int");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "nexus_bins", "0", "0","int");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "username0", "NULL", "NULL", "char*");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "username1", "NULL", "NULL", "char*");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "username2", "NULL", "NULL", "char*");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "username3", "NULL", "NULL", "char*");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "username4", "NULL", "NULL", "char*");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "username5", "NULL", "NULL", "char*");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "username6", "NULL", "NULL", "char*");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "username7", "NULL", "NULL", "char*");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "username8", "NULL", "NULL", "char*");
-        mccomp_param_nexus(nxhandle,"0111_P_monitor_lam", "username9", "NULL", "NULL", "char*");
+        mccomp_placement_type_nexus(nxhandle,"0112_P_monitor_lam", _P_monitor_lam_var._position_absolute, _P_monitor_lam_var._rotation_absolute, "Monitor_nD");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "user0", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "user1", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "user2", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "user3", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "user4", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "user5", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "user6", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "user7", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "user8", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "user9", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "xwidth", "0", "0.06","MCNUM");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "yheight", "0", "0.085","MCNUM");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "xmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "xmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "ymin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "ymax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "zmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "zmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "min", "-1e40", "-1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "max", "1e40", "1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "restore_neutron", "0", "1","int");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "radius", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "options", "NULL", "lambda limits [0.5:10.0] bins = 130", "char*");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "filename", "NULL", "P_monitor_lam.dat", "char*");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "geometry", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "nowritefile", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "nexus_bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "username0", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "username1", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "username2", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "username3", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "username4", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "username5", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "username6", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "username7", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "username8", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0112_P_monitor_lam", "username9", "NULL", "NULL", "char*");
       );
     }
   } else {
@@ -27521,6 +27605,204 @@ int _P_monitor_lam_setpos(void)
   #endif
   return(0);
 } /* _P_monitor_lam_setpos */
+
+/* component P_monitor_ToF_lam=Monitor_nD() SETTING, POSITION/ROTATION */
+int _P_monitor_ToF_lam_setpos(void)
+{ /* sets initial component parameters, position and rotation */
+  SIG_MESSAGE("[_P_monitor_ToF_lam_setpos] component P_monitor_ToF_lam=Monitor_nD() SETTING [Monitor_nD:0]");
+  stracpy(_P_monitor_ToF_lam_var._name, "P_monitor_ToF_lam", 16384);
+  stracpy(_P_monitor_ToF_lam_var._type, "Monitor_nD", 16384);
+  _P_monitor_ToF_lam_var._index=114;
+  int current_setpos_index = 114;
+  if("" && strlen(""))
+    stracpy(_P_monitor_ToF_lam_var._parameters.user0, "" ? "" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.user0[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_ToF_lam_var._parameters.user1, "" ? "" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.user1[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_ToF_lam_var._parameters.user2, "" ? "" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.user2[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_ToF_lam_var._parameters.user3, "" ? "" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.user3[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_ToF_lam_var._parameters.user4, "" ? "" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.user4[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_ToF_lam_var._parameters.user5, "" ? "" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.user5[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_ToF_lam_var._parameters.user6, "" ? "" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.user6[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_ToF_lam_var._parameters.user7, "" ? "" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.user7[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_ToF_lam_var._parameters.user8, "" ? "" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.user8[0]='\0';
+  if("" && strlen(""))
+    stracpy(_P_monitor_ToF_lam_var._parameters.user9, "" ? "" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.user9[0]='\0';
+  _P_monitor_ToF_lam_var._parameters.xwidth = 0.06;
+  _P_monitor_ToF_lam_var._parameters.yheight = 0.084;
+  _P_monitor_ToF_lam_var._parameters.zdepth = 0;
+  _P_monitor_ToF_lam_var._parameters.xmin = 0;
+  _P_monitor_ToF_lam_var._parameters.xmax = 0;
+  _P_monitor_ToF_lam_var._parameters.ymin = 0;
+  _P_monitor_ToF_lam_var._parameters.ymax = 0;
+  _P_monitor_ToF_lam_var._parameters.zmin = 0;
+  _P_monitor_ToF_lam_var._parameters.zmax = 0;
+  _P_monitor_ToF_lam_var._parameters.bins = 0;
+  _P_monitor_ToF_lam_var._parameters.min = -1e40;
+  _P_monitor_ToF_lam_var._parameters.max = 1e40;
+  _P_monitor_ToF_lam_var._parameters.restore_neutron = 1;
+  _P_monitor_ToF_lam_var._parameters.radius = 0;
+  if("t limits [0.04:0.100] bins = 2000 lambda limits [0.5:4.0] bins = 130" && strlen("t limits [0.04:0.100] bins = 2000 lambda limits [0.5:4.0] bins = 130"))
+    stracpy(_P_monitor_ToF_lam_var._parameters.options, "t limits [0.04:0.100] bins = 2000 lambda limits [0.5:4.0] bins = 130" ? "t limits [0.04:0.100] bins = 2000 lambda limits [0.5:4.0] bins = 130" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.options[0]='\0';
+  if("P_monitor_tof_lam.dat" && strlen("P_monitor_tof_lam.dat"))
+    stracpy(_P_monitor_ToF_lam_var._parameters.filename, "P_monitor_tof_lam.dat" ? "P_monitor_tof_lam.dat" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.filename[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_ToF_lam_var._parameters.geometry, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.geometry[0]='\0';
+  _P_monitor_ToF_lam_var._parameters.nowritefile = 0;
+  _P_monitor_ToF_lam_var._parameters.nexus_bins = 0;
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_ToF_lam_var._parameters.username0, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.username0[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_ToF_lam_var._parameters.username1, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.username1[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_ToF_lam_var._parameters.username2, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.username2[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_ToF_lam_var._parameters.username3, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.username3[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_ToF_lam_var._parameters.username4, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.username4[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_ToF_lam_var._parameters.username5, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.username5[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_ToF_lam_var._parameters.username6, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.username6[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_ToF_lam_var._parameters.username7, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.username7[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_ToF_lam_var._parameters.username8, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.username8[0]='\0';
+  if("NULL" && strlen("NULL"))
+    stracpy(_P_monitor_ToF_lam_var._parameters.username9, "NULL" ? "NULL" : "", 16384);
+  else 
+  _P_monitor_ToF_lam_var._parameters.username9[0]='\0';
+
+
+  /* component P_monitor_ToF_lam=Monitor_nD() AT ROTATED */
+  {
+    Coords tc1, tc2;
+    tc1 = coords_set(0,0,0);
+    tc2 = coords_set(0,0,0);
+    Rotation tr1;
+    rot_set_rotation(tr1,0,0,0);
+    rot_set_rotation(tr1,
+      (0.0)*DEG2RAD, (0.0)*DEG2RAD, (0.0)*DEG2RAD);
+    rot_mul(tr1, _P_monitor_lam_var._rotation_absolute, _P_monitor_ToF_lam_var._rotation_absolute);
+    rot_transpose(_P_monitor_lam_var._rotation_absolute, tr1);
+    rot_mul(_P_monitor_ToF_lam_var._rotation_absolute, tr1, _P_monitor_ToF_lam_var._rotation_relative);
+    _P_monitor_ToF_lam_var._rotation_is_identity =  rot_test_identity(_P_monitor_ToF_lam_var._rotation_relative);
+    tc1 = coords_set(
+      0, 0, 0.0001);
+    rot_transpose(_P_monitor_lam_var._rotation_absolute, tr1);
+    tc2 = rot_apply(tr1, tc1);
+    _P_monitor_ToF_lam_var._position_absolute = coords_add(_P_monitor_lam_var._position_absolute, tc2);
+    tc1 = coords_sub(_P_monitor_lam_var._position_absolute, _P_monitor_ToF_lam_var._position_absolute);
+    _P_monitor_ToF_lam_var._position_relative = rot_apply(_P_monitor_ToF_lam_var._rotation_absolute, tc1);
+  } /* P_monitor_ToF_lam=Monitor_nD() AT ROTATED */
+  DEBUG_COMPONENT("P_monitor_ToF_lam", _P_monitor_ToF_lam_var._position_absolute, _P_monitor_ToF_lam_var._rotation_absolute);
+  instrument->_position_absolute[114] = _P_monitor_ToF_lam_var._position_absolute;
+  instrument->_position_relative[114] = _P_monitor_ToF_lam_var._position_relative;
+    _P_monitor_ToF_lam_var._position_relative_is_zero =  coords_test_zero(_P_monitor_ToF_lam_var._position_relative);
+  instrument->counter_N[114]  = instrument->counter_P[114] = instrument->counter_P2[114] = 0;
+  instrument->counter_AbsorbProp[114]= 0;
+  #ifdef USE_NEXUS
+  if(nxhandle) {
+    if ((!mcdotrace) && mcformat && strcasestr(mcformat, "NeXus")) {
+    MPI_MASTER(
+        mccomp_placement_type_nexus(nxhandle,"0113_P_monitor_ToF_lam", _P_monitor_ToF_lam_var._position_absolute, _P_monitor_ToF_lam_var._rotation_absolute, "Monitor_nD");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "user0", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "user1", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "user2", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "user3", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "user4", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "user5", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "user6", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "user7", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "user8", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "user9", "", "", "char*");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "xwidth", "0", "0.06","MCNUM");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "yheight", "0", "0.084","MCNUM");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "zdepth", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "xmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "xmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "ymin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "ymax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "zmin", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "zmax", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "min", "-1e40", "-1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "max", "1e40", "1e40","MCNUM");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "restore_neutron", "0", "1","int");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "radius", "0", "0","MCNUM");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "options", "NULL", "t limits [0.04:0.100] bins = 2000 lambda limits [0.5:4.0] bins = 130", "char*");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "filename", "NULL", "P_monitor_tof_lam.dat", "char*");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "geometry", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "nowritefile", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "nexus_bins", "0", "0","int");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "username0", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "username1", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "username2", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "username3", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "username4", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "username5", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "username6", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "username7", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "username8", "NULL", "NULL", "char*");
+        mccomp_param_nexus(nxhandle,"0113_P_monitor_ToF_lam", "username9", "NULL", "NULL", "char*");
+      );
+    }
+  } else {
+    // fprintf(stderr,"NO NEXUS FILE");
+  }
+  #endif
+  return(0);
+} /* _P_monitor_ToF_lam_setpos */
 
 _class_ESS_butterfly *class_ESS_butterfly_init(_class_ESS_butterfly *_comp
 ) {
@@ -28732,7 +29014,7 @@ _class_DiskChopper *class_DiskChopper_init(_class_DiskChopper *_comp
   #define delta_y (_comp->_parameters.delta_y)
   #define height (_comp->_parameters.height)
   #define omega (_comp->_parameters.omega)
-  SIG_MESSAGE("[_PulseShapingChopper1_HR_init] component PulseShapingChopper1_HR=DiskChopper() INITIALISE [DiskChopper:0]");
+  SIG_MESSAGE("[_PulseShapingChopper2_HR_init] component PulseShapingChopper2_HR=DiskChopper() INITIALISE [DiskChopper:0]");
 
   /* If slit height 'unset', assume full opening */
   if (yheight == 0) {
@@ -28887,11 +29169,12 @@ nslits_BW2 = 1;
 // P1 Chopper
 radius_P1 = 0.35;
 delta_y_P1 = 0.305;
-delay_P1 = tof_P1; //time delay
+delay_P1 = tof_P1; //time delay#
 nslits_P1 = 4;
 phase_P1 = phase_P;// angular delay
 
-
+delay_P1_HR = tof_P1 + theta_pos_P1_HR/f_P1/360; //time delay
+delay_P1_HF = tof_P1 + theta_pos_P1_HF/f_P1/360; //time delay
 
 // P2 Chopper
 radius_P2 = 0.35;
@@ -28899,6 +29182,9 @@ delta_y_P2 = delta_y_P1;
 delay_P2 = tof_P2; //time delay
 nslits_P2 = 4;
 phase_P2 = phase_P;// angular delay
+
+delay_P2_HR = tof_P2 + theta_pos_P2_HR/f_P2/360; //time delay
+delay_P2_HF = tof_P2 + theta_pos_P2_HF/f_P2/360; //time delay
 
 
 }
@@ -29016,11 +29302,13 @@ phase_P2 = phase_P;// angular delay
   _guide_99_setpos(); /* type Guide_anyshape_r */
   _guide_100_setpos(); /* type Guide_anyshape_r */
   _guide_101_setpos(); /* type Guide_anyshape_r */
+  _PulseShapingChopper2_HR_setpos(); /* type DiskChopper */
+  _PulseShapingChopper2_HF_setpos(); /* type DiskChopper */
   _PulseShapingChopper1_HR_setpos(); /* type DiskChopper */
   _PulseShapingChopper1_HF_setpos(); /* type DiskChopper */
-  _PulseShapingChopper2_setpos(); /* type MultiDiskChopper */
   _P_monitor_ToF_setpos(); /* type Monitor_nD */
   _P_monitor_lam_setpos(); /* type Monitor_nD */
+  _P_monitor_ToF_lam_setpos(); /* type Monitor_nD */
 
   /* call iteratively all components INITIALISE */
   class_ESS_butterfly_init(&_source_var);
@@ -29237,15 +29525,19 @@ phase_P2 = phase_P;// angular delay
 
   class_Guide_anyshape_r_init(&_guide_101_var);
 
+  class_DiskChopper_init(&_PulseShapingChopper2_HR_var);
+
+  class_DiskChopper_init(&_PulseShapingChopper2_HF_var);
+
   class_DiskChopper_init(&_PulseShapingChopper1_HR_var);
 
   class_DiskChopper_init(&_PulseShapingChopper1_HF_var);
 
-  class_MultiDiskChopper_init(&_PulseShapingChopper2_var);
-
   class_Monitor_nD_init(&_P_monitor_ToF_var);
 
   class_Monitor_nD_init(&_P_monitor_lam_var);
+
+  class_Monitor_nD_init(&_P_monitor_ToF_lam_var);
 
   if (mcdotrace) display();
   DEBUG_INSTR_END();
@@ -29359,11 +29651,13 @@ phase_P2 = phase_P;// angular delay
 #pragma acc update device(_guide_99_var)
 #pragma acc update device(_guide_100_var)
 #pragma acc update device(_guide_101_var)
+#pragma acc update device(_PulseShapingChopper2_HR_var)
+#pragma acc update device(_PulseShapingChopper2_HF_var)
 #pragma acc update device(_PulseShapingChopper1_HR_var)
 #pragma acc update device(_PulseShapingChopper1_HF_var)
-#pragma acc update device(_PulseShapingChopper2_var)
 #pragma acc update device(_P_monitor_ToF_var)
 #pragma acc update device(_P_monitor_lam_var)
+#pragma acc update device(_P_monitor_ToF_lam_var)
 #pragma acc update device(_instrument_var)
 #endif
 
@@ -30673,7 +30967,7 @@ void class_DiskChopper_trace(_class_DiskChopper *_comp
   #define delta_y (_comp->_parameters.delta_y)
   #define height (_comp->_parameters.height)
   #define omega (_comp->_parameters.omega)
-  SIG_MESSAGE("[_PulseShapingChopper1_HR_trace] component PulseShapingChopper1_HR=DiskChopper() TRACE [DiskChopper:0]");
+  SIG_MESSAGE("[_PulseShapingChopper2_HR_trace] component PulseShapingChopper2_HR=DiskChopper() TRACE [DiskChopper:0]");
 
   double toff;
   double yprime;
@@ -33006,7 +33300,56 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       _particle->_index++;
       if (!ABSORBED) { DEBUG_STATE(); }
     } /* end component guide_101 [107] */
-    /* begin component PulseShapingChopper1_HR=DiskChopper() [108] */
+    /* begin component PulseShapingChopper2_HR=DiskChopper() [108] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_PulseShapingChopper2_HR_var._rotation_is_identity) {
+        if(!_PulseShapingChopper2_HR_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _PulseShapingChopper2_HR_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_PulseShapingChopper2_HR_var._position_relative, _PulseShapingChopper2_HR_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 108) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_PulseShapingChopper2_HR_var._name);
+      DEBUG_STATE();
+      class_DiskChopper_trace(&_PulseShapingChopper2_HR_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      // GROUP PulseShapingChopper2: from PulseShapingChopper2_HR [108] to PulseShapingChopper2_HF [109]
+      if (SCATTERED) _particle->_index = 109; // when SCATTERED in GROUP: reach exit of GROUP after PulseShapingChopper2_HF
+      else particle_restore(_particle, &_particle_save); // not SCATTERED in GROUP, restore
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component PulseShapingChopper2_HR [108] */
+    /* begin component PulseShapingChopper2_HF=DiskChopper() [109] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_PulseShapingChopper2_HF_var._rotation_is_identity) {
+        if(!_PulseShapingChopper2_HF_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _PulseShapingChopper2_HF_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_PulseShapingChopper2_HF_var._position_relative, _PulseShapingChopper2_HF_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 109) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      // 2nd or higher GROUP member, "reuse" coordinate-changed _particle_save from 1st GROUP element.
+      mccoordschange(_PulseShapingChopper2_HF_var._position_relative, _PulseShapingChopper2_HF_var._rotation_relative, &_particle_save);
+      DEBUG_COMP(_PulseShapingChopper2_HF_var._name);
+      DEBUG_STATE();
+      class_DiskChopper_trace(&_PulseShapingChopper2_HF_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      // GROUP PulseShapingChopper2: from PulseShapingChopper2_HR [108] to PulseShapingChopper2_HF [109]
+      if (SCATTERED) _particle->_index = 109; // when SCATTERED in GROUP: reach exit of GROUP after PulseShapingChopper2_HF
+      else ABSORBED=1;     // not SCATTERED at end of GROUP: removes left events
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component PulseShapingChopper2_HF [109] */
+    /* begin component PulseShapingChopper1_HR=DiskChopper() [110] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
       if (_PulseShapingChopper1_HR_var._rotation_is_identity) {
         if(!_PulseShapingChopper1_HR_var._position_relative_is_zero) {
@@ -33016,7 +33359,7 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
           mccoordschange(_PulseShapingChopper1_HR_var._position_relative, _PulseShapingChopper1_HR_var._rotation_relative, _particle);
       }
     }
-    if (!ABSORBED && _particle->_index == 108) {
+    if (!ABSORBED && _particle->_index == 110) {
       _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
       _particle_save = *_particle;
       DEBUG_COMP(_PulseShapingChopper1_HR_var._name);
@@ -33024,13 +33367,13 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       class_DiskChopper_trace(&_PulseShapingChopper1_HR_var, _particle);
       if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
-      // GROUP PulseShapingChopper1: from PulseShapingChopper1_HR [108] to PulseShapingChopper1_HF [109]
-      if (SCATTERED) _particle->_index = 109; // when SCATTERED in GROUP: reach exit of GROUP after PulseShapingChopper1_HF
+      // GROUP PulseShapingChopper1: from PulseShapingChopper1_HR [110] to PulseShapingChopper1_HF [111]
+      if (SCATTERED) _particle->_index = 111; // when SCATTERED in GROUP: reach exit of GROUP after PulseShapingChopper1_HF
       else particle_restore(_particle, &_particle_save); // not SCATTERED in GROUP, restore
       _particle->_index++;
       if (!ABSORBED) { DEBUG_STATE(); }
-    } /* end component PulseShapingChopper1_HR [108] */
-    /* begin component PulseShapingChopper1_HF=DiskChopper() [109] */
+    } /* end component PulseShapingChopper1_HR [110] */
+    /* begin component PulseShapingChopper1_HF=DiskChopper() [111] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
       if (_PulseShapingChopper1_HF_var._rotation_is_identity) {
         if(!_PulseShapingChopper1_HF_var._position_relative_is_zero) {
@@ -33040,7 +33383,7 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
           mccoordschange(_PulseShapingChopper1_HF_var._position_relative, _PulseShapingChopper1_HF_var._rotation_relative, _particle);
       }
     }
-    if (!ABSORBED && _particle->_index == 109) {
+    if (!ABSORBED && _particle->_index == 111) {
       _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
       // 2nd or higher GROUP member, "reuse" coordinate-changed _particle_save from 1st GROUP element.
       mccoordschange(_PulseShapingChopper1_HF_var._position_relative, _PulseShapingChopper1_HF_var._rotation_relative, &_particle_save);
@@ -33049,34 +33392,13 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
       class_DiskChopper_trace(&_PulseShapingChopper1_HF_var, _particle);
       if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
-      // GROUP PulseShapingChopper1: from PulseShapingChopper1_HR [108] to PulseShapingChopper1_HF [109]
-      if (SCATTERED) _particle->_index = 109; // when SCATTERED in GROUP: reach exit of GROUP after PulseShapingChopper1_HF
+      // GROUP PulseShapingChopper1: from PulseShapingChopper1_HR [110] to PulseShapingChopper1_HF [111]
+      if (SCATTERED) _particle->_index = 111; // when SCATTERED in GROUP: reach exit of GROUP after PulseShapingChopper1_HF
       else ABSORBED=1;     // not SCATTERED at end of GROUP: removes left events
       _particle->_index++;
       if (!ABSORBED) { DEBUG_STATE(); }
-    } /* end component PulseShapingChopper1_HF [109] */
-    /* begin component PulseShapingChopper2=MultiDiskChopper() [110] */
-    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
-      if (_PulseShapingChopper2_var._rotation_is_identity) {
-        if(!_PulseShapingChopper2_var._position_relative_is_zero) {
-          coords_get(coords_add(coords_set(x,y,z), _PulseShapingChopper2_var._position_relative),&x, &y, &z);
-        }
-      } else {
-          mccoordschange(_PulseShapingChopper2_var._position_relative, _PulseShapingChopper2_var._rotation_relative, _particle);
-      }
-    }
-    if (!ABSORBED && _particle->_index == 110) {
-      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
-      _particle_save = *_particle;
-      DEBUG_COMP(_PulseShapingChopper2_var._name);
-      DEBUG_STATE();
-      class_MultiDiskChopper_trace(&_PulseShapingChopper2_var, _particle);
-      if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
-      _particle->_index++;
-      if (!ABSORBED) { DEBUG_STATE(); }
-    } /* end component PulseShapingChopper2 [110] */
-    /* begin component P_monitor_ToF=Monitor_nD() [111] */
+    } /* end component PulseShapingChopper1_HF [111] */
+    /* begin component P_monitor_ToF=Monitor_nD() [112] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
       if (_P_monitor_ToF_var._rotation_is_identity) {
         if(!_P_monitor_ToF_var._position_relative_is_zero) {
@@ -33086,7 +33408,7 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
           mccoordschange(_P_monitor_ToF_var._position_relative, _P_monitor_ToF_var._rotation_relative, _particle);
       }
     }
-    if (!ABSORBED && _particle->_index == 111) {
+    if (!ABSORBED && _particle->_index == 112) {
       _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
       _particle_save = *_particle;
       DEBUG_COMP(_P_monitor_ToF_var._name);
@@ -33096,8 +33418,8 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
         particle_restore(_particle, &_particle_save);
       _particle->_index++;
       if (!ABSORBED) { DEBUG_STATE(); }
-    } /* end component P_monitor_ToF [111] */
-    /* begin component P_monitor_lam=Monitor_nD() [112] */
+    } /* end component P_monitor_ToF [112] */
+    /* begin component P_monitor_lam=Monitor_nD() [113] */
     if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
       if (_P_monitor_lam_var._rotation_is_identity) {
         if(!_P_monitor_lam_var._position_relative_is_zero) {
@@ -33107,7 +33429,7 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
           mccoordschange(_P_monitor_lam_var._position_relative, _P_monitor_lam_var._rotation_relative, _particle);
       }
     }
-    if (!ABSORBED && _particle->_index == 112) {
+    if (!ABSORBED && _particle->_index == 113) {
       _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
       _particle_save = *_particle;
       DEBUG_COMP(_P_monitor_lam_var._name);
@@ -33117,8 +33439,29 @@ int raytrace(_class_particle* _particle) { /* single event propagation, called b
         particle_restore(_particle, &_particle_save);
       _particle->_index++;
       if (!ABSORBED) { DEBUG_STATE(); }
-    } /* end component P_monitor_lam [112] */
-    if (_particle->_index > 112)
+    } /* end component P_monitor_lam [113] */
+    /* begin component P_monitor_ToF_lam=Monitor_nD() [114] */
+    if (!_particle->flag_nocoordschange) { // flag activated by JUMP to pass coords change
+      if (_P_monitor_ToF_lam_var._rotation_is_identity) {
+        if(!_P_monitor_ToF_lam_var._position_relative_is_zero) {
+          coords_get(coords_add(coords_set(x,y,z), _P_monitor_ToF_lam_var._position_relative),&x, &y, &z);
+        }
+      } else {
+          mccoordschange(_P_monitor_ToF_lam_var._position_relative, _P_monitor_ToF_lam_var._rotation_relative, _particle);
+      }
+    }
+    if (!ABSORBED && _particle->_index == 114) {
+      _particle->flag_nocoordschange=0; /* Reset if we came here from a JUMP */
+      _particle_save = *_particle;
+      DEBUG_COMP(_P_monitor_ToF_lam_var._name);
+      DEBUG_STATE();
+      class_Monitor_nD_trace(&_P_monitor_ToF_lam_var, _particle);
+      if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      _particle->_index++;
+      if (!ABSORBED) { DEBUG_STATE(); }
+    } /* end component P_monitor_ToF_lam [114] */
+    if (_particle->_index > 114)
       ABSORBED++; /* absorbed when passed all components */
   } /* while !ABSORBED */
 
@@ -34889,8 +35232,44 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         _particle->_index++;
       }
 
-      // PulseShapingChopper1_HR
+      // PulseShapingChopper2_HR
     if (!ABSORBED && _particle->_index == 108) {
+#ifndef MULTICORE
+        if (_PulseShapingChopper2_HR_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _PulseShapingChopper2_HR_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_PulseShapingChopper2_HR_var._position_relative, _PulseShapingChopper2_HR_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_DiskChopper_trace(&_PulseShapingChopper2_HR_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      // GROUP PulseShapingChopper2: from PulseShapingChopper2_HR [108] to PulseShapingChopper2_HF [109]
+      if (SCATTERED) _particle->_index = 109; // when SCATTERED in GROUP: reach exit of GROUP after PulseShapingChopper2_HF
+      else ABSORBED=0; // not SCATTERED within GROUP: always tries next
+        _particle->_index++;
+      }
+
+      // PulseShapingChopper2_HF
+    if (!ABSORBED && _particle->_index == 109) {
+#ifndef MULTICORE
+        if (_PulseShapingChopper2_HF_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _PulseShapingChopper2_HF_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_PulseShapingChopper2_HF_var._position_relative, _PulseShapingChopper2_HF_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_DiskChopper_trace(&_PulseShapingChopper2_HF_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+      // GROUP PulseShapingChopper2: from PulseShapingChopper2_HR [108] to PulseShapingChopper2_HF [109]
+      if (SCATTERED) _particle->_index = 109; // when SCATTERED in GROUP: reach exit of GROUP after PulseShapingChopper2_HF
+      else ABSORBED=1;     // not SCATTERED at end of GROUP: removes left events
+        _particle->_index++;
+      }
+
+      // PulseShapingChopper1_HR
+    if (!ABSORBED && _particle->_index == 110) {
 #ifndef MULTICORE
         if (_PulseShapingChopper1_HR_var._rotation_is_identity)
           coords_get(coords_add(coords_set(x,y,z), _PulseShapingChopper1_HR_var._position_relative),&x, &y, &z);
@@ -34901,14 +35280,14 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         class_DiskChopper_trace(&_PulseShapingChopper1_HR_var, _particle);
         if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
-      // GROUP PulseShapingChopper1: from PulseShapingChopper1_HR [108] to PulseShapingChopper1_HF [109]
-      if (SCATTERED) _particle->_index = 109; // when SCATTERED in GROUP: reach exit of GROUP after PulseShapingChopper1_HF
+      // GROUP PulseShapingChopper1: from PulseShapingChopper1_HR [110] to PulseShapingChopper1_HF [111]
+      if (SCATTERED) _particle->_index = 111; // when SCATTERED in GROUP: reach exit of GROUP after PulseShapingChopper1_HF
       else ABSORBED=0; // not SCATTERED within GROUP: always tries next
         _particle->_index++;
       }
 
       // PulseShapingChopper1_HF
-    if (!ABSORBED && _particle->_index == 109) {
+    if (!ABSORBED && _particle->_index == 111) {
 #ifndef MULTICORE
         if (_PulseShapingChopper1_HF_var._rotation_is_identity)
           coords_get(coords_add(coords_set(x,y,z), _PulseShapingChopper1_HF_var._position_relative),&x, &y, &z);
@@ -34919,29 +35298,14 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
         class_DiskChopper_trace(&_PulseShapingChopper1_HF_var, _particle);
         if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
-      // GROUP PulseShapingChopper1: from PulseShapingChopper1_HR [108] to PulseShapingChopper1_HF [109]
-      if (SCATTERED) _particle->_index = 109; // when SCATTERED in GROUP: reach exit of GROUP after PulseShapingChopper1_HF
+      // GROUP PulseShapingChopper1: from PulseShapingChopper1_HR [110] to PulseShapingChopper1_HF [111]
+      if (SCATTERED) _particle->_index = 111; // when SCATTERED in GROUP: reach exit of GROUP after PulseShapingChopper1_HF
       else ABSORBED=1;     // not SCATTERED at end of GROUP: removes left events
         _particle->_index++;
       }
 
-      // PulseShapingChopper2
-    if (!ABSORBED && _particle->_index == 110) {
-#ifndef MULTICORE
-        if (_PulseShapingChopper2_var._rotation_is_identity)
-          coords_get(coords_add(coords_set(x,y,z), _PulseShapingChopper2_var._position_relative),&x, &y, &z);
-        else
-#endif
-          mccoordschange(_PulseShapingChopper2_var._position_relative, _PulseShapingChopper2_var._rotation_relative, _particle);
-        _particle_save = *_particle;
-        class_MultiDiskChopper_trace(&_PulseShapingChopper2_var, _particle);
-        if (_particle->_restore)
-        particle_restore(_particle, &_particle_save);
-        _particle->_index++;
-      }
-
       // P_monitor_ToF
-    if (!ABSORBED && _particle->_index == 111) {
+    if (!ABSORBED && _particle->_index == 112) {
 #ifndef MULTICORE
         if (_P_monitor_ToF_var._rotation_is_identity)
           coords_get(coords_add(coords_set(x,y,z), _P_monitor_ToF_var._position_relative),&x, &y, &z);
@@ -34956,7 +35320,7 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
       }
 
       // P_monitor_lam
-    if (!ABSORBED && _particle->_index == 112) {
+    if (!ABSORBED && _particle->_index == 113) {
 #ifndef MULTICORE
         if (_P_monitor_lam_var._rotation_is_identity)
           coords_get(coords_add(coords_set(x,y,z), _P_monitor_lam_var._position_relative),&x, &y, &z);
@@ -34965,6 +35329,21 @@ void raytrace_all_funnel(unsigned long long ncount, unsigned long seed) {
           mccoordschange(_P_monitor_lam_var._position_relative, _P_monitor_lam_var._rotation_relative, _particle);
         _particle_save = *_particle;
         class_Monitor_nD_trace(&_P_monitor_lam_var, _particle);
+        if (_particle->_restore)
+        particle_restore(_particle, &_particle_save);
+        _particle->_index++;
+      }
+
+      // P_monitor_ToF_lam
+    if (!ABSORBED && _particle->_index == 114) {
+#ifndef MULTICORE
+        if (_P_monitor_ToF_lam_var._rotation_is_identity)
+          coords_get(coords_add(coords_set(x,y,z), _P_monitor_ToF_lam_var._position_relative),&x, &y, &z);
+        else
+#endif
+          mccoordschange(_P_monitor_ToF_lam_var._position_relative, _P_monitor_ToF_lam_var._rotation_relative, _particle);
+        _particle_save = *_particle;
+        class_Monitor_nD_trace(&_P_monitor_ToF_lam_var, _particle);
         if (_particle->_restore)
         particle_restore(_particle, &_particle_save);
         _particle->_index++;
@@ -35249,9 +35628,12 @@ int save(FILE *handle) { /* called by mccode_main for TRex:SAVE */
 
 
 
+
   class_Monitor_nD_save(&_P_monitor_ToF_var);
 
   class_Monitor_nD_save(&_P_monitor_lam_var);
+
+  class_Monitor_nD_save(&_P_monitor_ToF_lam_var);
 
   if (!handle) siminfo_close(); 
 
@@ -35530,11 +35912,13 @@ int finally(void) { /* called by mccode_main for TRex:FINALLY */
 #pragma acc update host(_guide_99_var)
 #pragma acc update host(_guide_100_var)
 #pragma acc update host(_guide_101_var)
+#pragma acc update host(_PulseShapingChopper2_HR_var)
+#pragma acc update host(_PulseShapingChopper2_HF_var)
 #pragma acc update host(_PulseShapingChopper1_HR_var)
 #pragma acc update host(_PulseShapingChopper1_HF_var)
-#pragma acc update host(_PulseShapingChopper2_var)
 #pragma acc update host(_P_monitor_ToF_var)
 #pragma acc update host(_P_monitor_lam_var)
+#pragma acc update host(_P_monitor_ToF_lam_var)
 #pragma acc update host(_instrument_var)
 
   siminfo_init(NULL);
@@ -35684,11 +36068,13 @@ int finally(void) { /* called by mccode_main for TRex:FINALLY */
 
 
 
-  class_MultiDiskChopper_finally(&_PulseShapingChopper2_var);
+
 
   class_Monitor_nD_finally(&_P_monitor_ToF_var);
 
   class_Monitor_nD_finally(&_P_monitor_lam_var);
+
+  class_Monitor_nD_finally(&_P_monitor_ToF_lam_var);
 
   siminfo_close(); 
 
@@ -36307,7 +36693,7 @@ _class_DiskChopper *class_DiskChopper_display(_class_DiskChopper *_comp
   #define delta_y (_comp->_parameters.delta_y)
   #define height (_comp->_parameters.height)
   #define omega (_comp->_parameters.omega)
-  SIG_MESSAGE("[_PulseShapingChopper1_HR_display] component PulseShapingChopper1_HR=DiskChopper() DISPLAY [DiskChopper:0]");
+  SIG_MESSAGE("[_PulseShapingChopper2_HR_display] component PulseShapingChopper2_HR=DiskChopper() DISPLAY [DiskChopper:0]");
 
   printf("MCDISPLAY: component %s\n", _comp->_name);
 
@@ -36578,15 +36964,19 @@ int display(void) { /* called by mccode_main for TRex:DISPLAY */
 
   class_Guide_anyshape_r_display(&_guide_101_var);
 
+  class_DiskChopper_display(&_PulseShapingChopper2_HR_var);
+
+  class_DiskChopper_display(&_PulseShapingChopper2_HF_var);
+
   class_DiskChopper_display(&_PulseShapingChopper1_HR_var);
 
   class_DiskChopper_display(&_PulseShapingChopper1_HF_var);
 
-  class_MultiDiskChopper_display(&_PulseShapingChopper2_var);
-
   class_Monitor_nD_display(&_P_monitor_ToF_var);
 
   class_Monitor_nD_display(&_P_monitor_lam_var);
+
+  class_Monitor_nD_display(&_P_monitor_ToF_lam_var);
 
   printf("MCDISPLAY: end\n");
 
@@ -36706,11 +37096,13 @@ void* _getvar_parameters(char* compname)
   if (!strcmp(compname, "guide_99")) return (void *) &(_guide_99_var._parameters);
   if (!strcmp(compname, "guide_100")) return (void *) &(_guide_100_var._parameters);
   if (!strcmp(compname, "guide_101")) return (void *) &(_guide_101_var._parameters);
+  if (!strcmp(compname, "PulseShapingChopper2_HR")) return (void *) &(_PulseShapingChopper2_HR_var._parameters);
+  if (!strcmp(compname, "PulseShapingChopper2_HF")) return (void *) &(_PulseShapingChopper2_HF_var._parameters);
   if (!strcmp(compname, "PulseShapingChopper1_HR")) return (void *) &(_PulseShapingChopper1_HR_var._parameters);
   if (!strcmp(compname, "PulseShapingChopper1_HF")) return (void *) &(_PulseShapingChopper1_HF_var._parameters);
-  if (!strcmp(compname, "PulseShapingChopper2")) return (void *) &(_PulseShapingChopper2_var._parameters);
   if (!strcmp(compname, "P_monitor_ToF")) return (void *) &(_P_monitor_ToF_var._parameters);
   if (!strcmp(compname, "P_monitor_lam")) return (void *) &(_P_monitor_lam_var._parameters);
+  if (!strcmp(compname, "P_monitor_ToF_lam")) return (void *) &(_P_monitor_ToF_lam_var._parameters);
   return 0;
 }
 
@@ -36831,11 +37223,13 @@ int _getcomp_index(char* compname)
   if (!strcmp(compname, "guide_99")) return 105;
   if (!strcmp(compname, "guide_100")) return 106;
   if (!strcmp(compname, "guide_101")) return 107;
-  if (!strcmp(compname, "PulseShapingChopper1_HR")) return 108;
-  if (!strcmp(compname, "PulseShapingChopper1_HF")) return 109;
-  if (!strcmp(compname, "PulseShapingChopper2")) return 110;
-  if (!strcmp(compname, "P_monitor_ToF")) return 111;
-  if (!strcmp(compname, "P_monitor_lam")) return 112;
+  if (!strcmp(compname, "PulseShapingChopper2_HR")) return 108;
+  if (!strcmp(compname, "PulseShapingChopper2_HF")) return 109;
+  if (!strcmp(compname, "PulseShapingChopper1_HR")) return 110;
+  if (!strcmp(compname, "PulseShapingChopper1_HF")) return 111;
+  if (!strcmp(compname, "P_monitor_ToF")) return 112;
+  if (!strcmp(compname, "P_monitor_lam")) return 113;
+  if (!strcmp(compname, "P_monitor_ToF_lam")) return 114;
   return -1;
 }
 

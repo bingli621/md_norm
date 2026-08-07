@@ -15,7 +15,7 @@
 * 
 * %Identification
 * Written by: Bing Li
-* Date: 17:29:28 on August 06, 2026
+* Date: 17:13:15 on August 07, 2026
 * Origin: DMSC
 * %INSTRUMENT_SITE: Generated_instruments
 * 
@@ -65,13 +65,14 @@ double tof_BW1, tof_BW2, tof_P1, tof_P2;
 // characteristic wavelength
 double v0;
 
-
-
 // distances
 double L_BW1 = 32;
 double L_BW2 = 40;
 double L_P1 = 107.95;
 double L_P2 = 108.05;
+
+
+
 
 // BW1 Chopper
 double f_BW1;
@@ -102,6 +103,12 @@ double delay_P1; //time delay
 double nslits_P1;
 double phase_P1;// angular delay
 
+double theta_pos_P1_HR = 0;
+double theta_pos_P1_HF = -55;
+double theta_width_P1_HR = 20;
+double theta_width_P1_HF = 35;
+double delay_P1_HR; //time delay
+double delay_P1_HF; //time delay
 
 // P2 Chopper
 double f_P2;
@@ -112,6 +119,13 @@ double delta_y_P2;
 double delay_P2; //time delay
 double nslits_P2;
 double phase_P2;// angular delay
+
+double theta_pos_P2_HR = 0;
+double theta_pos_P2_HF = -55;
+double theta_width_P2_HR = 20;
+double theta_width_P2_HF = 35;
+double delay_P2_HR; //time delay
+double delay_P2_HF; //time delay
 
 
 
@@ -169,11 +183,12 @@ nslits_BW2 = 1;
 // P1 Chopper
 radius_P1 = 0.35;
 delta_y_P1 = 0.305;
-delay_P1 = tof_P1; //time delay
+delay_P1 = tof_P1; //time delay#
 nslits_P1 = 4;
 phase_P1 = phase_P;// angular delay
 
-
+delay_P1_HR = tof_P1 + theta_pos_P1_HR/f_P1/360; //time delay
+delay_P1_HF = tof_P1 + theta_pos_P1_HF/f_P1/360; //time delay
 
 // P2 Chopper
 radius_P2 = 0.35;
@@ -181,6 +196,9 @@ delta_y_P2 = delta_y_P1;
 delay_P2 = tof_P2; //time delay
 nslits_P2 = 4;
 phase_P2 = phase_P;// angular delay
+
+delay_P2_HR = tof_P2 + theta_pos_P2_HR/f_P2/360; //time delay
+delay_P2_HF = tof_P2 + theta_pos_P2_HF/f_P2/360; //time delay
 
 
 %}
@@ -669,30 +687,38 @@ COMPONENT guide_101 = Guide_anyshape_r(
  geometry = "./OFF_files/try101.off")
 AT (0, 0, 0) ABSOLUTE
 
+COMPONENT PulseShapingChopper2_HR = DiskChopper(
+ theta_0 = theta_width_P2_HR, radius = radius_P2,
+ yheight = 0.095, nu = f_P2,
+ nslit = 2, delay = delay_P2_HR)
+AT (0.41159673083080733, 0.0, 108.055) ABSOLUTE
+ROTATED (0, 0.430122381481144, 180) ABSOLUTE
+GROUP PulseShapingChopper2
+
+COMPONENT PulseShapingChopper2_HF = DiskChopper(
+ theta_0 = theta_width_P2_HF, radius = radius_P2,
+ yheight = 0.095, nu = f_P2,
+ nslit = 2, delay = delay_P2_HF)
+AT (0.41159673083080733, 0.0, 108.055) ABSOLUTE
+ROTATED (0, 0.430122381481144, 180) ABSOLUTE
+GROUP PulseShapingChopper2
+
 // /* ---------------------- P-Choppers -------------------- */
 COMPONENT PulseShapingChopper1_HR = DiskChopper(
- theta_0 = 2, radius = radius_P1,
+ theta_0 = theta_width_P1_HR, radius = radius_P1,
  yheight = 0.095, nu = f_P1,
- nslit = 2, delay = delay_P1)
+ nslit = 2, delay = delay_P1_HR)
 AT (0.4108460115539497, 0.0, 107.95) ABSOLUTE
 ROTATED (0, 0.430122381481144, 180) ABSOLUTE
 GROUP PulseShapingChopper1
 
 COMPONENT PulseShapingChopper1_HF = DiskChopper(
- theta_0 = 35, radius = radius_P1,
+ theta_0 = theta_width_P1_HF, radius = radius_P1,
  yheight = 0.095, nu = f_P1,
- nslit = 2, delay = delay_P1)
+ nslit = 2, delay = delay_P1_HF)
 AT (0.4108460115539497, 0.0, 107.95) ABSOLUTE
 ROTATED (0, 0.430122381481144, 180) ABSOLUTE
 GROUP PulseShapingChopper1
-
-COMPONENT PulseShapingChopper2 = MultiDiskChopper(
- slit_center = theta_pos_P2, slit_width = theta_width_P2,
- nslits = nslits_P2, delta_y = delta_y_P2,
- nu = f_P2, delay = delay_P2,
- radius = radius_P2)
-AT (0.41159673083080733, 0.0, 108.055) ABSOLUTE
-ROTATED (0, 0.430122381481144, 0) ABSOLUTE
 
 COMPONENT P_monitor_ToF = Monitor_nD(
  xwidth = 0.06, yheight = 0.084,
@@ -704,6 +730,12 @@ COMPONENT P_monitor_lam = Monitor_nD(
  xwidth = 0.06, yheight = 0.085,
  restore_neutron = 1, options = "lambda limits [0.5:10.0] bins = 130",
  filename = "P_monitor_lam.dat")
+AT (0, 0, 0.0001) RELATIVE PREVIOUS
+
+COMPONENT P_monitor_ToF_lam = Monitor_nD(
+ xwidth = 0.06, yheight = 0.084,
+ restore_neutron = 1, options = "t limits [0.04:0.100] bins = 2000 lambda limits [0.5:4.0] bins = 130",
+ filename = "P_monitor_tof_lam.dat")
 AT (0, 0, 0.0001) RELATIVE PREVIOUS
 
 FINALLY 

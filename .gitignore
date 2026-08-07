@@ -1,6 +1,5 @@
 # pixi environments
-.pixi/*
-!.pixi/config.toml
+.pixi
 
 # Ruff
 .ruff_cache

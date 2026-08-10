@@ -15,7 +15,7 @@
 * 
 * %Identification
 * Written by: Bing Li
-* Date: 17:13:15 on August 07, 2026
+* Date: 19:35:02 on August 10, 2026
 * Origin: DMSC
 * %INSTRUMENT_SITE: Generated_instruments
 * 
@@ -60,7 +60,7 @@ double rTopUpPar[5] = {0.99,0.0219,3.02,4.0,0.003};
 double rTopDownPar[5] = {0.99,0.0219,3.02,4.0,0.003};
 
 
-double tof_BW1, tof_BW2, tof_P1, tof_P2;
+double tof_BW1, tof_BW2, tof_P1, tof_P2, tof_M1, tof_M2;
 
 // characteristic wavelength
 double v0;
@@ -70,62 +70,90 @@ double L_BW1 = 32;
 double L_BW2 = 40;
 double L_P1 = 107.95;
 double L_P2 = 108.05;
+double L_M1 = 161.995;
+double L_M2 = 162.005;
 
 
 
 
 // BW1 Chopper
 double f_BW1;
-double radius_BW1;
-char theta_pos_BW1[256] = "0";
-char theta_width_BW1[256] = "61.4";
-double delta_y_BW1;
 double delay_BW1; //time delay
-double nslits_BW1;
 
+double radius_BW1 = 0.35;
+double slit_height_BW1 = 0.095; // FIXME
+double nslits_BW1 = 1;
+double theta_pos_BW1 = 0;
+double theta_width_BW1 = 61.4;
 
 // BW2 Chopper
 double f_BW2;
-double radius_BW2;
-char theta_pos_BW2[256] = "0";
-char theta_width_BW2[256] = "63.3";
-double delta_y_BW2;
 double delay_BW2; //time delay
-double nslits_BW2;
+
+double radius_BW2 = 0.35;
+double slit_height_BW2 = 0.095; // FIXME
+double nslits_BW2 = 1;
+double theta_pos_BW2 = 0;
+double theta_width_BW2 = 63.3;
 
 // P1 Chopper
 double f_P1;
-double radius_P1;
-char theta_pos_P1[256] = "0 -55 -180 -235";
-char theta_width_P1[256] = "2 35 2 35";
-double delta_y_P1;
-double delay_P1; //time delay
-double nslits_P1;
 double phase_P1;// angular delay
+double delay_P1_HR; //time delay
+double delay_P1_HF; //time delay
 
+double radius_P1 = 0.35;
+double slit_height_P1 = 0.095;
+double nslits_P1 = 2;
 double theta_pos_P1_HR = 0;
 double theta_pos_P1_HF = -55;
 double theta_width_P1_HR = 20;
 double theta_width_P1_HF = 35;
-double delay_P1_HR; //time delay
-double delay_P1_HF; //time delay
 
 // P2 Chopper
 double f_P2;
-double radius_P2;
-char theta_pos_P2[256] = "0 -55 -180 -235";
-char theta_width_P2[256] = "2 35 2 35";
-double delta_y_P2;
-double delay_P2; //time delay
-double nslits_P2;
 double phase_P2;// angular delay
+double delay_P2_HR; //time delay
+double delay_P2_HF; //time delay
 
+double radius_P2 = 0.35;
+double slit_height_P2 = 0.095;
+double nslits_P2 = 2;
 double theta_pos_P2_HR = 0;
 double theta_pos_P2_HF = -55;
 double theta_width_P2_HR = 20;
 double theta_width_P2_HF = 35;
-double delay_P2_HR; //time delay
-double delay_P2_HF; //time delay
+
+
+
+ // M1 Chopper
+double f_M1;
+double phase_M1;// angular delay
+double delay_M1_HR; //time delay
+double delay_M1_HF; //time delay
+
+double radius_M1 = 0.35;
+double slit_height_M1 = 0.045; 
+double nslits_M1 = 1;
+double theta_pos_M1_HR = 180;
+double theta_pos_M1_HF = 5;
+double theta_width_M1_HR = 2.5;
+double theta_width_M1_HF = 4.3;
+
+
+// M2 Chopper
+double f_M2;
+double phase_M2;// angular delay
+double delay_M2_HR; //time delay
+double delay_M2_HF; //time delay
+
+double radius_M2 = 0.35;
+double slit_height_M2 = 0.045; 
+double nslits_M2 = 1;
+double theta_pos_M2_HR = 0;
+double theta_pos_M2_HF = -175;
+double theta_width_M2_HR = 2.5;
+double theta_width_M2_HF = 4.3;
 
 
 
@@ -151,7 +179,7 @@ printf("lamb_2: %g \n", lamb_2);
 
 // frequencies
 f_BW1 = f;
-f_BW2 = f;
+f_BW2 = f_BW1;
 f_P1 = RRM*f*0.75;
 f_P2 = -f_P1;
 
@@ -165,40 +193,34 @@ tof_BW1 = T_offset + L_BW1/v0;
 tof_BW2 = T_offset + L_BW2/v0;
 tof_P1 = T_offset + L_P1/v0;
 tof_P2 = T_offset + L_P2/v0;
+tof_M1 = T_offset + L_M1/v0;
+tof_M2 = T_offset + L_M2/v0;
 
 /* Chopper parameters */
 
 // BW1 Chopper
-radius_BW1 = 0.35;
-delta_y_BW1 = -0.3075;
-delay_BW1 = tof_BW1; // time delay
-nslits_BW1 = 1;
+delay_BW1 = tof_BW1 + theta_pos_BW1/f_BW1/360; // time delay
 
 // BW2 Chopper
-radius_BW2 = 0.35;
-delta_y_BW2 = delta_y_BW1;
-delay_BW2 = tof_BW2; // time delay
-nslits_BW2 = 1;
+delay_BW2 = tof_BW2 + theta_pos_BW2/f_BW2/360; // time delay
 
 // P1 Chopper
-radius_P1 = 0.35;
-delta_y_P1 = 0.305;
-delay_P1 = tof_P1; //time delay#
-nslits_P1 = 4;
-phase_P1 = phase_P;// angular delay
-
 delay_P1_HR = tof_P1 + theta_pos_P1_HR/f_P1/360; //time delay
 delay_P1_HF = tof_P1 + theta_pos_P1_HF/f_P1/360; //time delay
 
 // P2 Chopper
-radius_P2 = 0.35;
-delta_y_P2 = delta_y_P1;
-delay_P2 = tof_P2; //time delay
-nslits_P2 = 4;
-phase_P2 = phase_P;// angular delay
-
 delay_P2_HR = tof_P2 + theta_pos_P2_HR/f_P2/360; //time delay
 delay_P2_HF = tof_P2 + theta_pos_P2_HF/f_P2/360; //time delay
+
+// M1 Chopper
+delay_M1_HR = tof_M1 + theta_pos_M1_HR/f_M1/360; //time delay
+delay_M1_HF = tof_M1 + theta_pos_M1_HF/f_M1/360; //time delay
+
+// M2 Chopper
+delay_M2_HR = tof_M2 + theta_pos_M2_HR/f_M2/360; //time delay
+delay_M2_HF = tof_M2 + theta_pos_M2_HF/f_M2/360; //time delay
+
+
 
 
 %}
@@ -426,11 +448,10 @@ COMPONENT guide_47 = Guide_anyshape_r(
 AT (0, 0, 0) ABSOLUTE
 
 // Bandwidth chopper 1
-COMPONENT BW_Chopper_1 = MultiDiskChopper(
- slit_center = theta_pos_BW1, slit_width = theta_width_BW1,
- nslits = nslits_BW1, delta_y = delta_y_BW1,
- nu = f_BW1, delay = delay_BW1,
- radius = radius_BW1)
+COMPONENT BW_Chopper_1 = DiskChopper(
+ theta_0 = theta_width_BW1, radius = radius_BW1,
+ yheight = slit_height_BW1, nu = f_BW1,
+ nslit = nslits_BW1, delay = delay_BW1)
 AT (0.011348994153930106, 0.0, 32.0) ABSOLUTE
 ROTATED (0, 0.12454202414165, 0) ABSOLUTE
 
@@ -452,40 +473,11 @@ COMPONENT BW1_monitor_ToF = Monitor_nD(
  filename = "BW1_monitor_ToF.dat")
 AT (0, 0, 0.0001) RELATIVE PREVIOUS
 
-COMPONENT guide_49 = Guide_anyshape_r(
- geometry = "./OFF_files/try49.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_50 = Guide_anyshape_r(
- geometry = "./OFF_files/try50.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_51 = Guide_anyshape_r(
- geometry = "./OFF_files/try51.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_52 = Guide_anyshape_r(
- geometry = "./OFF_files/try52.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_53 = Guide_anyshape_r(
- geometry = "./OFF_files/try53.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_54 = Guide_anyshape_r(
- geometry = "./OFF_files/try54.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_55 = Guide_anyshape_r(
- geometry = "./OFF_files/try55.off")
-AT (0, 0, 0) ABSOLUTE
-
-// Bandwidth chopper 2 
-COMPONENT BW_Chopper_2 = MultiDiskChopper(
- slit_center = theta_pos_BW2, slit_width = theta_width_BW2,
- nslits = nslits_BW2, delta_y = delta_y_BW2,
- nu = f_BW2, delay = delay_BW2,
- radius = radius_BW2)
+// Bandwidth chopper 2
+COMPONENT BW_Chopper_2 = DiskChopper(
+ theta_0 = theta_width_BW2, radius = radius_BW2,
+ yheight = slit_height_BW2, nu = f_BW2,
+ nslit = nslits_BW2, delay = delay_BW2)
 AT (0.03140505829452013, 0.0, 40.0) ABSOLUTE
 ROTATED (0, 0.16273933122724, 0) ABSOLUTE
 
@@ -507,236 +499,71 @@ COMPONENT BW2_monitor_ToF = Monitor_nD(
  filename = "BW2_monitor_ToF.dat")
 AT (0, 0, 0.0001) RELATIVE PREVIOUS
 
-COMPONENT guide_57 = Guide_anyshape_r(
- geometry = "./OFF_files/try57.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_58 = Guide_anyshape_r(
- geometry = "./OFF_files/try58.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_59 = Guide_anyshape_r(
- geometry = "./OFF_files/try59.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_60 = Guide_anyshape_r(
- geometry = "./OFF_files/try60.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_61 = Guide_anyshape_r(
- geometry = "./OFF_files/try61.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_62 = Guide_anyshape_r(
- geometry = "./OFF_files/try62.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_63 = Guide_anyshape_r(
- geometry = "./OFF_files/try63.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_64 = Guide_anyshape_r(
- geometry = "./OFF_files/try64.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_65 = Guide_anyshape_r(
- geometry = "./OFF_files/try65.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_66 = Guide_anyshape_r(
- geometry = "./OFF_files/try66.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_67 = Guide_anyshape_r(
- geometry = "./OFF_files/try67.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_68 = Guide_anyshape_r(
- geometry = "./OFF_files/try68.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_69 = Guide_anyshape_r(
- geometry = "./OFF_files/try69.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_70 = Guide_anyshape_r(
- geometry = "./OFF_files/try70.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_71 = Guide_anyshape_r(
- geometry = "./OFF_files/try71.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_72 = Guide_anyshape_r(
- geometry = "./OFF_files/try72.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_73 = Guide_anyshape_r(
- geometry = "./OFF_files/try73.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_74 = Guide_anyshape_r(
- geometry = "./OFF_files/try74.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_75 = Guide_anyshape_r(
- geometry = "./OFF_files/try75.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_76 = Guide_anyshape_r(
- geometry = "./OFF_files/try76.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_77 = Guide_anyshape_r(
- geometry = "./OFF_files/try77.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_78 = Guide_anyshape_r(
- geometry = "./OFF_files/try78.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_79 = Guide_anyshape_r(
- geometry = "./OFF_files/try79.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_80 = Guide_anyshape_r(
- geometry = "./OFF_files/try80.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_81 = Guide_anyshape_r(
- geometry = "./OFF_files/try81.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_82 = Guide_anyshape_r(
- geometry = "./OFF_files/try82.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_83 = Guide_anyshape_r(
- geometry = "./OFF_files/try83.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_84 = Guide_anyshape_r(
- geometry = "./OFF_files/try84.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_85 = Guide_anyshape_r(
- geometry = "./OFF_files/try85.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_86 = Guide_anyshape_r(
- geometry = "./OFF_files/try86.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_87 = Guide_anyshape_r(
- geometry = "./OFF_files/try87.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_88 = Guide_anyshape_r(
- geometry = "./OFF_files/try88.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_89 = Guide_anyshape_r(
- geometry = "./OFF_files/try89.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_90 = Guide_anyshape_r(
- geometry = "./OFF_files/try90.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_91 = Guide_anyshape_r(
- geometry = "./OFF_files/try91.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_92 = Guide_anyshape_r(
- geometry = "./OFF_files/try92.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_93 = Guide_anyshape_r(
- geometry = "./OFF_files/try93.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_94 = Guide_anyshape_r(
- geometry = "./OFF_files/try94.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_95 = Guide_anyshape_r(
- geometry = "./OFF_files/try95.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_96 = Guide_anyshape_r(
- geometry = "./OFF_files/try96.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_97 = Guide_anyshape_r(
- geometry = "./OFF_files/try97.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_98 = Guide_anyshape_r(
- geometry = "./OFF_files/try98.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_99 = Guide_anyshape_r(
- geometry = "./OFF_files/try99.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_100 = Guide_anyshape_r(
- geometry = "./OFF_files/try100.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT guide_101 = Guide_anyshape_r(
- geometry = "./OFF_files/try101.off")
-AT (0, 0, 0) ABSOLUTE
-
-COMPONENT PulseShapingChopper2_HR = DiskChopper(
- theta_0 = theta_width_P2_HR, radius = radius_P2,
- yheight = 0.095, nu = f_P2,
- nslit = 2, delay = delay_P2_HR)
-AT (0.41159673083080733, 0.0, 108.055) ABSOLUTE
-ROTATED (0, 0.430122381481144, 180) ABSOLUTE
-GROUP PulseShapingChopper2
-
-COMPONENT PulseShapingChopper2_HF = DiskChopper(
- theta_0 = theta_width_P2_HF, radius = radius_P2,
- yheight = 0.095, nu = f_P2,
- nslit = 2, delay = delay_P2_HF)
-AT (0.41159673083080733, 0.0, 108.055) ABSOLUTE
-ROTATED (0, 0.430122381481144, 180) ABSOLUTE
-GROUP PulseShapingChopper2
-
 // /* ---------------------- P-Choppers -------------------- */
-COMPONENT PulseShapingChopper1_HR = DiskChopper(
+COMPONENT PSChopper1_HR = DiskChopper(
  theta_0 = theta_width_P1_HR, radius = radius_P1,
- yheight = 0.095, nu = f_P1,
- nslit = 2, delay = delay_P1_HR)
+ yheight = slit_height_P1, nu = f_P1,
+ nslit = nslits_P1, delay = delay_P1_HR)
 AT (0.4108460115539497, 0.0, 107.95) ABSOLUTE
 ROTATED (0, 0.430122381481144, 180) ABSOLUTE
-GROUP PulseShapingChopper1
+GROUP PSChopper1
 
-COMPONENT PulseShapingChopper1_HF = DiskChopper(
+COMPONENT PSChopper1_HF = DiskChopper(
  theta_0 = theta_width_P1_HF, radius = radius_P1,
- yheight = 0.095, nu = f_P1,
- nslit = 2, delay = delay_P1_HF)
+ yheight = slit_height_P1, nu = f_P1,
+ nslit = nslits_P1, delay = delay_P1_HF)
 AT (0.4108460115539497, 0.0, 107.95) ABSOLUTE
 ROTATED (0, 0.430122381481144, 180) ABSOLUTE
-GROUP PulseShapingChopper1
+GROUP PSChopper1
 
-COMPONENT P_monitor_ToF = Monitor_nD(
- xwidth = 0.06, yheight = 0.084,
- restore_neutron = 1, options = "t limits [0.04:0.100] bins = 20000",
- filename = "P_monitor_tof.dat")
-AT (0, 0, 0.0001) RELATIVE PREVIOUS
+COMPONENT PSChopper2_HR = DiskChopper(
+ theta_0 = theta_width_P2_HR, radius = radius_P2,
+ yheight = slit_height_P2, nu = f_P2,
+ nslit = nslits_P2, delay = delay_P2_HR)
+AT (0.41159673083080733, 0.0, 108.055) ABSOLUTE
+ROTATED (0, 0.430122381481144, 180) ABSOLUTE
+GROUP PSChopper2
 
-COMPONENT P_monitor_lam = Monitor_nD(
- xwidth = 0.06, yheight = 0.085,
- restore_neutron = 1, options = "lambda limits [0.5:10.0] bins = 130",
- filename = "P_monitor_lam.dat")
-AT (0, 0, 0.0001) RELATIVE PREVIOUS
+COMPONENT PSChopper2_HF = DiskChopper(
+ theta_0 = theta_width_P2_HF, radius = radius_P2,
+ yheight = slit_height_P2, nu = f_P2,
+ nslit = nslits_P2, delay = delay_P2_HF)
+AT (0.41159673083080733, 0.0, 108.055) ABSOLUTE
+ROTATED (0, 0.430122381481144, 180) ABSOLUTE
+GROUP PSChopper2
 
-COMPONENT P_monitor_ToF_lam = Monitor_nD(
- xwidth = 0.06, yheight = 0.084,
- restore_neutron = 1, options = "t limits [0.04:0.100] bins = 2000 lambda limits [0.5:4.0] bins = 130",
- filename = "P_monitor_tof_lam.dat")
-AT (0, 0, 0.0001) RELATIVE PREVIOUS
+// /* ---------------------- M-Choppers -------------------- */
+COMPONENT MonoChopper1_HR = DiskChopper(
+ theta_0 = theta_width_M1_HR, radius = radius_M1,
+ yheight = slit_height_M1, nu = f_M1,
+ nslit = nslits_M1, delay = delay_M1_HR)
+AT (0.8166097806955753, 0.0, 161.995) ABSOLUTE
+ROTATED (0, 0.430122381481144, 180) ABSOLUTE
+GROUP MonoChopper1
+
+COMPONENT MonoChopper1_HF = DiskChopper(
+ theta_0 = theta_width_M1_HF, radius = radius_M1,
+ yheight = slit_height_M1, nu = f_M1,
+ nslit = nslits_M1, delay = delay_M1_HF)
+AT (0.8166097806955753, 0.0, 161.995) ABSOLUTE
+ROTATED (0, 0.430122381481144, 180) ABSOLUTE
+GROUP MonoChopper1
+
+COMPONENT MonoChopper2_HR = DiskChopper(
+ theta_0 = theta_width_M2_HR, radius = radius_M2,
+ yheight = slit_height_M2, nu = f_M2,
+ nslit = nslits_M2, delay = delay_M2_HR)
+AT (0.8166097806955753, 0.0, 162.005) ABSOLUTE
+ROTATED (0, 0.430122381481144, 0) ABSOLUTE
+GROUP MonoChopper2
+
+COMPONENT MonoChopper2_HF = DiskChopper(
+ theta_0 = theta_width_M2_HF, radius = radius_M2,
+ yheight = slit_height_M2, nu = f_M2,
+ nslit = nslits_M2, delay = delay_M2_HF)
+AT (0.8166097806955753, 0.0, 162.005) ABSOLUTE
+ROTATED (0, 0.430122381481144, 0) ABSOLUTE
+GROUP MonoChopper2
 
 FINALLY 
 %{

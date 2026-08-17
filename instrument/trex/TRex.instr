@@ -15,7 +15,7 @@
 * 
 * %Identification
 * Written by: Bing Li
-* Date: 19:01:56 on August 16, 2026
+* Date: 17:34:35 on August 17, 2026
 * Origin: DMSC
 * %INSTRUMENT_SITE: Generated_instruments
 * 
@@ -46,7 +46,7 @@ double d_Li = 0.845, // wavelength band in [Å] to be simulated
 int RRM = 18, // repetition rate multiplication
 string mode = "HR", // HR for High Resolution, HF for High Flux
 int mod_type = 1, // this variable determines which moderator type is used {0: Thermal moderator, 1: Bispectral moderator, 2: Cold moderator}
-int bender = 0, // bender out = 0, bender in = 1
+int bender = 1, // bender out = 0, bender in = 1
 double b_rot = -0.5, // in [deg], rotation of the cold neutron bender
 int coll = 0 // Type of collimator{0: Guide anyshape, 1: Guide_honeycomb_1, 2: Guide_honeycomb_2}
 )
@@ -59,20 +59,16 @@ double lamb_2; // Wavelength max in [AA]
 double T_offset = 0.0017; // Time offset in [s] to shift to the center of long pulse
 double f = 14.0; // Source frequency in [Hz]
 double v0; // characteristic velocity in [m/s]
-double rTopUpPar[5] = {0.99,0.0219,3.02,4.0,0.003};
-double rTopDownPar[5] = {0.99,0.0219,3.02,4.0,0.003};
 
 // BW1 Chopper
 
-double L_BW1 = 32; // [m]
+double position_BW1[3] = {0.011348994153930106, 0.0, 32.0};
+double rotation_BW1[3] = {0, 0.124542024141650, 0};
 double radius_BW1 = 0.35; // [m]
 double delta_y_BW1 = -0.3075; // [m]
 double nslits_BW1 = 1;
 char theta_pos_BW1[256] = "0";
 char theta_width_BW1[256] = "61.4";
-
-double position_BW1[3] = {0.011348994153930106, 0.0, 32.0};
-double orientation_BW1[3] = {0, 0.124542024141650, 0};
 
 double tof_BW1; // [s]
 double f_BW1; // frequency [Hz]
@@ -82,12 +78,14 @@ double delay_BW1; //time delay [s]
 
 // BW2 Chopper
 
-double L_BW2 = 40; // [m]
+double position_BW2[3] = {0.03140505829452013, 0.0, 40.0};
+double rotation_BW2[3] = {0, 0.162739331227240, 0};
 double radius_BW2 = 0.35; // [m]
 double delta_y_BW2 = -0.3075; // [m]
 double nslits_BW2 = 1;
 char theta_pos_BW2[256] = "0";
 char theta_width_BW2[256] = "63.3";
+
 
 double tof_BW2; // [s]
 double f_BW2; // frequency [Hz]
@@ -98,12 +96,14 @@ double delay_BW2; // time delay [s]
 
 // P1 Chopper
 
-double L_P1 = 107.95; // [m]
+double position_P1[3] = {0.4108460115539497, 0.0, 107.95};
+double rotation_P1[3] = {0, 0.430122381481144, 0};
 double radius_P1 = 0.35; // [m]
 double delta_y_P1 = 0.305; // [m]
 double nslits_P1 = 4;
 char theta_pos_P1[256] = "0;55;180;235"; // positive for CW
 char theta_width_P1[256] = "20;35;20;35";
+
 
 double tof_P1; // [s]
 double f_P1; // frequency [Hz]
@@ -113,13 +113,13 @@ double phase_P1; // angular delay [deg]
 
 // P2 Chopper
 
-double L_P2 = 108.05; // [m]
+double position_P2[3] = {0.41159673083080733, 0.0, 108.055};
+double rotation_P2[3] = {0, 0.430122381481144, 0};
 double radius_P2 = 0.35; // [m]
 double delta_y_P2 = 0.305; // [m]
 double nslits_P2 = 4;
 char theta_pos_P2[256] = "0;55;180;235"; // positive for CW
 char theta_width_P2[256] = "20;35;20;35";
-
 
 double tof_P2; // [s]
 double f_P2; // frequency [Hz]
@@ -129,7 +129,8 @@ double phase_P2; // angular delay [deg]
 
 // M1 Chopper
 
-double L_M1 = 161.995; // [m]
+double position_M1[3] = {0.8166097806955753, 0.0, 161.995};
+double rotation_M1[3] = {0, 0.430122381481144, 0};
 double radius_M1 = 0.35; // [m]
 double delta_y_M1 = 0.325; // [m]
 double nslits_M1 = 2;
@@ -146,7 +147,8 @@ double phase_M1; // angular delay [deg]
 
 // M2 Chopper
 
-double L_M2 = 162.005; // [m]
+double position_M2[3] = {0.8166097806955753, 0.0, 162.005};
+double rotation_M2[3] = {0, 0.430122381481144, 0};
 double radius_M2 = 0.35; // [m]
 double delta_y_M2 = -0.325; // [m]
 double nslits_M2 = 2;
@@ -191,12 +193,12 @@ f_M2 = -f_M1;
 v0 = 2*PI*K2V/L0; // speed center neutron
 
 // time of flight and chopper phases
-tof_BW1 = T_offset + L_BW1/v0;
-tof_BW2 = T_offset + L_BW2/v0;
-tof_P1 = T_offset + L_P1/v0;
-tof_P2 = T_offset + L_P2/v0;
-tof_M1 = T_offset + L_M1/v0;
-tof_M2 = T_offset + L_M2/v0;
+tof_BW1 = T_offset + position_BW1[2]/v0;
+tof_BW2 = T_offset + position_BW2[2]/v0;
+tof_P1 = T_offset + position_P1[2]/v0;
+tof_P2 = T_offset + position_P2[2]/v0;
+tof_M1 = T_offset + position_M1[2]/v0;
+tof_M2 = T_offset + position_M2[2]/v0;
 
 //time delay
 delay_BW1 = tof_BW1; 
@@ -231,7 +233,8 @@ COMPONENT source = ESS_butterfly(
  dist = 2, focus_xw = 0.095,
  focus_yh = 0.035, Lmin = lamb_1,
  Lmax = lamb_2, n_pulses = 1,
- acc_power = 2)
+ acc_power = 2, tfocus_dist = position_BW2[2],
+ tfocus_time = tof_BW2, tfocus_width = 0.02)
 AT (0, 0, 0) ABSOLUTE
 
 // NBOA section
@@ -269,13 +272,15 @@ COMPONENT guide_10 = Guide_anyshape_r(
 WHEN (bender==0)
 AT (0, 0, 0) ABSOLUTE
 
-// bender: 63.84mm x 46mm x 50mm (WxHxL), 0.15mm Si channels/ NiTi m=4 curve=7.2m
+// bender: 63.84mm x 46mm x 50mm (WxHxL),
+// 0.15mm Si channels/ NiTi m=4 curve=7.2m
+
 COMPONENT bender = Pol_bender(
  xwidth = 0.06384, yheight = 0.046,
  length = 0.05, radius = 7.2,
  nslit = 425, d = 1e-06,
- endFlat = 0, rTopUpPar = rTopUpPar,
- rTopDownPar = rTopDownPar, drawOption = 2)
+ endFlat = 0, rTopUpPar = {0.99, 3.02, 4.0, 0.0219, 0.003},
+ rTopDownPar = {0.99, 3.02, 4.0, 0.0219, 0.003}, drawOption = 2)
 WHEN (bender==1)
 AT (-0.017, 0, 5.399) ABSOLUTE
 ROTATED (0.00192, b_rot, 0) ABSOLUTE
@@ -402,14 +407,14 @@ COMPONENT guide_47 = Guide_anyshape_r(
  geometry = "../OFF_files/try47.off")
 AT (0, 0, 0) ABSOLUTE
 
-// Bandwidth chopper 1
+// ---------------------- Bandwidth chopper 1 ----------------------
 COMPONENT BW_Chopper_1 = MultiDiskChopper(
  slit_center = theta_pos_BW1, slit_width = theta_width_BW1,
  nslits = nslits_BW1, delta_y = delta_y_BW1,
  nu = f_BW1, delay = delay_BW1,
  radius = radius_BW1)
-AT (0.011348994153930106, 0.0, 32.0) ABSOLUTE
-ROTATED (0, 0.12454202414165, 0) ABSOLUTE
+AT (position_BW1[0], position_BW1[1], position_BW1[2]) ABSOLUTE
+ROTATED (rotation_BW1[0], rotation_BW1[1], rotation_BW1[2]) ABSOLUTE
 
 COMPONENT guide_49 = Guide_anyshape_r(
  geometry = "../OFF_files/try49.off")
@@ -439,14 +444,14 @@ COMPONENT guide_55 = Guide_anyshape_r(
  geometry = "../OFF_files/try55.off")
 AT (0, 0, 0) ABSOLUTE
 
-// Bandwidth chopper 2
+// ---------------------- Bandwidth chopper 2 ---------------------- 
 COMPONENT BW_Chopper_2 = MultiDiskChopper(
  slit_center = theta_pos_BW2, slit_width = theta_width_BW2,
  nslits = nslits_BW2, delta_y = delta_y_BW2,
  nu = f_BW2, delay = delay_BW2,
  radius = radius_BW2)
-AT (0.03140505829452013, 0.0, 40.0) ABSOLUTE
-ROTATED (0, 0.16273933122724, 0) ABSOLUTE
+AT (position_BW2[0], position_BW2[1], position_BW2[2]) ABSOLUTE
+ROTATED (rotation_BW2[0], rotation_BW2[1], rotation_BW2[2]) ABSOLUTE
 
 COMPONENT guide_57 = Guide_anyshape_r(
  geometry = "../OFF_files/try57.off")
@@ -628,14 +633,22 @@ COMPONENT guide_101 = Guide_anyshape_r(
  geometry = "../OFF_files/try101.off")
 AT (0, 0, 0) ABSOLUTE
 
-// /* ---------------------- P-Choppers -------------------- */
+// ---------------------- P-Choppers --------------------
 COMPONENT PulseShapingChopper1 = MultiDiskChopper(
  slit_center = theta_pos_P1, slit_width = theta_width_P1,
  nslits = nslits_P1, delta_y = delta_y_P1,
  nu = f_P1, delay = delay_P1,
  phase = phase_P1, radius = radius_P1)
-AT (0.4108460115539497, 0.0, 107.95) ABSOLUTE
-ROTATED (0, 0.430122381481144, 0) ABSOLUTE
+AT (position_P1[0], position_P1[1], position_P1[2]) ABSOLUTE
+ROTATED (rotation_P1[0], rotation_P1[1], rotation_P1[2]) ABSOLUTE
+
+COMPONENT PulseShapingChopper2 = MultiDiskChopper(
+ slit_center = theta_pos_P2, slit_width = theta_width_P2,
+ nslits = nslits_P2, delta_y = delta_y_P2,
+ nu = f_P2, delay = delay_P2,
+ phase = phase_P2, radius = radius_P2)
+AT (position_P2[0], position_P2[1], position_P2[2]) ABSOLUTE
+ROTATED (rotation_P2[0], rotation_P2[1], rotation_P2[2]) ABSOLUTE
 
 COMPONENT guide_103 = Guide_anyshape_r(
  geometry = "../OFF_files/try103.off")
@@ -769,34 +782,26 @@ COMPONENT guide_136 = Guide_anyshape_r(
  geometry = "../OFF_files/try136.off")
 AT (0, 0, 0) ABSOLUTE
 
-COMPONENT PulseShapingChopper2 = MultiDiskChopper(
- slit_center = theta_pos_P2, slit_width = theta_width_P2,
- nslits = nslits_P2, delta_y = delta_y_P2,
- nu = f_P2, delay = delay_P2,
- phase = phase_P2, radius = radius_P2)
-AT (0.41159673083080733, 0.0, 108.055) ABSOLUTE
-ROTATED (0, 0.430122381481144, 0) ABSOLUTE
-
-// /* ---------------------- M-Choppers -------------------- */
+// ---------------------- M-Choppers --------------------
 COMPONENT MonochromatingChopper1 = MultiDiskChopper(
  slit_center = theta_pos_M1, slit_width = theta_width_M1,
  nslits = nslits_M1, delta_y = delta_y_M1,
  nu = f_M1, delay = delay_M1,
  phase = phase_M1, radius = radius_M1)
-AT (0.8166097806955753, 0.0, 161.995) ABSOLUTE
-ROTATED (0, 0.430122381481144, 0) ABSOLUTE
+AT (position_M1[0], position_M1[1], position_M1[2]) ABSOLUTE
+ROTATED (rotation_M1[0], rotation_M1[1], rotation_M1[2]) ABSOLUTE
 
 COMPONENT MonochromatingChopper2 = MultiDiskChopper(
  slit_center = theta_pos_M2, slit_width = theta_width_M2,
  nslits = nslits_M2, delta_y = delta_y_M2,
  nu = f_M2, delay = delay_M2,
  phase = phase_M2, radius = radius_M2)
-AT (0.8166097806955753, 0.0, 162.005) ABSOLUTE
-ROTATED (0, 0.430122381481144, 0) ABSOLUTE
+AT (position_M2[0], position_M2[1], position_M2[2]) ABSOLUTE
+ROTATED (rotation_M2[0], rotation_M2[1], rotation_M2[2]) ABSOLUTE
 
 COMPONENT slitMC = Slit(
  xwidth = 0.0205, yheight = 0.0345)
-AT (-0.817, 0, 162.07) ABSOLUTE
+AT (0.817, 0, 162.07) ABSOLUTE
 
 // These 4 elements define #50 in ToO, Can be exchanged for honeycomb.
 COMPONENT guide_138 = Guide_anyshape_r(
@@ -834,6 +839,64 @@ COMPONENT coll2 = Guide_honeycomb(
 WHEN (coll==2)
 AT (0.817, 0, 162.07) ABSOLUTE
 ROTATED (0, 0.430122381481144, 0) ABSOLUTE
+
+COMPONENT Sample_Pos = Arm()
+AT (0.8301227276790154, 0.0, 163.8) ABSOLUTE
+ROTATED (0, 0.430122381481144, 0) ABSOLUTE
+
+COMPONENT Sample = Incoherent(
+ radius = 0.005, yheight = 0.03,
+ thickness = 0.001, p_interact = 1,
+ order = 1)
+AT (0, 0, 0.015) RELATIVE Sample_Pos
+ROTATED (0, 0, 0) RELATIVE Sample_Pos
+
+// ---------------------------------------------------------------------------    
+// BEAMSTOP                                                               
+// From drawing ESS-5864743.2: get-lost tube front face at 1.77m from sample  
+// Opening aperture: 76mm x 76mm                                              
+// Centred at y=0 (beam axis) — no y-shift needed                             
+// ---------------------------------------------------------------------------
+
+COMPONENT Beamstop = Beamstop(
+ xwidth = 0.076, yheight = 0.076)
+AT (0, 0, 1.77) RELATIVE Sample
+
+// --------------------------------------------------------------------------- 
+// RADIAL COLLIMATOR                                                   
+// From drawing 240040000 REV1 (JJ X-RAY)                                      
+// 261 foils, 0.7deg pitch, Gd oxide on Kapton 12.5 micron                     
+// Inner radius: 625mm, Outer radius: 823mm, Active height: 702mm              
+// Section 1 (negative): -42.7deg to -5.6deg (53 channels/nslit)               
+// Gap: -5.6deg to +5.6deg (beamstop region, 11.2deg total)                    
+// Section 2 (positive): +5.6deg to +149.8deg (207 channels/nslit)             
+// nchan=0: continuous collimator, nslit=number of foils                        
+// transmission=1: fully absorbing walls (Gd oxide)                             
+// roc=0.1: small oscillation amplitude to smooth foil shadows                 
+// --------------------------------------------------------------------------- 
+
+COMPONENT Radial_coll_neg = Collimator_radial(
+ xwidth = 0, yheight = 0.702,
+ length = 0.198, transmission = 1,
+ theta_min = -42.7, theta_max = -5.6,
+ nchan = 0, radius = 0.625,
+ nslit = 53, roc = 0.1)
+AT (0, 0, 0) RELATIVE Sample
+
+COMPONENT Radial_coll_pos = Collimator_radial(
+ xwidth = 0, yheight = 0.702,
+ length = 0.198, transmission = 1,
+ theta_min = 5.6, theta_max = 149.8,
+ nchan = 0, radius = 0.625,
+ nslit = 207, roc = 0.1)
+AT (0, 0, 1e-06) RELATIVE Sample
+
+COMPONENT banana_det_events = Monitor_nD(
+ yheight = 2.2, restore_neutron = 1,
+ radius = 3.0, options = "mantid banana, theta limits=[-36 144] bins=288, y bins=136, neutron pixel min = 0 t, list all neutrons",
+ filename = "TRex_banana_events_monitor_plate.dat")
+AT (0, -0.298, 0) RELATIVE Sample
+ROTATED (0, 0, 0) RELATIVE Sample
 
 FINALLY 
 %{

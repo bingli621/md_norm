@@ -15,7 +15,7 @@
 * 
 * %Identification
 * Written by: Bing Li
-* Date: 17:34:35 on August 17, 2026
+* Date: 18:03:37 on August 18, 2026
 * Origin: DMSC
 * %INSTRUMENT_SITE: Generated_instruments
 * 
@@ -101,7 +101,7 @@ double rotation_P1[3] = {0, 0.430122381481144, 0};
 double radius_P1 = 0.35; // [m]
 double delta_y_P1 = 0.305; // [m]
 double nslits_P1 = 4;
-char theta_pos_P1[256] = "0;55;180;235"; // positive for CW
+char theta_pos_P1[256] = "0;125;180;305"; // positive for CW
 char theta_width_P1[256] = "20;35;20;35";
 
 
@@ -118,7 +118,7 @@ double rotation_P2[3] = {0, 0.430122381481144, 0};
 double radius_P2 = 0.35; // [m]
 double delta_y_P2 = 0.305; // [m]
 double nslits_P2 = 4;
-char theta_pos_P2[256] = "0;55;180;235"; // positive for CW
+char theta_pos_P2[256] = "0;125;180;305"; // positive for CW
 char theta_width_P2[256] = "20;35;20;35";
 
 double tof_P2; // [s]
@@ -134,7 +134,7 @@ double rotation_M1[3] = {0, 0.430122381481144, 0};
 double radius_M1 = 0.35; // [m]
 double delta_y_M1 = 0.325; // [m]
 double nslits_M1 = 2;
-char theta_pos_M1[256] = "0;175"; // positive for CW
+char theta_pos_M1[256] = "0;-175"; // positive for CW
 char theta_width_M1[256] = "2.5;4.4";
 // Use below to rotate HR opening up
 // char theta_pos_M1[256] = "-180;-5";
@@ -152,7 +152,7 @@ double rotation_M2[3] = {0, 0.430122381481144, 0};
 double radius_M2 = 0.35; // [m]
 double delta_y_M2 = -0.325; // [m]
 double nslits_M2 = 2;
-char theta_pos_M2[256] = "0;175"; // positive for CW
+char theta_pos_M2[256] = "0;-175"; // positive for CW
 char theta_width_M2[256] = "2.5;4.4";
 
 double tof_M2; // [s]
@@ -216,10 +216,10 @@ if (strcmp(mode, "HR") == 0){
     phase_M1 = 0;
     phase_M2 = 0;
 } else if (strcmp(mode, "HF") == 0){
-    phase_P1 = 55;
-    phase_P2 = 55;
-    phase_M1 = 175;
-    phase_M2 = 175;
+    phase_P1 = -55;
+    phase_P2 = -55;
+    phase_M1 = -175;
+    phase_M2 = -175;
 } else {
     printf("Need valid resolution option, 'HR' or 'HF'");
 }
@@ -411,7 +411,7 @@ AT (0, 0, 0) ABSOLUTE
 COMPONENT BW_Chopper_1 = MultiDiskChopper(
  slit_center = theta_pos_BW1, slit_width = theta_width_BW1,
  nslits = nslits_BW1, delta_y = delta_y_BW1,
- nu = f_BW1, delay = delay_BW1,
+ nu = -f_BW1, delay = delay_BW1,
  radius = radius_BW1)
 AT (position_BW1[0], position_BW1[1], position_BW1[2]) ABSOLUTE
 ROTATED (rotation_BW1[0], rotation_BW1[1], rotation_BW1[2]) ABSOLUTE
@@ -448,7 +448,7 @@ AT (0, 0, 0) ABSOLUTE
 COMPONENT BW_Chopper_2 = MultiDiskChopper(
  slit_center = theta_pos_BW2, slit_width = theta_width_BW2,
  nslits = nslits_BW2, delta_y = delta_y_BW2,
- nu = f_BW2, delay = delay_BW2,
+ nu = -f_BW2, delay = delay_BW2,
  radius = radius_BW2)
 AT (position_BW2[0], position_BW2[1], position_BW2[2]) ABSOLUTE
 ROTATED (rotation_BW2[0], rotation_BW2[1], rotation_BW2[2]) ABSOLUTE
@@ -637,7 +637,7 @@ AT (0, 0, 0) ABSOLUTE
 COMPONENT PulseShapingChopper1 = MultiDiskChopper(
  slit_center = theta_pos_P1, slit_width = theta_width_P1,
  nslits = nslits_P1, delta_y = delta_y_P1,
- nu = f_P1, delay = delay_P1,
+ nu = -f_P1, delay = delay_P1,
  phase = phase_P1, radius = radius_P1)
 AT (position_P1[0], position_P1[1], position_P1[2]) ABSOLUTE
 ROTATED (rotation_P1[0], rotation_P1[1], rotation_P1[2]) ABSOLUTE
@@ -645,7 +645,7 @@ ROTATED (rotation_P1[0], rotation_P1[1], rotation_P1[2]) ABSOLUTE
 COMPONENT PulseShapingChopper2 = MultiDiskChopper(
  slit_center = theta_pos_P2, slit_width = theta_width_P2,
  nslits = nslits_P2, delta_y = delta_y_P2,
- nu = f_P2, delay = delay_P2,
+ nu = -f_P2, delay = delay_P2,
  phase = phase_P2, radius = radius_P2)
 AT (position_P2[0], position_P2[1], position_P2[2]) ABSOLUTE
 ROTATED (rotation_P2[0], rotation_P2[1], rotation_P2[2]) ABSOLUTE
@@ -786,7 +786,7 @@ AT (0, 0, 0) ABSOLUTE
 COMPONENT MonochromatingChopper1 = MultiDiskChopper(
  slit_center = theta_pos_M1, slit_width = theta_width_M1,
  nslits = nslits_M1, delta_y = delta_y_M1,
- nu = f_M1, delay = delay_M1,
+ nu = -f_M1, delay = delay_M1,
  phase = phase_M1, radius = radius_M1)
 AT (position_M1[0], position_M1[1], position_M1[2]) ABSOLUTE
 ROTATED (rotation_M1[0], rotation_M1[1], rotation_M1[2]) ABSOLUTE
@@ -794,7 +794,7 @@ ROTATED (rotation_M1[0], rotation_M1[1], rotation_M1[2]) ABSOLUTE
 COMPONENT MonochromatingChopper2 = MultiDiskChopper(
  slit_center = theta_pos_M2, slit_width = theta_width_M2,
  nslits = nslits_M2, delta_y = delta_y_M2,
- nu = f_M2, delay = delay_M2,
+ nu = -f_M2, delay = delay_M2,
  phase = phase_M2, radius = radius_M2)
 AT (position_M2[0], position_M2[1], position_M2[2]) ABSOLUTE
 ROTATED (rotation_M2[0], rotation_M2[1], rotation_M2[2]) ABSOLUTE

@@ -15,7 +15,7 @@
 * 
 * %Identification
 * Written by: Bing Li
-* Date: 11:35:58 on August 14, 2026
+* Date: 17:32:40 on August 18, 2026
 * Origin: ESS DMSC
 * %INSTRUMENT_SITE: Generated_instruments
 * 
@@ -39,99 +39,110 @@
 DEFINE INSTRUMENT TRex_choppers (
 L0 = 2.4, // wavelength in [Å] used to calculate the minimum and maximum wavelength for the source component by adding and subtracting a set wavelength
 int RRM = 18, // repetition rate multiplication
-int phase_P = 55, // angular offset for the P-Chopper {0: 20 deg Opening, 55: 35 deg Opening}
-int phase_M = 175 // angular offset for the M-Chopper {0: 2.2 deg Opening, 175: 4.3 deg Opening}
+int phase_P = -55, // angular offset for the P-Chopper {0: 20 deg Opening, 55: 35 deg Opening}
+int phase_M = -175 // angular offset for the M-Chopper {0: 2.2 deg Opening, 175: 4.3 deg Opening}
 )
 
 DECLARE 
 %{
 double T_offset = 0.0017; // Time offset in [s] to shift to the center of long pulse
-double f = 14.0; // Source frequency in [Hz]
-
-
-    double tof_BW1, tof_BW2, tof_P1, tof_P2, tof_M1, tof_M2;
-
-    // characteristic wavelength
-    double v0;
-
-    // distances
-    double L_BW1 = 32;
-    double L_BW2 = 40;
-    double L_P1 = 107.95;
-    double L_P2 = 108.05;
-    double L_M1 = 161.995;
-    double L_M2 = 162.005;
-
-    
+double f = 14; // Source frequency in [Hz]
+double v0; // characteristic velocity in [m/s]
 
 
     // BW1 Chopper
-    double f_BW1;
-    double delay_BW1; //time delay
 
-    double radius_BW1 = 0.35;
-    double delta_y_BW1 = -0.3075;
+    double position_BW1[3] = {0.011348994153930106, 0.0, 32.0};
+    double rotation_BW1[3] = {0, 0.124542024141650, 0};
+    double radius_BW1 = 0.35; // [m]
+    double delta_y_BW1 = -0.3075; // [m]
     double nslits_BW1 = 1;
     char theta_pos_BW1[256] = "0";
     char theta_width_BW1[256] = "61.4";
 
-    // BW2 Chopper
-    double f_BW2;
-    double delay_BW2; //time delay
+    double tof_BW1; // [s]
+    double f_BW1; // frequency [Hz]
+    double delay_BW1; //time delay [s]
 
-    double radius_BW2 = 0.35;
-    double delta_y_BW2 = -0.3075;
+
+    // BW2 Chopper
+
+    double position_BW2[3] = {0.03140505829452013, 0.0, 40.0};
+    double rotation_BW2[3] = {0, 0.162739331227240, 0};
+    double radius_BW2 = 0.35; // [m]
+    double delta_y_BW2 = -0.3075; // [m]
     double nslits_BW2 = 1;
     char theta_pos_BW2[256] = "0";
     char theta_width_BW2[256] = "63.3";
 
-    // P1 Chopper
-    double f_P1;
-    double delay_P1; //time delay
-    double phase_P1;// angular delay
 
-    double radius_P1 = 0.35;
-    double delta_y_P1 = 0.305;
+    double tof_BW2; // [s]
+    double f_BW2; // frequency [Hz]
+    double delay_BW2; // time delay [s]
+
+    // P1 Chopper
+
+    double position_P1[3] = {0.4108460115539497, 0.0, 107.95};
+    double rotation_P1[3] = {0, 0.430122381481144, 0};
+    double radius_P1 = 0.35; // [m]
+    double delta_y_P1 = 0.305; // [m]
     double nslits_P1 = 4;
-    char theta_pos_P1[256] = "0;55;180;235"; // positive for CW
+    char theta_pos_P1[256] = "0;125;180;305"; 
     char theta_width_P1[256] = "20;35;20;35";
 
-    // P2 Chopper
-    double f_P2;
-    double delay_P2; //time delay
-    double phase_P2;// angular delay
 
-    double radius_P2 = 0.35;
-    double delta_y_P2 = 0.305;
+    double tof_P1; // [s]
+    double f_P1; // frequency [Hz]
+    double delay_P1; //time delay [s]
+    double phase_P1; // angular delay [deg]
+
+    // P2 Chopper
+
+    double position_P2[3] = {0.41159673083080733, 0.0, 108.055};
+    double rotation_P2[3] = {0, 0.430122381481144, 0};
+    double radius_P2 = 0.35; // [m]
+    double delta_y_P2 = 0.305; // [m]
     double nslits_P2 = 4;
-    char theta_pos_P2[256] = "0;55;180;235"; // positive for CW
+    char theta_pos_P2[256] = "0;125;180;305"; 
     char theta_width_P2[256] = "20;35;20;35";
+
+    double tof_P2; // [s]
+    double f_P2; // frequency [Hz]
+    double delay_P2; //time delay [s]
+    double phase_P2; // angular delay [deg]
 
 
 
     // M1 Chopper
-    double f_M1;
-    double delay_M1; //time delay
-    double phase_M1;// angular delay
 
-    double radius_M1 = 0.35;
-    double delta_y_M1 = 0.325;
+    double position_M1[3] = {0.8166097806955753, 0.0, 161.995};
+    double rotation_M1[3] = {0, 0.430122381481144, 0};
+    double radius_M1 = 0.35; // [m]
+    double delta_y_M1 = 0.325; // [m]
     double nslits_M1 = 2;
-    char theta_pos_M1[256] = "0;175"; // positive for CW
-    //char theta_pos_M1[256] = "-180;-5"; // positive for CW
+    char theta_pos_M1[256] = "0;-175"; // positive for CW
     char theta_width_M1[256] = "2.5;4.4";
+
+    double tof_M1; // [s]
+    double f_M1; // frequency [Hz]
+    double delay_M1; //time delay [s]
+    double phase_M1; // angular delay [deg]
 
 
     // M2 Chopper
-    double f_M2;
-    double delay_M2; //time delay
-    double phase_M2;// angular delay
 
-    double radius_M2 = 0.35;
-    double delta_y_M2 = -0.325;
+    double position_M2[3] = {0.8166097806955753, 0.0, 162.005};
+    double rotation_M2[3] = {0, 0.430122381481144, 0};
+    double radius_M2 = 0.35; // [m]
+    double delta_y_M2 = -0.325; // [m]
     double nslits_M2 = 2;
-    char theta_pos_M2[256] = "0;175"; // positive for CW
+    char theta_pos_M2[256] = "0;-175"; // positive for CW
     char theta_width_M2[256] = "2.5;4.4";
+
+    double tof_M2; // [s]
+    double f_M2; // frequency [Hz]
+    double delay_M2; //time delay [s]
+    double phase_M2; // angular delay [deg]
 
     
 %}
@@ -149,38 +160,26 @@ INITIALIZE
     f_M1 = RRM*f;
     f_M2 = -f_M1;
 
-    //TODO
-    // Resolution Settings
-    //"angular offset for the P-Chopper {0: 20deg Opening, 55: 35deg Opening}",
-    // angular offset for the M-Chopper {0: 2.5deg Opening, 177: 4,3deg Opening}
-    //if (strcmp(r,"HR") == 0){
-    //
-    //} else if (strcmp(r,"HF") == 0){
-    //
-    //} else {
-    //    printf("Need valid resolution option, 'HR' or 'HF'");
-    //}
 
-
-    // characteristic wavelength 
-
+    // calculate time delay
     v0 = 2*PI*K2V/L0; // speed center neutron
 
 
     // time of flight and chopper phases
-    tof_BW1 = T_offset + L_BW1/v0;
-    tof_BW2 = T_offset + L_BW2/v0;
-    tof_P1 = T_offset + L_P1/v0;
-    tof_P2 = T_offset + L_P2/v0;
-    tof_M1 = T_offset + L_M1/v0;
-    tof_M2 = T_offset + L_M2/v0;
+    tof_BW1 = T_offset + position_BW1[2]/v0;
+    tof_BW2 = T_offset + position_BW2[2]/v0;
+    tof_P1 = T_offset + position_P1[2]/v0;
+    tof_P2 = T_offset + position_P2[2]/v0;
+    tof_M1 = T_offset + position_M1[2]/v0;
+    tof_M2 = T_offset + position_M2[2]/v0;
 
-    delay_BW1 = tof_BW1; //time delay
-    delay_BW2 = tof_BW2; //time delay
-    delay_P1 = tof_P1; //time delay
-    delay_P2 = tof_P2; //time delay
-    delay_M1 = tof_M1; //time delay
-    delay_M2 = tof_M1; //time delay
+    //time delay
+    delay_BW1 = tof_BW1; 
+    delay_BW2 = tof_BW2; 
+    delay_P1 = tof_P1; 
+    delay_P2 = tof_P2;
+    delay_M1 = tof_M1;
+    delay_M2 = tof_M2;
 
     phase_P1 = phase_P;// angular delay
     phase_P2 = phase_P;// angular delay
@@ -200,7 +199,7 @@ AT (0.8166097806955753, delta_y_M2, 161.995) ABSOLUTE
 COMPONENT MonochromatingChopper2 = MultiDiskChopper(
  slit_center = theta_pos_M2, slit_width = theta_width_M2,
  nslits = nslits_M2, delta_y = delta_y_M2,
- nu = f_M2, delay = delay_M2,
+ nu = -f_M2, delay = delay_M2,
  phase = phase_M2, radius = radius_M2)
 AT (0.8166097806955753, 0.0, 162.005) ABSOLUTE
 ROTATED (0, 0.430122381481144, 0) ABSOLUTE
